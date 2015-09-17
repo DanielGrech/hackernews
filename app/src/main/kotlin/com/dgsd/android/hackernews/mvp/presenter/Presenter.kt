@@ -49,33 +49,4 @@ public abstract class Presenter<V : MvpView>(private val view: V, private val co
 
     public open fun onStop() {
     }
-
-    protected fun <T> bind(observable: Observable<T>, observer: Observer<T>): Subscription {
-        val boundObservable: Observable<T>
-
-        val cxt = getContext()
-        if (cxt is BaseActivity) {
-            boundObservable = observable.bind(cxt)
-        } else if (cxt is BaseFragment) {
-            boundObservable = observable.bind(cxt)
-        } else {
-            boundObservable = observable
-        }
-
-        return boundObservable.observeOnMainThread()
-                .subscribeOnIoThread()
-                .subscribe(observer)
-    }
-
-    protected inner class SimpleSubscriber<T> : Subscriber<T>() {
-
-        override fun onCompleted() {
-        }
-
-        override fun onError(e: Throwable) {
-        }
-
-        override fun onNext(t: T) {
-        }
-    }
 }

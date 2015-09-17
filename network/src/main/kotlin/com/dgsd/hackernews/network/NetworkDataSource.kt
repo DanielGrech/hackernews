@@ -1,17 +1,24 @@
 package com.dgsd.hackernews.network
 
+import com.dgsd.hackernews.model.Item
+import com.dgsd.hackernews.network.utils.convert
+import com.dgsd.hackernews.network.utils.filterNulls
 import com.squareup.okhttp.Interceptor
 import com.squareup.okhttp.OkHttpClient
 import retrofit.GsonConverterFactory
 import retrofit.Retrofit
 import retrofit.RxJavaCallAdapterFactory
+import rx.Observable
 import java.util.*
 import java.util.concurrent.TimeUnit
+import com.dgsd.hackernews.network.utils.*
 
 public class NetworkDataSource : DataSource {
 
     companion object {
         private val CONNECTION_TIMEOUT = TimeUnit.SECONDS.toMillis(10)
+
+        private val COLLECTION_ITEMS_TO_FETCH = 10
 
         fun createDefaultHttpClient(): OkHttpClient {
             val client = OkHttpClient()
@@ -29,11 +36,38 @@ public class NetworkDataSource : DataSource {
         client.networkInterceptors().addAll(builder.networkInterceptors)
 
         apiService = Retrofit.Builder()
+                .baseUrl(builder.endpoint)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build()
                 .create(ApiService::class.java)
+    }
+
+    override fun getItem(itemId: Long): Observable<Item> {
+        return apiService.getItem(itemId)
+                .filterNulls()
+                .map {
+                    it.convert()
+                }
+    }
+
+    override fun getTopStories(): Observable<List<Item>> {
+        return apiService.getTopStories()
+                .map {
+                    it.mapIndexed { index, value ->
+                        value.to(index < NetworkDataSource.COLLECTION_ITEMS_TO_FETCH)
+                    }
+                }
+                .flatMapList()
+                .flatMap {
+                    if (it.second) {
+                        getItem(it.first)
+                    } else {
+                        Observable.just(Item(id = it.first))
+                    }
+                }
+                .toList()
     }
 
     public class Builder {

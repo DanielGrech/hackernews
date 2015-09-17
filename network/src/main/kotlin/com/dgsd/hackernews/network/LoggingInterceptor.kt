@@ -12,14 +12,14 @@ internal class LoggingInterceptor : Interceptor {
         val request = chain.request();
 
         val t1 = System.nanoTime();
-        System.err.println("Sending request %s on %s%n%s".format(
+        System.err.println("\u21E2 %s %s%n%s".format(
                 request.url(), chain.connection(), request.headers()
         ));
 
         val response = chain.proceed(request);
 
         val t2 = System.nanoTime();
-        System.err.println("Received response for %s in %.1fms%n%s".format(
+        System.err.println("\u21E0 %s in %sms%n%s".format(
                 response.request().url(), TimeUnit.NANOSECONDS.toMillis(t2 - t1), response.headers()
         ));
 

@@ -38,7 +38,7 @@ android {
         versionCode config.versionCode
         versionName config.versionName
 
-        buildConfigField "String", "API_SERVER", "\"https://hacker-news.firebaseio.com/v0\""
+        buildConfigField "String", "API_SERVER", "\"https://hacker-news.firebaseio.com/v0/\""
         buildConfigField "String", "BUILD_TIME", "\"${getBuildTime()}\""
         buildConfigField "String", "GIT_SHA", "\"${getGitSha()}\""
         buildConfigField "String", "BUILD_NUMBER", "\"${getCiBuildNumber()}\""

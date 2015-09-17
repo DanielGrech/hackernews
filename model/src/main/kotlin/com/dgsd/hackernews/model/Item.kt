@@ -12,9 +12,9 @@ public data class Item(
         val score: Int = -1,
         val deleted: Boolean = false,
         val dead: Boolean = false,
-        val parentId: Int = -1,
-        val childItemIds: List<Int> = emptyList(),
-        private val pollOpts: List<Int> = emptyList()) {
+        val parentId: Long = -1,
+        val childItemIds: List<Long> = emptyList(),
+        private val pollOpts: List<Long> = emptyList()) {
 
 
     public enum class Type {
@@ -26,7 +26,12 @@ public data class Item(
         UNKNOWN;
     }
 
-    public val pollOptionIds: List<Int>
+    public fun hasType(): Boolean {
+        return !this.type.equals(Item.Type.UNKNOWN)
+    }
+
+
+    public val pollOptionIds: List<Long>
             get() = if (type.equals(Item.Type.POLL)) pollOpts else emptyList()
 
 

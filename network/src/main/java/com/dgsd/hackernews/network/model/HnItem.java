@@ -4,22 +4,35 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/**
+ * Represents a single item in the HN API.
+ * <p/>
+ * This could be a comment, story, job, poll or 'poll option'
+ *
+ * @see <a href="https://github.com/HackerNews/API#items">Github API Reference</a>
+ */
 public class HnItem {
 
+    public static final String TYPE_JOB = "job";
+    public static final String TYPE_STORY = "story";
+    public static final String TYPE_COMMENT = "comment";
+    public static final String TYPE_POLL = "poll";
+    public static final String TYPE_POLLOPT = "pollopt";
+
     @SerializedName("id")
-    int id;
+    long id;
 
     @SerializedName("by")
     String by;
 
     @SerializedName("descendants")
-    int descendants;
+    Integer descendants;
 
     @SerializedName("parent")
-    int parent;
+    Long parent;
 
     @SerializedName("score")
-    int score;
+    Integer score;
 
     @SerializedName("text")
     String text;
@@ -43,12 +56,12 @@ public class HnItem {
     boolean dead;
 
     @SerializedName("parts")
-    List<Integer> parts;
+    List<Long> parts;
 
     @SerializedName("kids")
-    List<Integer> kids;
+    List<Long> kids;
 
-    public int getId() {
+    public long getId() {
         return this.id;
     }
 
@@ -56,15 +69,15 @@ public class HnItem {
         return this.by;
     }
 
-    public int getDescendants() {
+    public Integer getDescendants() {
         return this.descendants;
     }
 
-    public int getParent() {
+    public Long getParent() {
         return this.parent;
     }
 
-    public int getScore() {
+    public Integer getScore() {
         return this.score;
     }
 
@@ -96,11 +109,11 @@ public class HnItem {
         return dead;
     }
 
-    public List<Integer> getParts() {
+    public List<Long> getParts() {
         return parts;
     }
 
-    public List<Integer> getKids() {
+    public List<Long> getKids() {
         return kids;
     }
 }
