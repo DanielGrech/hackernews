@@ -7,8 +7,8 @@ import javax.inject.Singleton
 /**
  * Dagger component to provide dependency injection
  */
-Singleton
-Component(modules = arrayOf(HNModule::class))
+@Singleton
+@Component(modules = arrayOf(HNModule::class))
 public interface AppServicesComponent {
 
     fun inject(presenter: MainPresenter)

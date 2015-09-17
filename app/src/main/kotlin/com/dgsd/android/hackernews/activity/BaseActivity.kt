@@ -14,7 +14,7 @@ public abstract class BaseActivity : RxActivity() {
      * @return the layout resource to use for this activity,
      * or a value <= 0 if no layout should be used
      */
-    LayoutRes protected abstract fun getLayoutResource(): Int
+    @LayoutRes protected abstract fun getLayoutResource(): Int
 
     override protected fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))

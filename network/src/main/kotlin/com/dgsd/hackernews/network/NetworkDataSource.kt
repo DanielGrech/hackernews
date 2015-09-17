@@ -1,9 +1,11 @@
-package com.dgsd.hackernews
+package com.dgsd.hackernews.network
 
 import com.squareup.okhttp.Interceptor
 import com.squareup.okhttp.OkHttpClient
-import retrofit.RestAdapter
-import retrofit.client.OkClient
+import retrofit.GsonConverterFactory
+import retrofit.Retrofit
+import retrofit.RxJavaCallAdapterFactory
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 public class NetworkDataSource : DataSource {
@@ -26,9 +28,10 @@ public class NetworkDataSource : DataSource {
         val client = createDefaultHttpClient()
         client.networkInterceptors().addAll(builder.networkInterceptors)
 
-        apiService = RestAdapter.Builder()
-                .setClient(OkClient(client))
-                .setLogLevel(if (builder.logging) RestAdapter.LogLevel.FULL else RestAdapter.LogLevel.NONE )
+        apiService = Retrofit.Builder()
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build()
                 .create(ApiService::class.java)
     }
@@ -38,9 +41,12 @@ public class NetworkDataSource : DataSource {
 
         public var endpoint: String = ""
 
-        public var networkInterceptors: List<Interceptor> = emptyList()
+        public var networkInterceptors: ArrayList<Interceptor> = arrayListOf()
 
         public fun build(): NetworkDataSource {
+            if (this.logging) {
+                this.networkInterceptors.add(LoggingInterceptor())
+            }
             return NetworkDataSource(this)
         }
     }

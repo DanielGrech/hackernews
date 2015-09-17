@@ -5,11 +5,14 @@ jacoco {
     toolVersion = versions.jacoco
 }
 
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
+
 dependencies {
     compile project(":model")
-    compile ("com.squareup.retrofit:retrofit:${versions.retrofit}") {
-        exclude group: 'com.squareup.okhttp', module: 'okhttp'
-    }
+    compile "com.squareup.retrofit:retrofit:${versions.retrofit}"
+    compile "com.squareup.retrofit:converter-gson:${versions.retrofit}"
+    compile "com.squareup.retrofit:adapter-rxjava:${versions.retrofit}"
     compile "com.squareup.okhttp:okhttp:${versions.okHttp}"
     compile "io.reactivex:rxjava:${versions.rxJava}"
     compile "com.google.code.gson:gson:${versions.gson}"
