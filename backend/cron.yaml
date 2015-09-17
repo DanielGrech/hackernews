@@ -1,0 +1,4 @@
+cron:
+- description: top stories job
+  url: /tasks/top_stories
+  schedule: every 5 minutes

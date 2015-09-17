@@ -19,17 +19,11 @@ func NewCache(c appengine.Context) *Cache {
 	return &cache
 }
 
-func (cache *Cache) GetStory(id int) *Story {
+func (cache *Cache) GetStory(id int) (Story, error) {
 	var cacheEntry Story
 	cacheKey := cacheKeyStoryPrefix + strconv.Itoa(id)
-	if _, err := memcache.Gob.Get(cache.context, cacheKey, &cacheEntry); err != nil {
-		if err != memcache.ErrCacheMiss {
-			cache.context.Warningf("Error getting story from memcache: %v", err)
-		}
-		return nil
-	} else {
-		return &cacheEntry
-	}
+	_, err := memcache.Gob.Get(cache.context, cacheKey, &cacheEntry)
+	return cacheEntry, err
 }
 
 func (cache *Cache) SetStory(story Story) {

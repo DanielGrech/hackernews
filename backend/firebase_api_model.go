@@ -12,21 +12,23 @@ type Item interface {
 	Title() string
 	Type() string
 	URL() string
+	Decendants() int
 }
 
 type Story struct {
-	By    string `json:"by"`
-	ID    int    `json:"id"`
-	Kids  []int  `json:"kids"`
-	Score int    `json:"score"`
-	Time  int    `json:"time"`
-	Title string `json:"title"`
-	Type  string `json:"type"`
-	URL   string `json:"url"`
+	By           string `json:"author"`
+	ID           int    `json:"id"`
+	Kids         []int  `json:"-"`
+	Score        int    `json:"score"`
+	Time         int    `json:"time"`
+	Title        string `json:"title"`
+	Type         string `json:"-"`
+	URL          string `json:"url"`
+	CommentCount int    `json:"comment_count"`
 }
 
 type Comment struct {
-	By     string `json:"by"`
+	By     string `json:"author"`
 	ID     int    `json:"id"`
 	Kids   []int  `json:"kids"`
 	Parent int    `json:"parent"`
@@ -36,19 +38,20 @@ type Comment struct {
 }
 
 type Poll struct {
-	By    string `json:"by"`
-	ID    int    `json:"id"`
-	Kids  []int  `json:"kids"`
-	Parts []int  `json:"parts"`
-	Score int    `json:"score"`
-	Text  string `json:"text"`
-	Time  int    `json:"time"`
-	Title string `json:"title"`
-	Type  string `json:"type"`
+	By           string `json:"author"`
+	ID           int    `json:"id"`
+	Kids         []int  `json:"-"`
+	Parts        []int  `json:"parts"`
+	Score        int    `json:"score"`
+	Text         string `json:"text"`
+	Time         int    `json:"time"`
+	Title        string `json:"title"`
+	Type         string `json:"type"`
+	CommentCount int    `json:"comment_count"`
 }
 
 type Part struct {
-	By     string `json:"by"`
+	By     string `json:"author"`
 	ID     int    `json:"id"`
 	Parent int    `json:"parent"`
 	Score  int    `json:"score"`
@@ -126,6 +129,11 @@ func (i item) URL() string {
 	return s
 }
 
+func (i item) Descendants() int {
+	s, _ := i["descendants"].(float64)
+	return int(s)
+}
+
 // Convert an item to a Story
 func (i item) ToStory() Story {
 	var s Story
@@ -137,6 +145,7 @@ func (i item) ToStory() Story {
 	s.Title = i.Title()
 	s.Type = i.Type()
 	s.URL = i.URL()
+	s.CommentCount = i.Descendants()
 	return s
 }
 
@@ -165,6 +174,7 @@ func (i item) ToPoll() Poll {
 	p.Time = i.Time()
 	p.Title = i.Title()
 	p.Type = i.Type()
+	p.CommentCount = i.Descendants()
 	return p
 }
 
