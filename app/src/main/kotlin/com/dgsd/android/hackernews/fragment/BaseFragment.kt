@@ -18,11 +18,11 @@ public abstract class BaseFragment : RxFragment() {
     @LayoutRes
     protected abstract fun getLayoutId(): Int
 
-    private var app: HNAppImpl? = null
+    private lateinit var app: HNAppImpl
 
     override public fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        app = getActivity().getApplicationContext() as HNAppImpl
+        app = activity.applicationContext as HNAppImpl
     }
 
     /**
@@ -45,11 +45,11 @@ public abstract class BaseFragment : RxFragment() {
     }
 
     protected fun getApp() : HNAppImpl {
-        return app!!
+        return app
     }
 
     override public fun onDestroy() {
         super.onDestroy()
-        app?.refWatcher?.watch(this, javaClass.getSimpleName())
+        app.refWatcher.watch(this, javaClass.simpleName)
     }
 }

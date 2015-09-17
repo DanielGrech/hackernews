@@ -1,13 +1,10 @@
 package com.dgsd.android.hackernews.util
 
 import android.os.Build
-import android.text.TextUtils
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.ImageView
-import android.widget.TextView
 import com.squareup.picasso.Picasso
-import org.jetbrains.anko.text
 
 /**
  * Runs the given action in an {@link OnPreDrawListener}
@@ -77,22 +74,6 @@ public fun View.isGone(): Boolean {
 
 public fun View.isVisible(): Boolean {
     return this.getVisibility() == View.VISIBLE
-}
-
-/**
- * Set the given string as the text of the given TextView, or hide the view completely if it
- * is empty
- *
- * @param tv   The view to set the text on
- * @param text The text to set
- */
-public fun TextView.setTextOrHide(text: CharSequence) {
-    if (TextUtils.isEmpty(text)) {
-        this.hide()
-    } else {
-        this.text = text
-        this.show()
-    }
 }
 
 public fun ImageView.setImageUrl(url: String) {

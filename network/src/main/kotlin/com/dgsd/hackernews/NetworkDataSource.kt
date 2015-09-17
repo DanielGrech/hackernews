@@ -30,7 +30,7 @@ public class NetworkDataSource : DataSource {
                 .setClient(OkClient(client))
                 .setLogLevel(if (builder.logging) RestAdapter.LogLevel.FULL else RestAdapter.LogLevel.NONE )
                 .build()
-                .create(javaClass<ApiService>())
+                .create(ApiService::class.java)
     }
 
     public class Builder {

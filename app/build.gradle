@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-android-extensions:0.12.1230'
+        classpath 'org.jetbrains.kotlin:kotlin-android-extensions:0.13.1513'
     }
 }
 
@@ -120,7 +120,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(":model")
     compile project(":network")
-    compile "org.jetbrains.anko:anko:${versions.anko}"
+//    compile "org.jetbrains.anko:anko:${versions.anko}"
     compile "com.android.support:appcompat-v7:${versions.androidSupport}"
     compile "com.android.support:support-v4:${versions.androidSupport}"
     compile "com.android.support:appcompat-v7:${versions.androidSupport}"

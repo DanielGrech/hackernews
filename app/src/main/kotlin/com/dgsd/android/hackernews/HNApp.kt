@@ -23,9 +23,9 @@ abstract class HNApp : Application() {
 
     var refWatcher: RefWatcher = RefWatcher.DISABLED
 
-    private var picassoImageCache: Cache? = null
+    private lateinit var picassoImageCache: Cache
 
-    private var appServicesComponent: AppServicesComponent? = null
+    private lateinit var appServicesComponent: AppServicesComponent
 
     protected abstract fun createAppServicesComponent() : AppServicesComponent
 
@@ -47,7 +47,7 @@ abstract class HNApp : Application() {
         if (level >= ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
             Timber.d("Android is suggesting to trim memory .. clearing picasso cache. Level = %s", level)
             // Clear our picasso cache
-            picassoImageCache!!.clear()
+            picassoImageCache.clear()
         }
     }
 
@@ -56,7 +56,7 @@ abstract class HNApp : Application() {
      * * other application components may want to use for injection purposes
      */
     public fun getAppServicesComponent(): AppServicesComponent {
-        return appServicesComponent!!
+        return appServicesComponent
     }
 
     protected fun getModule() : HNModule {

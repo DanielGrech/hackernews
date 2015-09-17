@@ -9,11 +9,11 @@ import rx.functions.Func1
 import rx.schedulers.Schedulers
 
 fun <T> Observable<T>.bind(activity : BaseActivity) : Observable<T> {
-    return this.compose(RxLifecycle.bindActivity(activity.lifecycle()));
+    return this.compose<T>(RxLifecycle.bindActivity(activity.lifecycle()));
 }
 
 fun <T> Observable<T>.bind(fragment : BaseFragment) : Observable<T> {
-    return this.compose(RxLifecycle.bindFragment(fragment.lifecycle()));
+    return this.compose<T>(RxLifecycle.bindFragment(fragment.lifecycle()));
 }
 
 fun <T> Observable<T>.observeOnMainThread() : Observable<T> {

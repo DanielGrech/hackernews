@@ -8,11 +8,11 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 public abstract class BaseActivity : RxActivity() {
 
-    private var app: HNAppImpl? = null
+    private lateinit var app: HNAppImpl
 
     /**
      * @return the layout resource to use for this activity,
-     * * or a value <= 0 if no layout should be used
+     * or a value <= 0 if no layout should be used
      */
     LayoutRes protected abstract fun getLayoutResource(): Int
 
@@ -22,7 +22,7 @@ public abstract class BaseActivity : RxActivity() {
 
     override protected fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        app = getApplicationContext() as HNAppImpl
+        app = applicationContext as HNAppImpl
 
         val layoutResId = getLayoutResource()
         if (layoutResId > 0) {
@@ -31,7 +31,7 @@ public abstract class BaseActivity : RxActivity() {
     }
 
     protected fun getApp() : HNAppImpl {
-        return app!!
+        return app
     }
 }
 
