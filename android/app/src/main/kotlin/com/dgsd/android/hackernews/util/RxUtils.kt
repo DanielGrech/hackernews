@@ -35,5 +35,5 @@ fun <T> Observable<T>.observeOnMainThread() : Observable<T> {
 }
 
 fun <T> Observable<T>.subscribeOnIoThread() : Observable<T> {
-    return this.observeOn(Schedulers.io())
+    return this.subscribeOn(Schedulers.io())
 }

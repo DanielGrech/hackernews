@@ -6,11 +6,15 @@ import android.preference.PreferenceManager
 import com.dgsd.android.hackernews.BuildConfig
 import com.dgsd.android.hackernews.HNApp
 import com.dgsd.android.hackernews.data.AppSettings
+import com.dgsd.hackernews.model.Story
 import com.dgsd.hackernews.network.DataSource
 import com.dgsd.hackernews.network.networkDataSource
 import com.lacronicus.easydatastorelib.DatastoreBuilder
 import dagger.Module
 import dagger.Provides
+import rx.Observable
+import rx.lang.kotlin.deferredObservable
+import rx.lang.kotlin.toSingletonObservable
 import javax.inject.Singleton
 
 /**
@@ -46,9 +50,18 @@ public class HNModule(private val application: HNApp) {
     @Provides
     @Singleton
     fun providesDataSource() : DataSource {
-        return networkDataSource {
-            logging = BuildConfig.DEBUG
-            endpoint = BuildConfig.API_SERVER
+        return object: DataSource {
+            override fun getTopStories(): Observable<List<Story>> {
+                return listOf(Story(), Story(),Story(), Story(),Story(),
+                        Story(), Story(),Story(), Story(),Story(),
+                        Story(), Story(),Story(), Story(),Story(),
+                        Story(), Story(),Story(), Story(),Story(),
+                        Story(), Story(),Story(), Story(),Story()).toSingletonObservable()
+            }
         }
+//        return networkDataSource {
+//            logging = BuildConfig.DEBUG
+//            endpoint = BuildConfig.API_SERVER
+//        }
     }
 }

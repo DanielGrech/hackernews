@@ -74,6 +74,7 @@ subprojects {
                 gson : "2.3.1",
                 okHttp : "2.5.0",
                 rxJava : "1.0.14",
+                rxKotlin : "0.22.13",
                 timber : "3.1.0",
                 picasso : "2.5.2",
                 jsr250 : "1.0",

@@ -2,9 +2,11 @@ package com.dgsd.android.hackernews.util
 
 import android.os.Build
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.ImageView
 import com.squareup.picasso.Picasso
+import java.util.*
 
 /**
  * Runs the given action in an {@link OnPreDrawListener}
@@ -81,4 +83,12 @@ public fun ImageView.setImageUrl(url: String) {
             .load(url)
             .fit()
             .into(this)
+}
+
+public fun ViewGroup.children(): List<View> {
+    val retval : LinkedList<View> = LinkedList()
+    for (i in 0..childCount - 1) {
+        retval.add(getChildAt(i))
+    }
+    return retval
 }

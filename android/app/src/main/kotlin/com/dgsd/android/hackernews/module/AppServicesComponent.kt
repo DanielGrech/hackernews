@@ -1,6 +1,7 @@
 package com.dgsd.android.hackernews.module
 
 import com.dgsd.android.hackernews.mvp.presenter.MainPresenter
+import com.dgsd.android.hackernews.mvp.presenter.StoryListPresenter
 import dagger.Component
 import javax.inject.Singleton
 
@@ -12,5 +13,7 @@ import javax.inject.Singleton
 public interface AppServicesComponent {
 
     fun inject(presenter: MainPresenter)
+
+    fun inject(presenter: StoryListPresenter)
 
 }

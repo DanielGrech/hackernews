@@ -1,3 +1,9 @@
 <resources>
-    
+    <string name="tab_title_top">Top</string>
+    <string name="tab_title_new">New</string>
+    <string name="tab_title_ask_hn">Ask HN</string>
+    <string name="tab_title_show_hn">Show HN</string>
+    <string name="tab_title_jobs">Jobs</string>
+
+    <string name="empty_stories">No stories found</string>
 </resources>

@@ -15,6 +15,7 @@ dependencies {
     compile "com.squareup.retrofit:adapter-rxjava:${versions.retrofit}"
     compile "com.squareup.okhttp:okhttp:${versions.okHttp}"
     compile "io.reactivex:rxjava:${versions.rxJava}"
+    compile "io.reactivex:rxkotlin:${versions.rxKotlin}"
     compile "com.google.code.gson:gson:${versions.gson}"
 
     testCompile "junit:junit:${versions.junit}"

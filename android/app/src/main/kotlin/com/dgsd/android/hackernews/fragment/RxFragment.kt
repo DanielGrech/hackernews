@@ -29,7 +29,7 @@ abstract class RxFragment : Fragment() {
         lifecycleSubject.onNext(FragmentEvent.ATTACH)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lifecycleSubject.onNext(FragmentEvent.CREATE_VIEW)
     }

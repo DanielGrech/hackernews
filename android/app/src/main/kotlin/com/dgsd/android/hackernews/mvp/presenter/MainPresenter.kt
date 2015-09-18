@@ -17,16 +17,4 @@ public class MainPresenter(view : MainMvpView, component : AppServicesComponent)
         component.inject(this)
     }
 
-    override public fun onResume() {
-        super.onResume()
-        dataSource.getTopStories()
-                .bind(getView())
-                .onIoThread()
-                .subscribe({
-                    Timber.i("Got items %s", it)
-                }, {
-                    Timber.e(it, "Error getting top stories!")
-                })
-    }
-
 }
