@@ -1,7 +1,6 @@
 package com.dgsd.android.hackernews.fragment
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.dgsd.android.hackernews.R
@@ -10,6 +9,7 @@ import com.dgsd.android.hackernews.module.AppServicesComponent
 import com.dgsd.android.hackernews.mvp.presenter.StoryListPresenter
 import com.dgsd.android.hackernews.mvp.view.StoryListMvpView
 import com.dgsd.android.hackernews.view.LceViewGroup
+import com.dgsd.android.hackernews.view.StoryRecyclerView
 import com.dgsd.hackernews.model.Story
 import org.jetbrains.anko.find
 
@@ -17,7 +17,7 @@ public class StoryListFragment: PresentableFragment<StoryListMvpView, StoryListP
 
     private lateinit var loadingContentErrorView: LceViewGroup
 
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView: StoryRecyclerView
 
     companion object {
 
@@ -38,13 +38,10 @@ public class StoryListFragment: PresentableFragment<StoryListMvpView, StoryListP
         super.onViewCreated(view, savedInstanceState)
         loadingContentErrorView = view.find(R.id.loadingContentErrorView)
         recyclerView = view.find(R.id.recyclerView)
-
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = StoryListAdapter()
     }
 
     override fun showStories(stories: List<Story>) {
-        (recyclerView.adapter as StoryListAdapter).setStories(stories)
+        recyclerView.setStories(stories)
         loadingContentErrorView.showContent()
     }
 

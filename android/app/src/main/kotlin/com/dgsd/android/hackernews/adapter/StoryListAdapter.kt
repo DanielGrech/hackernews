@@ -3,7 +3,7 @@ package com.dgsd.android.hackernews.adapter
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import com.dgsd.android.hackernews.view.StoryListItemView
 import com.dgsd.hackernews.model.Story
 
 public class StoryListAdapter : RecyclerView.Adapter<StoryViewHolder>() {
@@ -15,12 +15,11 @@ public class StoryListAdapter : RecyclerView.Adapter<StoryViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
-        val view = TextView(parent.context)
-        return StoryViewHolder(view)
+        return StoryViewHolder(StoryListItemView.inflate(parent))
     }
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
-        (holder.itemView as TextView).text = stories[position].toString()
+        holder.populate(stories[position])
     }
 
     public fun setStories(newStories: List<Story>) {
@@ -32,4 +31,7 @@ public class StoryListAdapter : RecyclerView.Adapter<StoryViewHolder>() {
 
 class StoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
+    public fun populate(story: Story) {
+        (itemView as StoryListItemView).populate(story)
+    }
 }
