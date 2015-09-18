@@ -72,6 +72,14 @@ android {
         }
     }
 
+    productFlavors {
+        dev {
+            buildConfigField "String", "API_SERVER", "\"http://10.80.4.19:8080/\""
+
+            resValue "string", "app_name", "${config.appName} dev"
+        }
+    }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
         test.java.srcDirs += 'src/test/kotlin'

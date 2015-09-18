@@ -1,50 +1,49 @@
 package com.dgsd.hackernews.network.utils
 
-import com.dgsd.hackernews.model.Item
-import com.dgsd.hackernews.network.model.HnItem
+import com.dgsd.hackernews.model.Comment
+import com.dgsd.hackernews.model.Story
+import com.dgsd.hackernews.network.model.HnComment
+import com.dgsd.hackernews.network.model.HnStory
 
-private fun convertType(typeAsStr: String?): Item.Type {
-    return when (typeAsStr) {
-        HnItem.TYPE_COMMENT -> Item.Type.COMMENT
-        HnItem.TYPE_JOB -> Item.Type.JOB
-        HnItem.TYPE_STORY -> Item.Type.STORY
-        HnItem.TYPE_POLL -> Item.Type.POLL
-        HnItem.TYPE_POLLOPT -> Item.Type.POLLOPT
-        else -> Item.Type.UNKNOWN
-    }
-}
-
-public fun HnItem.convert(): Item {
-    var item = Item(
+public fun HnComment.convert(): Comment {
+    var item = Comment(
             id = this.id,
             time = this.time,
-            author = this.by,
+            author = this.author,
+            parentId = this.parentId,
+            text = this.text,
+            commentCount = this.commentCount
+    )
+
+    if (this.commentIds != null) {
+        item = item.copy(commentIds = this.commentIds)
+    }
+
+    if (this.comments != null) {
+        item = item.copy(comments = this.comments.map { it.convert() }.toList())
+    }
+
+    return item
+}
+
+public fun HnStory.convert(): Story {
+    var item = Story(
+            id = this.id,
+            time = this.time,
+            author = this.author,
             title = this.title,
             text = this.text,
             url = this.url,
-            deleted = this.isDeleted,
-            dead = this.isDead,
-            type = convertType(this.type)
+            score = this.score,
+            commentCount = this.commentCount
     )
 
-    if (this.descendants != null) {
-        item = item.copy(commentCount = this.descendants)
+    if (this.commentIds != null) {
+        item = item.copy(commentIds = this.commentIds)
     }
 
-    if (this.score != null) {
-        item = item.copy(score = this.score)
-    }
-
-    if (this.parent != null) {
-        item = item.copy(parentId = this.parent)
-    }
-
-    if (this.kids != null) {
-        item = item.copy(childItemIds = this.kids)
-    }
-
-    if (this.parts != null) {
-        item = item.copy(pollOpts = this.parts)
+    if (this.comments != null) {
+        item = item.copy(comments = this.comments.map { it.convert() }.toList())
     }
 
     return item
