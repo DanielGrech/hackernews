@@ -50,17 +50,33 @@ func (hnc *HnApiClient) GetTopStories() (topStories []int, e error) {
 	return
 }
 
-func (hnc *HnApiClient) GetStory(id int) (Story, error) {
+func (hnc *HnApiClient) GetStory(id int) (*Story, error) {
 	item, err := hnc.GetItem(id)
 	if err != nil {
-		return Story{}, err
+		return nil, err
 	}
 
 	if item.Type() != "story" {
-		return Story{}, fmt.Errorf("Called GetStory with ID #%v "+
+		return nil, fmt.Errorf("Called GetStory with ID #%v "+
 			"which is not a story. It is a %v", id, item.Type())
 	} else {
-		return item.ToStory(), nil
+		story := item.ToStory()
+		return &story, nil
+	}
+}
+
+func (hnc *HnApiClient) GetComment(id int) (*Comment, error) {
+	item, err := hnc.GetItem(id)
+	if err != nil {
+		return nil, err
+	}
+
+	if item.Type() != "comment" {
+		return nil, fmt.Errorf("Called GetComment with ID #%v "+
+			"which is not a comment. It is a %v", id, item.Type())
+	} else {
+		comment := item.ToComment()
+		return &comment, nil
 	}
 }
 

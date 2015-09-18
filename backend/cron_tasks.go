@@ -21,10 +21,12 @@ func (tasks *Tasks) getTopStories(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, id := range topStories {
-		_, err := fetchStoryIfNeeded(id, c, cache, datastore, client)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+	for index, id := range topStories {
+		if index < 5 {
+			_, err := fetchStoryIfNeeded(id, c, cache, datastore, client)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
 		}
 	}
 }
@@ -42,7 +44,7 @@ func cacheTopStoryIds(context appengine.Context, cache *Cache, apiClient *HnApiC
 	return topStories, nil
 }
 
-func fetchStoryIfNeeded(id int, context appengine.Context, cache *Cache, datastore *Db, apiClient *HnApiClient) (Story, error) {
+func fetchStoryIfNeeded(id int, context appengine.Context, cache *Cache, datastore *Db, apiClient *HnApiClient) (*Story, error) {
 	story, err := cache.GetStory(id)
 
 	// We have a copy in memcache
@@ -61,6 +63,7 @@ func fetchStoryIfNeeded(id int, context appengine.Context, cache *Cache, datasto
 	if err != nil {
 		context.Errorf("%v", err)
 	} else {
+		fetchTopComments(story, context, cache, datastore, apiClient)
 		err = datastore.SaveStory(story)
 		if err != nil {
 			context.Errorf("Error saving story to datastore: %v", err)
@@ -71,4 +74,28 @@ func fetchStoryIfNeeded(id int, context appengine.Context, cache *Cache, datasto
 	}
 
 	return story, err
+}
+
+func fetchTopComments(story *Story, context appengine.Context, cache *Cache, datastore *Db, apiClient *HnApiClient) {
+	commentsToRetrieve := len(story.Kids)
+	if commentsToRetrieve > 5 {
+		commentsToRetrieve = 5
+	}
+
+	for i := 0; i < commentsToRetrieve; i++ {
+		commentId := story.Kids[i]
+
+		comment, err := datastore.GetComment(commentId)
+		if err == nil {
+			story.Comments = append(story.Comments, *comment)
+		} else {
+			comment, err := apiClient.GetComment(commentId)
+			if err == nil {
+				story.Comments = append(story.Comments, *comment)
+				datastore.SaveComment(comment)
+			} else {
+				context.Errorf("Error fetching comment: %v", err)
+			}
+		}
+	}
 }

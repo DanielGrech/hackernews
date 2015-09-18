@@ -19,17 +19,17 @@ func NewCache(c appengine.Context) *Cache {
 	return &cache
 }
 
-func (cache *Cache) GetStory(id int) (Story, error) {
+func (cache *Cache) GetStory(id int) (*Story, error) {
 	var cacheEntry Story
 	cacheKey := cacheKeyStoryPrefix + strconv.Itoa(id)
 	_, err := memcache.Gob.Get(cache.context, cacheKey, &cacheEntry)
-	return cacheEntry, err
+	return &cacheEntry, err
 }
 
-func (cache *Cache) SetStory(story Story) {
+func (cache *Cache) SetStory(story *Story) {
 	item := &memcache.Item{
 		Key:    cacheKeyStoryPrefix + strconv.Itoa(story.ID),
-		Object: story,
+		Object: *story,
 	}
 
 	if err := memcache.Gob.Set(cache.context, item); err != nil {
