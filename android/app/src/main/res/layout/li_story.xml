@@ -6,12 +6,17 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/padding_small"
     android:layout_marginRight="@dimen/padding_small"
+    android:foreground="?attr/selectableItemBackground"
     android:orientation="vertical"
     app:cardCornerRadius="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/padding_small"
+        android:paddingEnd="@dimen/padding_default"
+        android:paddingStart="@dimen/padding_default"
+        android:paddingTop="@dimen/padding_small">
 
         <TextView
             android:id="@+id/storyDate"
@@ -19,6 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             tools:text="Posted at 3:18pm today" />
 
         <TextView
@@ -27,6 +33,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@id/storyDate"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:layout_marginTop="@dimen/padding_small"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
             tools:text="This invention will change the world" />
 
         <TextView
@@ -36,6 +45,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
             android:layout_below="@id/storyTitle"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             tools:text="78 comments" />
 
         <TextView
@@ -46,6 +56,7 @@
             android:layout_alignParentEnd="true"
             android:layout_below="@id/storyTitle"
             android:layout_marginStart="@dimen/padding_default"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             tools:text="Homer Simpson" />
 
     </RelativeLayout>

@@ -6,4 +6,7 @@
     <string name="tab_title_jobs">Jobs</string>
 
     <string name="empty_stories">No stories found</string>
+    <string name="story_list_item_time_template">Posted %1$s</string>
+    <string name="story_list_item_author_template">Posted by %1$s</string>
+    <string name="story_list_item_comments_template">{0,choice,0#No comments|1#1 comment|1&lt;{0} comments}</string>
 </resources>

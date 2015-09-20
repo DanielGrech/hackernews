@@ -13,6 +13,8 @@ import org.jetbrains.anko.dimen
 
 public class StoryRecyclerView(context: Context, attrs: AttributeSet?, defStyle: Int) : RecyclerView (context, attrs, defStyle) {
 
+    private var onClickListener:  (Story, View) -> Unit = {s, v -> }
+
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -22,10 +24,18 @@ public class StoryRecyclerView(context: Context, attrs: AttributeSet?, defStyle:
         adapter = StoryListAdapter()
 
         addItemDecoration(VerticalSpaceItemDecoration(context.dimen(R.dimen.padding_small)))
+
+        (adapter as StoryListAdapter).setOnStoryClickListener { story, view ->
+            onClickListener(story, view)
+        }
     }
 
     public fun setStories(stories: List<Story>) {
         (adapter as StoryListAdapter).setStories(stories)
+    }
+
+    public fun setOnStoryClickListener(listener: (Story, View) -> Unit) {
+        onClickListener = listener
     }
 
     public class VerticalSpaceItemDecoration(val verticalHeight: Int) : RecyclerView.ItemDecoration() {

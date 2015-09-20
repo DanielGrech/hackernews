@@ -2,6 +2,7 @@ package hackernews
 
 import (
 	"encoding/json"
+	"strings"
 )
 
 type TextAsBytes struct {
@@ -134,7 +135,7 @@ func (i item) Time() int {
 
 func (i item) Title() string {
 	s, _ := i["title"].(string)
-	return s
+	return strings.Replace(s, "\t", " ", -1)
 }
 
 func (i item) Type() string {

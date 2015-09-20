@@ -6,9 +6,11 @@ import android.view.ViewGroup
 import com.dgsd.android.hackernews.view.StoryListItemView
 import com.dgsd.hackernews.model.Story
 
-public class StoryListAdapter : RecyclerView.Adapter<StoryViewHolder>() {
+public class StoryListAdapter : RecyclerView.Adapter<StoryListAdapter.StoryViewHolder>() {
 
     private val stories = arrayListOf<Story>()
+
+    private var onClickListener:  (Story, View) -> Unit = {s, v -> }
 
     override fun getItemCount(): Int {
         return stories.size()
@@ -27,11 +29,23 @@ public class StoryListAdapter : RecyclerView.Adapter<StoryViewHolder>() {
         stories.addAll(newStories)
         notifyDataSetChanged()
     }
-}
 
-class StoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    public fun setOnStoryClickListener(listener: (Story, View) -> Unit) {
+        onClickListener = listener
+    }
 
-    public fun populate(story: Story) {
-        (itemView as StoryListItemView).populate(story)
+    inner class StoryViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+
+        init {
+            view.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View) {
+            onClickListener(stories[position], v)
+        }
+
+        public fun populate(story: Story) {
+            (itemView as StoryListItemView).populate(story)
+        }
     }
 }
