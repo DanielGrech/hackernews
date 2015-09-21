@@ -18,17 +18,19 @@ import org.jetbrains.anko.browse
 import org.jetbrains.anko.onClick
 import timber.log.Timber
 
-public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>(), StoryMvpView {
+public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>(), StoryMvpView, CustomTabActivityHelper.ConnectionCallback {
 
     private lateinit var customTabActivityHelper: CustomTabActivityHelper
 
     companion object {
 
         private val EXTRA_STORY_ID = "_story_id"
+        private val EXTRA_HINT_URL = "_hint_url"
 
         public fun getStartIntent(context: Context, story: Story): Intent {
             return Intent(context, StoryActivity::class.java)
                     .putExtra(EXTRA_STORY_ID, story.id)
+                    .putExtra(EXTRA_HINT_URL, story.url)
         }
     }
 
@@ -51,6 +53,7 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
 
     override fun onStart() {
         super.onStart()
+        customTabActivityHelper.setConnectionCallback(this)
         customTabActivityHelper.bindCustomTabsService(this)
     }
 
@@ -88,6 +91,17 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
 
         CustomTabActivityHelper.openCustomTab(this, customTabIntent, uri) { activity, uri ->
             activity.browse(uri.toString())
+        }
+    }
+
+    override fun onCustomTabsDisconnected() {
+        // No-op
+    }
+
+    override fun onCustomTabsConnected() {
+        val hintUrl = intent.getStringExtra(EXTRA_HINT_URL)
+        if (hintUrl != null) {
+            customTabActivityHelper.mayLaunchUrl(Uri.parse(hintUrl), null, null)
         }
     }
 }

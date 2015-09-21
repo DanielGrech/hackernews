@@ -102,7 +102,9 @@ public class CustomTabActivityHelper {
             public void onCustomTabsServiceConnected(ComponentName name, CustomTabsClient client) {
                 mClient = client;
                 mClient.warmup(0L);
-                if (mConnectionCallback != null) mConnectionCallback.onCustomTabsConnected();
+                if (mConnectionCallback != null) {
+                    mConnectionCallback.onCustomTabsConnected();
+                }
                 //Initialize a session as soon as possible.
                 getSession();
             }
@@ -110,7 +112,9 @@ public class CustomTabActivityHelper {
             @Override
             public void onServiceDisconnected(ComponentName name) {
                 mClient = null;
-                if (mConnectionCallback != null) mConnectionCallback.onCustomTabsDisconnected();
+                if (mConnectionCallback != null) {
+                    mConnectionCallback.onCustomTabsDisconnected();
+                }
             }
         };
         CustomTabsClient.bindCustomTabsService(activity, packageName, mConnection);
