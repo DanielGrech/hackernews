@@ -1,5 +1,7 @@
 package com.dgsd.android.hackernews.util
 
+import android.app.ActivityOptions
+import android.content.Intent
 import android.os.Build
 import android.view.View
 import android.view.ViewGroup
@@ -91,4 +93,14 @@ public fun ViewGroup.children(): List<View> {
         retval.add(getChildAt(i))
     }
     return retval
+}
+
+public fun View.startActivity(intent: Intent) {
+    val activityOpts: ActivityOptions
+    if (Api.isMin(Api.MARSHMALLOW)) {
+        activityOpts = ActivityOptions.makeClipRevealAnimation(this, width / 2, height / 2, width, height)
+    } else {
+        activityOpts = ActivityOptions.makeScaleUpAnimation(this, width / 2, height / 2, width, height)
+    }
+    context.startActivity(intent, activityOpts.toBundle())
 }
