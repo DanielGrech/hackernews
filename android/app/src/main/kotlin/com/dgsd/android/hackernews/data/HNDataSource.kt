@@ -13,25 +13,30 @@ public class HNDataSource(private val apiDataSource: DataSource, private val dbD
 
     private var storyCache: LongSparseArray<Story> = LongSparseArray()
 
-    override fun getTopStories(): Observable<List<Story>> {
+    public fun getTopStories(skipCache: Boolean): Observable<List<Story>> {
         val apiObservable = apiDataSource.getTopStories()
                 .doOnNext {
                     dbDataSource.saveTopStories(it)
                     topStoriesCache = it
                 }
 
-        val dbObservable = dbDataSource.getTopStories()
-                .filter {
-                    it.isNotEmpty()
-                }
-
-        val memoryCacheObservable = if (topStoriesCache.orEmpty().isEmpty()) {
-            Observable.empty<List<Story>>()
+        if (skipCache) {
+            return apiObservable
         } else {
-            Observable.just(topStoriesCache)
-        }
+            val dbObservable = dbDataSource.getTopStories().filter { it.isNotEmpty() }
 
-        return Observable.mergeDelayError(memoryCacheObservable, dbObservable, apiObservable)
+            val memoryCacheObservable = if (topStoriesCache.orEmpty().isEmpty()) {
+                Observable.empty<List<Story>>()
+            } else {
+                Observable.just(topStoriesCache)
+            }
+
+            return Observable.mergeDelayError(memoryCacheObservable, dbObservable, apiObservable)
+        }
+    }
+
+    override fun getTopStories(): Observable<List<Story>> {
+        return getTopStories(false)
     }
 
     override fun getStory(storyId: Long): Observable<Story> {

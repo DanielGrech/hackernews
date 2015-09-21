@@ -22,9 +22,16 @@ public class StoryListPresenter(view : StoryListMvpView, component : AppServices
 
     override public fun onResume() {
         super.onResume()
-
         getView().showLoading()
-        dataSource.getTopStories()
+        getTopStories(false)
+    }
+
+    fun onRefreshRequested() {
+        getTopStories(true)
+    }
+
+    private fun getTopStories(skipCache: Boolean) {
+        dataSource.getTopStories(skipCache)
                 .bind(getView())
                 .onIoThread()
                 .subscribe({
