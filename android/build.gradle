@@ -71,6 +71,7 @@ subprojects {
                 calligraphy : "2.1.0",
                 retrofit : "2.0.0-beta1",
                 easyDataStore : "1.0.2",
+                sqlbrite: "0.3.1",
                 gson : "2.3.1",
                 okHttp : "2.5.0",
                 rxJava : "1.0.14",

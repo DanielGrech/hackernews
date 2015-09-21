@@ -6,14 +6,18 @@ import android.preference.PreferenceManager
 import com.dgsd.android.hackernews.BuildConfig
 import com.dgsd.android.hackernews.HNApp
 import com.dgsd.android.hackernews.data.AppSettings
+import com.dgsd.android.kotlindemo.data.DbOpenHelper
 import com.dgsd.hackernews.model.Story
 import com.dgsd.hackernews.network.DataSource
 import com.dgsd.hackernews.network.networkDataSource
 import com.lacronicus.easydatastorelib.DatastoreBuilder
+import com.squareup.sqlbrite.BriteDatabase
+import com.squareup.sqlbrite.SqlBrite
 import dagger.Module
 import dagger.Provides
 import rx.Observable
 import rx.lang.kotlin.toSingletonObservable
+import timber.log.Timber
 import javax.inject.Singleton
 
 /**
@@ -44,6 +48,26 @@ public class HNModule(private val application: HNApp) {
     @Singleton
     fun providesAppSettings(sharedPreferences: SharedPreferences): AppSettings {
         return DatastoreBuilder(sharedPreferences).create(AppSettings::class.java)
+    }
+
+    Provides
+    Singleton
+    fun providesDbOpenHelper(context: Context): DbOpenHelper {
+        return DbOpenHelper(context.applicationContext)
+    }
+
+    Provides
+    Singleton
+    fun providesSqlBrite(): SqlBrite {
+        return SqlBrite.create {
+            Timber.tag("Database").v(it)
+        }
+    }
+
+    Provides
+    Singleton
+    fun providesDatabase(sqlBrite: SqlBrite, dbOpenHelper: DbOpenHelper): BriteDatabase {
+        return sqlBrite.wrapDatabaseHelper(dbOpenHelper)
     }
 
     @Provides

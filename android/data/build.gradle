@@ -1,0 +1,31 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion config.compileSdkVersion
+    buildToolsVersion config.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion config.minSdkVersion
+        targetSdkVersion config.targetSdkVersion
+        versionCode config.versionCode
+        versionName config.versionName
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
+    compile project(':model')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "com.squareup.sqlbrite:sqlbrite:${versions.sqlbrite}"
+    compile "io.reactivex:rxjava:${versions.rxJava}"
+    compile "io.reactivex:rxkotlin:${versions.rxKotlin}"
+
+    testCompile "junit:junit:${versions.junit}"
+    testCompile "org.mockito:mockito-core:${versions.mockito}"
+}
