@@ -1,5 +1,7 @@
 package com.dgsd.hackernews.model
 
+import java.util.concurrent.TimeUnit
+
 public data class Story(
         val id: Long = -1,
         val time: Long = -1,
@@ -10,5 +12,6 @@ public data class Story(
         val commentCount: Int = -1,
         val score: Int = -1,
         val commentIds: List<Long> = emptyList(),
-        val comments: List<Comment> = emptyList()) {
+        val comments: List<Comment> = emptyList(),
+        val dateRetrieved: Long = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())) {
 }

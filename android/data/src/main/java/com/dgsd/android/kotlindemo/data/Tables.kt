@@ -14,6 +14,8 @@ class Tables {
         val COL_TYPE_TEXT = "TEXT"
 
         val COL_TYPE_NOT_NULL = "NOT NULL"
+
+        val Stories: _Stories = _Stories()
     }
 
     abstract class Table<T> {
@@ -44,22 +46,13 @@ class Tables {
         }
     }
 
-    class Stories : Table<Story>() {
-        override fun getColumnType(col: String): String {
-            return when (col) {
-                COL_ID -> Tables.COL_TYPE_PK
-                COL_TIME -> Tables.COL_TYPE_INTEGER + " " + Tables.COL_TYPE_NOT_NULL
-                COL_AUTHOR -> Tables.COL_TYPE_TEXT
-                COL_TITLE -> Tables.COL_TYPE_TEXT
-                COL_TEXT -> Tables.COL_TYPE_TEXT
-                COL_URL -> Tables.COL_TYPE_TEXT
-                COL_COMMENT_COUNT -> Tables.COL_TYPE_INTEGER
-                COL_SCORE -> Tables.COL_TYPE_INTEGER
-                else -> ""
-            }
-        }
+    class _Stories : Table<Story>() {
+
+        val SELECT_ALL = "SELECT * FROM " + TABLE_NAME
 
         companion object {
+            val TABLE_NAME = "stories"
+
             val COL_ID = "_id"
             val COL_TIME = "_time"
             val COL_AUTHOR = "_author"
@@ -68,10 +61,11 @@ class Tables {
             val COL_URL = "_url"
             val COL_COMMENT_COUNT = "_comment_count"
             val COL_SCORE = "_score"
+            val COL_RETRIEVE_DATE = "_date_retrieved"
         }
 
         override fun name(): String {
-            return "stories"
+            return TABLE_NAME
         }
 
         override fun columns(): Array<String> {
@@ -83,7 +77,8 @@ class Tables {
                     COL_TEXT,
                     COL_URL,
                     COL_COMMENT_COUNT,
-                    COL_SCORE
+                    COL_SCORE,
+                    COL_RETRIEVE_DATE
             )
         }
 
@@ -95,8 +90,24 @@ class Tables {
                     title = cursor.getString(COL_TITLE),
                     url = cursor.getString(COL_URL),
                     commentCount = cursor.getInt(COL_COMMENT_COUNT),
-                    score = cursor.getInt(COL_SCORE)
+                    score = cursor.getInt(COL_SCORE),
+                    dateRetrieved = cursor.getLong(COL_RETRIEVE_DATE)
             )
+        }
+
+        override fun getColumnType(col: String): String {
+            return when (col) {
+                COL_ID -> Tables.COL_TYPE_PK
+                COL_TIME -> Tables.COL_TYPE_INTEGER + " " + Tables.COL_TYPE_NOT_NULL
+                COL_AUTHOR -> Tables.COL_TYPE_TEXT
+                COL_TITLE -> Tables.COL_TYPE_TEXT
+                COL_TEXT -> Tables.COL_TYPE_TEXT
+                COL_URL -> Tables.COL_TYPE_TEXT
+                COL_COMMENT_COUNT -> Tables.COL_TYPE_INTEGER
+                COL_SCORE -> Tables.COL_TYPE_INTEGER
+                COL_RETRIEVE_DATE -> Tables.COL_TYPE_INTEGER
+                else -> ""
+            }
         }
 
     }

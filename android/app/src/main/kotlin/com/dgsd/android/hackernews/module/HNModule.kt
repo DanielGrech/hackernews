@@ -6,17 +6,18 @@ import android.preference.PreferenceManager
 import com.dgsd.android.hackernews.BuildConfig
 import com.dgsd.android.hackernews.HNApp
 import com.dgsd.android.hackernews.data.AppSettings
+import com.dgsd.android.hackernews.data.HNDataSource
 import com.dgsd.android.kotlindemo.data.DbOpenHelper
-import com.dgsd.hackernews.model.Story
+import com.dgsd.android.kotlindemo.data.DbProvider
 import com.dgsd.hackernews.network.DataSource
+import com.dgsd.hackernews.network.DbDataSource
+import com.dgsd.hackernews.network.NetworkDataSource
 import com.dgsd.hackernews.network.networkDataSource
 import com.lacronicus.easydatastorelib.DatastoreBuilder
 import com.squareup.sqlbrite.BriteDatabase
 import com.squareup.sqlbrite.SqlBrite
 import dagger.Module
 import dagger.Provides
-import rx.Observable
-import rx.lang.kotlin.toSingletonObservable
 import timber.log.Timber
 import javax.inject.Singleton
 
@@ -50,8 +51,8 @@ public class HNModule(private val application: HNApp) {
         return DatastoreBuilder(sharedPreferences).create(AppSettings::class.java)
     }
 
-    Provides
-    Singleton
+    @Provides
+    @Singleton
     fun providesDbOpenHelper(context: Context): DbOpenHelper {
         return DbOpenHelper(context.applicationContext)
     }
@@ -72,23 +73,23 @@ public class HNModule(private val application: HNApp) {
 
     @Provides
     @Singleton
-    fun providesDataSource(): DataSource {
-//        return object : DataSource {
-//            override fun getTopStories(): Observable<List<Story>> {
-//                return listOf(Story(
-//                        time = System.currentTimeMillis(),
-//                        title = "Something AMAZING just happened!",
-//                        commentCount = 78
-//                ), Story(), Story(), Story(), Story(),
-//                        Story(), Story(), Story(), Story(), Story(),
-//                        Story(), Story(), Story(), Story(), Story(),
-//                        Story(), Story(), Story(), Story(), Story(),
-//                        Story(), Story(), Story(), Story(), Story()).toSingletonObservable()
-//            }
-//        }
-                return networkDataSource {
-                    logging = BuildConfig.DEBUG
-                    endpoint = BuildConfig.API_SERVER
-                }
+    fun providesDbDataSource(db: BriteDatabase): DbDataSource {
+        return DbProvider(db)
     }
+
+    @Provides
+    @Singleton
+    fun providesNetworkDataSource(): NetworkDataSource {
+        return networkDataSource {
+            logging = BuildConfig.DEBUG
+            endpoint = BuildConfig.API_SERVER
+        }
+    }
+
+    @Provides
+    @Singleton
+    fun providesDataSource(networkDataSource: NetworkDataSource, db: DbDataSource): DataSource {
+        return HNDataSource(networkDataSource, db)
+    }
+
 }
