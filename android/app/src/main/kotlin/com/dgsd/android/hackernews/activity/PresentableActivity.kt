@@ -12,7 +12,7 @@ import com.dgsd.android.hackernews.mvp.view.MvpView
  */
 abstract class PresentableActivity<V : MvpView, T : Presenter<V>> : BaseActivity() {
 
-    private lateinit var presenter : T
+    protected lateinit var presenter : T
 
     /**
      * Return a presenter to use for this activity. This will only be called once per activity,
