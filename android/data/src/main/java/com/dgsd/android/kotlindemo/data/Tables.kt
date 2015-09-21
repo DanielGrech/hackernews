@@ -10,15 +10,20 @@ import com.dgsd.hackernews.model.Story
 class Tables {
 
     companion object {
+        val Stories: _Stories = _Stories()
+        val TopStoryIds: _TopStoryIds = _TopStoryIds()
+        val Comments: _Comments = _Comments()
+        val CommentIds: _CommentIds = _CommentIds()
+
         val COL_TYPE_PK = "INTEGER PRIMARY KEY AUTOINCREMENT"
         val COL_TYPE_INTEGER = "INTEGER"
         val COL_TYPE_TEXT = "TEXT"
 
         val COL_TYPE_NOT_NULL = "NOT NULL"
 
-        val Stories: _Stories = _Stories()
-        val Comments: _Comments = _Comments()
-        val CommentIds: _CommentIds = _CommentIds()
+        val SELECT_TOP_STORIES = "SELECT s.* FROM ${TopStoryIds.name()} as t " +
+                "INNER JOIN ${Stories.name()} AS s " +
+                "ON t.${_TopStoryIds.COL_ID} = s.${_Stories.COL_ID}"
     }
 
     abstract class Table<T> {
@@ -49,9 +54,38 @@ class Tables {
         }
     }
 
+    class _TopStoryIds : Table<Long>() {
+        val SELECT_ALL = "SELECT * FROM $TABLE_NAME"
+
+        companion object {
+            val TABLE_NAME = "top_story_ids"
+
+            val COL_ID = "_id"
+        }
+
+        override fun name(): String {
+            return TABLE_NAME
+        }
+
+        override fun columns(): Array<String> {
+            return arrayOf(COL_ID)
+        }
+
+        override fun fromCursor(cursor: Cursor): Long {
+            return cursor.getLong(COL_ID)
+        }
+
+        override fun getColumnType(col: String): String {
+            return when (col) {
+                COL_ID -> COL_TYPE_INTEGER
+                else -> ""
+            }
+        }
+    }
+
     class _Stories : Table<Story>() {
 
-        val SELECT_ALL = "SELECT * FROM $TABLE_NAME"
+        val SELECT_ALL = "SELECT * FROM $TABLE_NAME ORDER BY $COL_TIME DESC"
         val SELECT_BY_ID = "SELECT * FROM $TABLE_NAME WHERE $COL_ID = ?"
 
         companion object {
@@ -118,7 +152,7 @@ class Tables {
 
     class _Comments : Table<Comment>() {
 
-        val SELECT_ALL_FOR_ITEM = "SELECT * FROM $TABLE_NAME WHERE $COL_PARENT_ID = ?"
+        val SELECT_ALL_FOR_ITEM = "SELECT * FROM $TABLE_NAME WHERE $COL_PARENT_ID = ? ORDER BY $COL_TIME DESC"
 
         companion object {
             val TABLE_NAME = "comments"
