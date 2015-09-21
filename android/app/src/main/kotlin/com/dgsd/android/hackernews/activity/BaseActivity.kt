@@ -3,6 +3,7 @@ package com.dgsd.android.hackernews.activity
 import android.content.Context
 import android.os.Bundle
 import android.support.annotation.LayoutRes
+import android.view.MenuItem
 import com.dgsd.android.hackernews.HNAppImpl
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
@@ -27,6 +28,16 @@ public abstract class BaseActivity : RxActivity() {
         val layoutResId = getLayoutResource()
         if (layoutResId > 0) {
             setContentView(layoutResId)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

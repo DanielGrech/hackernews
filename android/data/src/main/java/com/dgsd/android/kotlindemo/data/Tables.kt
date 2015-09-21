@@ -4,6 +4,7 @@ import android.database.Cursor
 import com.dgsd.android.moodtracker.data.util.getInt
 import com.dgsd.android.moodtracker.data.util.getLong
 import com.dgsd.android.moodtracker.data.util.getString
+import com.dgsd.hackernews.model.Comment
 import com.dgsd.hackernews.model.Story
 
 class Tables {
@@ -16,6 +17,7 @@ class Tables {
         val COL_TYPE_NOT_NULL = "NOT NULL"
 
         val Stories: _Stories = _Stories()
+        val Comments: _Comments = _Comments()
     }
 
     abstract class Table<T> {
@@ -48,7 +50,8 @@ class Tables {
 
     class _Stories : Table<Story>() {
 
-        val SELECT_ALL = "SELECT * FROM " + TABLE_NAME
+        val SELECT_ALL = "SELECT * FROM $TABLE_NAME"
+        val SELECT_BY_ID = "SELECT * FROM $TABLE_NAME WHERE $COL_ID = ?"
 
         companion object {
             val TABLE_NAME = "stories"
@@ -106,6 +109,60 @@ class Tables {
                 COL_COMMENT_COUNT -> Tables.COL_TYPE_INTEGER
                 COL_SCORE -> Tables.COL_TYPE_INTEGER
                 COL_RETRIEVE_DATE -> Tables.COL_TYPE_INTEGER
+                else -> ""
+            }
+        }
+    }
+
+    class _Comments : Table<Comment>() {
+
+        val SELECT_ALL_FOR_ITEM = "SELECT * FROM $TABLE_NAME WHERE $COL_PARENT_ID = ?"
+
+        companion object {
+            val TABLE_NAME = "comments"
+
+            val COL_ID = "_id"
+            val COL_TIME = "_time"
+            val COL_AUTHOR = "_author"
+            val COL_TEXT = "_text"
+            val COL_PARENT_ID = "_parent_id"
+            val COL_COMMENT_COUNT = "_comment_count"
+        }
+
+        override fun name(): String {
+            return TABLE_NAME
+        }
+
+        override fun columns(): Array<String> {
+            return arrayOf(
+                    COL_ID,
+                    COL_TIME,
+                    COL_AUTHOR,
+                    COL_PARENT_ID,
+                    COL_TEXT,
+                    COL_COMMENT_COUNT
+            )
+        }
+
+        override fun fromCursor(cursor: Cursor): Comment {
+            return Comment(
+                    id = cursor.getLong(COL_ID),
+                    time = cursor.getLong(COL_TIME),
+                    author = cursor.getString(COL_AUTHOR),
+                    parentId = cursor.getLong(COL_PARENT_ID),
+                    text = cursor.getString(COL_TEXT),
+                    commentCount = cursor.getInt(COL_COMMENT_COUNT)
+            )
+        }
+
+        override fun getColumnType(col: String): String {
+            return when (col) {
+                COL_ID -> Tables.COL_TYPE_PK
+                COL_TIME -> Tables.COL_TYPE_INTEGER + " " + Tables.COL_TYPE_NOT_NULL
+                COL_AUTHOR -> Tables.COL_TYPE_TEXT
+                COL_PARENT_ID -> Tables.COL_TYPE_INTEGER
+                COL_TEXT -> Tables.COL_TYPE_TEXT
+                COL_COMMENT_COUNT -> Tables.COL_TYPE_INTEGER
                 else -> ""
             }
         }

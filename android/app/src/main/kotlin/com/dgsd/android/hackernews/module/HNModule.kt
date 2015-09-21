@@ -88,7 +88,7 @@ public class HNModule(private val application: HNApp) {
 
     @Provides
     @Singleton
-    fun providesDataSource(networkDataSource: NetworkDataSource, db: DbDataSource): DataSource {
+    fun providesDataSource(networkDataSource: NetworkDataSource, db: DbDataSource): HNDataSource {
         return HNDataSource(networkDataSource, db)
     }
 

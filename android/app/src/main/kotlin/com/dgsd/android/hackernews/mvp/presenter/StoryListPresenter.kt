@@ -1,6 +1,7 @@
 package com.dgsd.android.hackernews.mvp.presenter
 
 import com.dgsd.android.hackernews.R
+import com.dgsd.android.hackernews.data.HNDataSource
 import com.dgsd.android.hackernews.module.AppServicesComponent
 import com.dgsd.android.hackernews.mvp.view.MainMvpView
 import com.dgsd.android.hackernews.mvp.view.StoryListMvpView
@@ -13,7 +14,7 @@ import javax.inject.Inject
 public class StoryListPresenter(view : StoryListMvpView, component : AppServicesComponent) : Presenter<StoryListMvpView>(view, component) {
 
     @Inject
-    lateinit val dataSource: DataSource
+    lateinit val dataSource: HNDataSource
 
     init {
         component.inject(this)

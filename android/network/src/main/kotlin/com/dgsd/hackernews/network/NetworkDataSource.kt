@@ -50,6 +50,13 @@ public class NetworkDataSource : DataSource {
                 .toList()
     }
 
+    override fun getStory(storyId: Long): Observable<Story> {
+        return apiService.getStory(storyId)
+                .map {
+                    it.convert()
+                }
+    }
+
     public class Builder {
         public var logging: Boolean = false
 

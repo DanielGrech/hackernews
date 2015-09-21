@@ -9,6 +9,7 @@ import com.dgsd.android.hackernews.mvp.presenter.StoryPresenter
 import com.dgsd.android.hackernews.mvp.view.StoryMvpView
 import com.dgsd.hackernews.model.Story
 import kotlinx.android.synthetic.act_story.toolbar
+import timber.log.Timber
 
 public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>(), StoryMvpView {
 
@@ -25,6 +26,11 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(toolbar)
+
+        with (supportActionBar) {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
     }
 
     override fun getLayoutResource(): Int {
@@ -32,11 +38,18 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
     }
 
     override fun createPresenter(component: AppServicesComponent): StoryPresenter {
-        return StoryPresenter(this, component)
+        return StoryPresenter(this, component, intent.getLongExtra(EXTRA_STORY_ID, -1L))
     }
 
     override fun getContext(): Context {
         return this
     }
 
+    override fun showError(message: String) {
+        Timber.d("SHOW ERROR: " + message)
+    }
+
+    override fun showStory(story: Story) {
+        toolbar.title = story.title
+    }
 }

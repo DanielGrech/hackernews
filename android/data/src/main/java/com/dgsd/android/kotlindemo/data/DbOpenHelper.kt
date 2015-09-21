@@ -13,6 +13,7 @@ class DbOpenHelper(context: Context) : SQLiteOpenHelper(context, DbOpenHelper.DB
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(Tables.Stories.getCreateSql())
+        db.execSQL(Tables.Comments.getCreateSql())
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
