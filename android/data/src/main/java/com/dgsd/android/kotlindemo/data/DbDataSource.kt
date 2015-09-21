@@ -14,5 +14,9 @@ public interface DbDataSource {
 
     public fun getComments(parentId: Long): Observable<List<Comment>>
 
+    public fun saveComments(comments: List<Comment>)
+
     public fun saveStory(story: Story)
+
+    public fun saveComment(comment: Comment)
 }

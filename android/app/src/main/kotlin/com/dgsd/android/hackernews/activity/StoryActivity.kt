@@ -8,7 +8,7 @@ import com.dgsd.android.hackernews.module.AppServicesComponent
 import com.dgsd.android.hackernews.mvp.presenter.StoryPresenter
 import com.dgsd.android.hackernews.mvp.view.StoryMvpView
 import com.dgsd.hackernews.model.Story
-import kotlinx.android.synthetic.act_story.toolbar
+import kotlinx.android.synthetic.act_story.*
 import timber.log.Timber
 
 public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>(), StoryMvpView {
@@ -51,5 +51,6 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
 
     override fun showStory(story: Story) {
         toolbar.title = story.title
+        storyText.text = story.text
     }
 }

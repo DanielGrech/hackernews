@@ -5,4 +5,8 @@
     <color name="accent">#03A6B2</color>
     <color name="divider">#B3B3B3</color>
     <color name="window_background">#FFFFFF</color>
+
+    <color name="view_story_action_btn_enabled">@color/primary</color>
+    <color name="view_story_action_btn_pressed">@color/primary_dark</color>
+    <color name="view_story_action_btn_disabled">@color/divider</color>
 </resources>

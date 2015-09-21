@@ -18,6 +18,7 @@ class Tables {
 
         val Stories: _Stories = _Stories()
         val Comments: _Comments = _Comments()
+        val CommentIds: _CommentIds = _CommentIds()
     }
 
     abstract class Table<T> {
@@ -30,7 +31,7 @@ class Tables {
 
         abstract fun getColumnType(col: String): String
 
-        fun getCreateSql(): String {
+        open fun getCreateSql(): String {
             val sb = StringBuilder()
             sb.append("CREATE TABLE IF NOT EXISTS ").append(name()).append("(")
             with(columns()) {
@@ -91,6 +92,7 @@ class Tables {
                     time = cursor.getLong(COL_TIME),
                     author = cursor.getString(COL_AUTHOR),
                     title = cursor.getString(COL_TITLE),
+                    text = cursor.getString(COL_TEXT),
                     url = cursor.getString(COL_URL),
                     commentCount = cursor.getInt(COL_COMMENT_COUNT),
                     score = cursor.getInt(COL_SCORE),
@@ -166,6 +168,48 @@ class Tables {
                 else -> ""
             }
         }
+    }
 
+    class _CommentIds : Table<Long>() {
+
+        companion object {
+            val TABLE_NAME = "comment_ids"
+
+            val COL_PARENT_ID = "_parent_id"
+            val COL_COMMENT_ID = "_comment_id"
+        }
+
+        override fun name(): String {
+            return TABLE_NAME
+        }
+
+        override fun columns(): Array<String> {
+            return arrayOf(
+                    COL_PARENT_ID,
+                    COL_COMMENT_ID
+            )
+        }
+
+        override fun fromCursor(cursor: Cursor): Long {
+            return cursor.getLong(COL_COMMENT_ID)
+        }
+
+        override fun getColumnType(col: String): String {
+            return when (col) {
+                COL_PARENT_ID -> Tables.COL_TYPE_INTEGER
+                COL_COMMENT_ID -> Tables.COL_TYPE_INTEGER
+                else -> ""
+            }
+        }
+
+        override fun getCreateSql(): String {
+            val createSql = super.getCreateSql()
+
+            val lastParenth = createSql.lastIndexOf(')')
+            return createSql.substring(0, lastParenth) +
+                    ", PRIMARY KEY ($COL_PARENT_ID, $COL_COMMENT_ID)" +
+                    createSql.substring(lastParenth)
+
+        }
     }
 }
