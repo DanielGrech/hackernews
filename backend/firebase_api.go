@@ -28,26 +28,11 @@ func (hnc *HnApiClient) fullUrl(urlPart string) string {
 }
 
 func (hnc *HnApiClient) GetTopStories() (topStories []int, e error) {
-	url := hnc.fullUrl("topstories")
+	return hnc.getStories("topstories")
+}
 
-	client := urlfetch.Client(hnc.context)
-
-	resp, err := client.Get(url)
-	if err != nil {
-		return nil, err
-	}
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	err = json.Unmarshal(body, &topStories)
-	if err != nil {
-		return nil, err
-	}
-
-	return
+func (hnc *HnApiClient) GetNewStories() (stories []int, e error) {
+	return hnc.getStories("newstories")
 }
 
 func (hnc *HnApiClient) GetStory(id int) (*Story, error) {
@@ -98,4 +83,27 @@ func (hnc *HnApiClient) GetItem(id int) (item item, e error) {
 	err = json.Unmarshal(body, &item)
 
 	return item, err
+}
+
+func (hnc *HnApiClient) getStories(urlPath string) (stories []int, e error) {
+	url := hnc.fullUrl(urlPath)
+
+	client := urlfetch.Client(hnc.context)
+
+	resp, err := client.Get(url)
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(body, &stories)
+	if err != nil {
+		return nil, err
+	}
+
+	return
 }

@@ -2,8 +2,18 @@ package hackernews
 
 type Tasks struct{}
 
-func (tasks *Tasks) getTopStories(handler *Handler) (string, *AppError) {
-	topStories, err := cacheTopStoryIds(handler)
+type StoryIdFunc func(*Handler) ([]int, error)
+
+func (tasks *Tasks) getTopStories(handler *Handler) (string, *ApiError) {
+	return tasks.getStories(handler, cacheTopStoryIds)
+}
+
+func (tasks *Tasks) getNewStories(handler *Handler) (string, *ApiError) {
+	return tasks.getStories(handler, cacheNewStoryIds)
+}
+
+func (tasks *Tasks) getStories(handler *Handler, fn StoryIdFunc) (string, *ApiError) {
+	topStories, err := fn(handler)
 	if err != nil {
 		return "", NewError(err)
 	}
@@ -26,11 +36,24 @@ func cacheTopStoryIds(handler *Handler) ([]int, error) {
 		return topStories, err
 	}
 
-	handler.Logd("Got stories from network: %v", topStories)
+	handler.Logd("Got top stories from network: %v", topStories)
 
 	handler.cache.SetTopStories(topStories)
 
 	return topStories, nil
+}
+
+func cacheNewStoryIds(handler *Handler) ([]int, error) {
+	newStories, err := handler.apiClient.GetNewStories()
+	if err != nil {
+		return newStories, err
+	}
+
+	handler.Logd("Got new stories from network: %v", newStories)
+
+	handler.cache.SetNewStories(newStories)
+
+	return newStories, nil
 }
 
 func fetchStoryIfNeeded(id int, handler *Handler) (*Story, error) {

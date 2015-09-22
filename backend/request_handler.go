@@ -2,6 +2,7 @@ package hackernews
 
 import (
 	"appengine"
+	"encoding/json"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -45,4 +46,32 @@ func (handler *Handler) GetTopStoryIds() ([]int, error) {
 	}
 
 	return topStories, err
+}
+
+func (handler *Handler) GetNewStoryIds() ([]int, error) {
+	newStories := handler.cache.GetNewStories()
+	if newStories != nil {
+		return newStories, nil
+	}
+
+	newStories, err := handler.apiClient.GetNewStories()
+	if err == nil {
+		handler.cache.SetNewStories(newStories)
+	}
+
+	return newStories, err
+}
+
+func (handler *Handler) GetStoriesFromDataStore(ids []int) (string, *ApiError) {
+	stories, err := handler.dataStore.GetStories(ids)
+	if err != nil {
+		return "", NewError(err)
+	}
+
+	jsonData, err := json.Marshal(stories)
+	if err != nil {
+		return "", NewError(err)
+	}
+
+	return string(jsonData), nil
 }
