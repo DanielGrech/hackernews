@@ -10,6 +10,9 @@ internal interface ApiService {
     @GET("top")
     fun getTopStories(): Observable<Array<HnStory>>
 
+    @GET("new")
+    fun getNewStories(): Observable<Array<HnStory>>
+
     @GET("story/{story_id}")
     fun getStory(@Path("story_id") storyId: Long): Observable<HnStory>
 }

@@ -7,8 +7,8 @@ import com.dgsd.android.hackernews.BuildConfig
 import com.dgsd.android.hackernews.HNApp
 import com.dgsd.android.hackernews.data.AppSettings
 import com.dgsd.android.hackernews.data.HNDataSource
-import com.dgsd.android.kotlindemo.data.DbOpenHelper
-import com.dgsd.android.kotlindemo.data.DbProvider
+import com.dgsd.android.hackernews.data.DbOpenHelper
+import com.dgsd.android.hackernews.data.DbProvider
 import com.dgsd.hackernews.network.DataSource
 import com.dgsd.hackernews.network.DbDataSource
 import com.dgsd.hackernews.network.NetworkDataSource

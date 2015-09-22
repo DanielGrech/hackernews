@@ -5,6 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.view.View
 import com.dgsd.android.hackernews.R
 import com.dgsd.android.hackernews.activity.StoryActivity
+import com.dgsd.android.hackernews.model.PageType
 import com.dgsd.android.hackernews.module.AppServicesComponent
 import com.dgsd.android.hackernews.mvp.presenter.StoryListPresenter
 import com.dgsd.android.hackernews.mvp.view.StoryListMvpView
@@ -24,8 +25,15 @@ public class StoryListFragment: PresentableFragment<StoryListMvpView, StoryListP
 
     companion object {
 
-        public fun newInstance(): StoryListFragment {
-            return StoryListFragment()
+        private val KEY_PAGE_TYPE = "_page_type"
+
+        public fun newInstance(type: PageType): StoryListFragment {
+            val args = Bundle()
+            args.putInt(KEY_PAGE_TYPE, type.ordinal())
+
+            val frag = StoryListFragment()
+            frag.arguments = args
+            return frag
         }
     }
 
@@ -34,7 +42,9 @@ public class StoryListFragment: PresentableFragment<StoryListMvpView, StoryListP
     }
 
     override fun createPresenter(servicesComponent: AppServicesComponent, savedInstanceState: Bundle?): StoryListPresenter {
-        return StoryListPresenter(this, servicesComponent)
+        val ordinal = arguments?.getInt(KEY_PAGE_TYPE, -1) ?: -1
+        val pageType = PageType.values().elementAtOrNull(ordinal) ?: throw IllegalStateException("No page type found!")
+        return StoryListPresenter(this, servicesComponent, pageType)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

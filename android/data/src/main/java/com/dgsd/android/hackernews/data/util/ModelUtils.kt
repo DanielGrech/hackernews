@@ -1,7 +1,7 @@
-package com.dgsd.android.kotlindemo.data.util
+package com.dgsd.android.hackernews.data.util
 
 import android.content.ContentValues
-import com.dgsd.android.kotlindemo.data.Tables
+import com.dgsd.android.hackernews.data.Tables
 import com.dgsd.android.moodtracker.data.util.with
 import com.dgsd.hackernews.model.Comment
 import com.dgsd.hackernews.model.Story

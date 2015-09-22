@@ -50,6 +50,15 @@ public class NetworkDataSource : DataSource {
                 .toList()
     }
 
+    override fun getNewStories(): Observable<List<Story>> {
+        return apiService.getNewStories()
+                .flatMapArray()
+                .map {
+                    it.convert()
+                }
+                .toList()
+    }
+
     override fun getStory(storyId: Long): Observable<Story> {
         return apiService.getStory(storyId)
                 .map {

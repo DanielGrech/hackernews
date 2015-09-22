@@ -1,8 +1,8 @@
-package com.dgsd.android.kotlindemo.data
+package com.dgsd.android.hackernews.data
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase.CONFLICT_REPLACE
-import com.dgsd.android.kotlindemo.data.util.toContentValues
+import com.dgsd.android.hackernews.data.util.toContentValues
 import com.dgsd.android.moodtracker.data.util.with
 import com.dgsd.hackernews.model.Comment
 import com.dgsd.hackernews.model.Story
@@ -12,10 +12,11 @@ import rx.Observable
 
 public class DbProvider(private val db: BriteDatabase) : DbDataSource {
     override fun getTopStories(): Observable<List<Story>> {
-        return db.createQuery(listOf(Tables.Stories.name(), Tables.TopStoryIds.name()), Tables.SELECT_TOP_STORIES)
-                .mapToList {
-                    Tables.Stories.fromCursor(it)
-                }
+        return getStoriesFromIds(Tables.TopStoryIds.name(), Tables.SELECT_TOP_STORIES)
+    }
+
+    override fun getNewStories(): Observable<List<Story>> {
+        return getStoriesFromIds(Tables.NewStoryIds.name(), Tables.SELECT_NEW_STORIES)
     }
 
     override fun saveStory(story: Story) {
@@ -35,18 +36,11 @@ public class DbProvider(private val db: BriteDatabase) : DbDataSource {
     }
 
     override fun saveTopStories(stories: List<Story>) {
-        saveModels(stories, ::saveStory)
+        saveStories(Tables.TopStoryIds.name(), stories)
+    }
 
-        transaction {
-            db.delete(Tables.TopStoryIds.name(), null)
-
-            stories.map {
-                it.id
-            }.forEach {
-                db.insert(Tables.TopStoryIds.name(),
-                        ContentValues().with(Tables._TopStoryIds.COL_ID, it), CONFLICT_REPLACE)
-            }
-        }
+    override fun saveNewStories(stories: List<Story>) {
+        saveStories(Tables.NewStoryIds.name(), stories)
     }
 
     override fun saveComments(comments: List<Comment>) {
@@ -71,6 +65,27 @@ public class DbProvider(private val db: BriteDatabase) : DbDataSource {
                 .mapToList {
                     Tables.Comments.fromCursor(it)
                 }
+    }
+
+    private fun getStoriesFromIds(tableName: String, query: String): Observable<List<Story>> {
+        return db.createQuery(listOf(Tables.Stories.name(), tableName), query)
+                .mapToList {
+                    Tables.Stories.fromCursor(it)
+                }
+    }
+
+    private fun saveStories(tableName: String, stories: List<Story>) {
+        saveModels(stories, ::saveStory)
+
+        transaction {
+            db.delete(tableName, null)
+
+            stories.map {
+                it.id
+            }.forEach {
+                db.insert(tableName, ContentValues().with(Tables.StoryIdTable.COL_ID, it), CONFLICT_REPLACE)
+            }
+        }
     }
 
     private fun <T> saveModels(models: List<T>, saveFn: DbProvider.(T) -> Unit) {

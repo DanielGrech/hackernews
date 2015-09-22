@@ -10,6 +10,7 @@ import rx.Observable
 public class HNDataSource(private val apiDataSource: DataSource, private val dbDataSource: DbDataSource) : DataSource {
 
     private var topStoriesCache: List<Story>? = null
+    private var newStoriesCache: List<Story>? = null
 
     private var storyCache: LongSparseArray<Story> = LongSparseArray()
 
@@ -18,6 +19,9 @@ public class HNDataSource(private val apiDataSource: DataSource, private val dbD
                 .doOnNext {
                     dbDataSource.saveTopStories(it)
                     topStoriesCache = it
+                    it.forEach { story ->
+                        storyCache.put(story.id, story)
+                    }
                 }
 
         if (skipCache) {
@@ -33,6 +37,35 @@ public class HNDataSource(private val apiDataSource: DataSource, private val dbD
 
             return Observable.mergeDelayError(memoryCacheObservable, dbObservable, apiObservable)
         }
+    }
+
+    public fun getNewStories(skipCache: Boolean): Observable<List<Story>> {
+        val apiObservable = apiDataSource.getNewStories()
+                .doOnNext {
+                    dbDataSource.saveNewStories(it)
+                    newStoriesCache = it
+                    it.forEach { story ->
+                        storyCache.put(story.id, story)
+                    }
+                }
+
+        if (skipCache) {
+            return apiObservable
+        } else {
+            val dbObservable = dbDataSource.getNewStories().filter { it.isNotEmpty() }
+
+            val memoryCacheObservable = if (newStoriesCache.orEmpty().isEmpty()) {
+                Observable.empty<List<Story>>()
+            } else {
+                Observable.just(newStoriesCache)
+            }
+
+            return Observable.mergeDelayError(memoryCacheObservable, dbObservable, apiObservable)
+        }
+    }
+
+    override fun getNewStories(): Observable<List<Story>> {
+        return getNewStories(false)
     }
 
     override fun getTopStories(): Observable<List<Story>> {

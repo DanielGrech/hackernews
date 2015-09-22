@@ -40,13 +40,7 @@ public class MainActivity : PresentableActivity<MainMvpView, MainPresenter>(), M
     private inner class SectionAdapter(fm : FragmentManager) : FragmentPagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment? {
-            return when (getPageType(position)) {
-                PageType.TOP -> StoryListFragment.newInstance()
-                PageType.NEW -> StoryListFragment.newInstance()
-                PageType.ASK_HN -> StoryListFragment.newInstance()
-                PageType.SHOW_HN -> StoryListFragment.newInstance()
-                PageType.JOBS -> StoryListFragment.newInstance()
-            }
+            return StoryListFragment.newInstance(getPageType(position))
         }
 
         override fun getCount(): Int {

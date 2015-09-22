@@ -1,4 +1,4 @@
-package com.dgsd.android.kotlindemo.data
+package com.dgsd.android.hackernews.data
 
 import android.database.Cursor
 import com.dgsd.android.moodtracker.data.util.getInt
@@ -12,6 +12,7 @@ class Tables {
     companion object {
         val Stories: _Stories = _Stories()
         val TopStoryIds: _TopStoryIds = _TopStoryIds()
+        val NewStoryIds: _NewStoryIds = _NewStoryIds()
         val Comments: _Comments = _Comments()
         val CommentIds: _CommentIds = _CommentIds()
 
@@ -23,7 +24,10 @@ class Tables {
 
         val SELECT_TOP_STORIES = "SELECT s.* FROM ${TopStoryIds.name()} as t " +
                 "INNER JOIN ${Stories.name()} AS s " +
-                "ON t.${_TopStoryIds.COL_ID} = s.${_Stories.COL_ID}"
+                "ON t.${StoryIdTable.COL_ID} = s.${_Stories.COL_ID}"
+        val SELECT_NEW_STORIES = "SELECT s.* FROM ${NewStoryIds.name()} as t " +
+                "INNER JOIN ${Stories.name()} AS s " +
+                "ON t.${StoryIdTable.COL_ID} = s.${_Stories.COL_ID}"
     }
 
     abstract class Table<T> {
@@ -54,17 +58,9 @@ class Tables {
         }
     }
 
-    class _TopStoryIds : Table<Long>() {
-        val SELECT_ALL = "SELECT * FROM $TABLE_NAME"
-
+    abstract class StoryIdTable : Table<Long>() {
         companion object {
-            val TABLE_NAME = "top_story_ids"
-
             val COL_ID = "_id"
-        }
-
-        override fun name(): String {
-            return TABLE_NAME
         }
 
         override fun columns(): Array<String> {
@@ -80,6 +76,26 @@ class Tables {
                 COL_ID -> COL_TYPE_INTEGER
                 else -> ""
             }
+        }
+    }
+
+    class _TopStoryIds : StoryIdTable() {
+        companion object {
+            val TABLE_NAME = "top_story_ids"
+        }
+
+        override fun name(): String {
+            return TABLE_NAME
+        }
+    }
+
+    class _NewStoryIds : StoryIdTable() {
+        companion object {
+            val TABLE_NAME = "new_story_ids"
+        }
+
+        override fun name(): String {
+            return TABLE_NAME
         }
     }
 
