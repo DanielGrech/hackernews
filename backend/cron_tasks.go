@@ -1,51 +1,40 @@
 package hackernews
 
-import (
-	"net/http"
-
-	"appengine"
-)
-
 type Tasks struct{}
 
-func (tasks *Tasks) getTopStories(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
-
-	client := NewClient(c)
-	datastore := NewDb(c)
-	cache := NewCache(c)
-
-	topStories, err := cacheTopStoryIds(c, cache, client)
+func (tasks *Tasks) getTopStories(handler *Handler) (string, *AppError) {
+	topStories, err := cacheTopStoryIds(handler)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return "", NewError(err)
 	}
 
 	for index, id := range topStories {
 		if index < 5 {
-			_, err := fetchStoryIfNeeded(id, c, cache, datastore, client)
+			_, err := fetchStoryIfNeeded(id, handler)
 			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return "", NewError(err)
 			}
 		}
 	}
+
+	return "Success", nil
 }
 
-func cacheTopStoryIds(context appengine.Context, cache *Cache, apiClient *HnApiClient) ([]int, error) {
-	topStories, err := apiClient.GetTopStories()
+func cacheTopStoryIds(handler *Handler) ([]int, error) {
+	topStories, err := handler.apiClient.GetTopStories()
 	if err != nil {
 		return topStories, err
 	}
 
-	context.Debugf("Got stories from network: %v", topStories)
+	handler.Logd("Got stories from network: %v", topStories)
 
-	cache.SetTopStories(topStories)
+	handler.cache.SetTopStories(topStories)
 
 	return topStories, nil
 }
 
-func fetchStoryIfNeeded(id int, context appengine.Context, cache *Cache, datastore *Db, apiClient *HnApiClient) (*Story, error) {
-	story, err := cache.GetStory(id)
+func fetchStoryIfNeeded(id int, handler *Handler) (*Story, error) {
+	story, err := handler.cache.GetStory(id)
 
 	// We have a copy in memcache
 	if err == nil {
@@ -53,30 +42,30 @@ func fetchStoryIfNeeded(id int, context appengine.Context, cache *Cache, datasto
 	}
 
 	// We have a copy in our datastore
-	story, err = datastore.GetStory(id)
+	story, err = handler.dataStore.GetStory(id)
 	if err == nil {
 		return story, nil
 	}
 
 	// S.O.L .. Will need to fetch the story
-	story, err = apiClient.GetStory(id)
+	story, err = handler.apiClient.GetStory(id)
 	if err != nil {
-		context.Errorf("%v", err)
+		handler.Loge("%v", err)
 	} else {
-		fetchTopComments(story, context, cache, datastore, apiClient)
-		err = datastore.SaveStory(story)
+		fetchTopComments(story, handler)
+		err = handler.dataStore.SaveStory(story)
 		if err != nil {
-			context.Errorf("Error saving story to datastore: %v", err)
+			handler.Logd("Error saving story to datastore: %v", err)
 		} else {
-			context.Debugf("Got story: %v", id)
-			cache.SetStory(story)
+			handler.Logd("Got story: %v", id)
+			handler.cache.SetStory(story)
 		}
 	}
 
 	return story, err
 }
 
-func fetchTopComments(story *Story, context appengine.Context, cache *Cache, datastore *Db, apiClient *HnApiClient) {
+func fetchTopComments(story *Story, handler *Handler) {
 	commentsToRetrieve := len(story.Kids)
 	if commentsToRetrieve > 5 {
 		commentsToRetrieve = 5
@@ -85,16 +74,16 @@ func fetchTopComments(story *Story, context appengine.Context, cache *Cache, dat
 	for i := 0; i < commentsToRetrieve; i++ {
 		commentId := story.Kids[i]
 
-		comment, err := datastore.GetComment(commentId)
+		comment, err := handler.dataStore.GetComment(commentId)
 		if err == nil {
 			story.Comments = append(story.Comments, *comment)
 		} else {
-			comment, err := apiClient.GetComment(commentId)
+			comment, err := handler.apiClient.GetComment(commentId)
 			if err == nil {
 				story.Comments = append(story.Comments, *comment)
-				datastore.SaveComment(comment)
+				handler.dataStore.SaveComment(comment)
 			} else {
-				context.Errorf("Error fetching comment: %v", err)
+				handler.Loge("Error fetching comment: %v", err)
 			}
 		}
 	}

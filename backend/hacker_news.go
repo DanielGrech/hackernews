@@ -2,13 +2,9 @@ package hackernews
 
 import (
 	"encoding/json"
-	"fmt"
+	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
-
-	"appengine"
-
-	"github.com/gorilla/mux"
 )
 
 func init() {
@@ -16,174 +12,119 @@ func init() {
 
 	var tasks Tasks
 
-	router.HandleFunc("/top", getTopStories)
-	router.HandleFunc("/story/{story:[0-9]+}", getStory)
-	router.HandleFunc("/story/{story:[0-9]+}/comments", getCommentsForStory)
-	router.HandleFunc("/comment/{comment:[0-9]+}", getComment)
-	router.HandleFunc("/comment/{comment:[0-9]+}/comments", getCommentsForComment)
-	router.HandleFunc("/tasks/top_stories", tasks.getTopStories)
+	router.Handle("/top", AppHandler(getTopStories))
+	router.Handle("/story/{story:[0-9]+}", AppHandler(getStory))
+	router.Handle("/story/{story:[0-9]+}/comments", AppHandler(getCommentsForStory))
+	router.Handle("/comment/{comment:[0-9]+}", AppHandler(getComment))
+	router.Handle("/comment/{comment:[0-9]+}/comments", AppHandler(getCommentsForComment))
+	router.Handle("/tasks/top_stories", AppHandler(tasks.getTopStories))
 
 	http.Handle("/", router)
 }
 
-func getStory(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	storyId, _ := strconv.Atoi(vars["story"])
+func getStory(handler *Handler) (string, *AppError) {
+	storyId, _ := strconv.Atoi(handler.vars["story"])
 
-	c := appengine.NewContext(r)
-
-	datastore := NewDb(c)
-	client := NewClient(c)
-
-	story, err := datastore.GetStory(storyId)
+	story, err := handler.dataStore.GetStory(storyId)
 	if err != nil {
-		story, err = client.GetStory(storyId)
+		story, err = handler.apiClient.GetStory(storyId)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+			return "", NewErrorWithMessage(err, "Error retrieving story")
 		}
 
-		datastore.SaveStory(story)
+		handler.dataStore.SaveStory(story)
 	}
 
 	jsonData, err := json.Marshal(story)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return "", NewError(err)
 	}
 
-	fmt.Fprintf(w, string(jsonData))
+	return string(jsonData), nil
 }
 
-func getComment(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	commentId, _ := strconv.Atoi(vars["comment"])
+func getComment(handler *Handler) (string, *AppError) {
+	commentId, _ := strconv.Atoi(handler.vars["comment"])
 
-	c := appengine.NewContext(r)
-
-	datastore := NewDb(c)
-	client := NewClient(c)
-
-	comment, err := datastore.GetComment(commentId)
+	comment, err := handler.dataStore.GetComment(commentId)
 	if err != nil {
-		c.Debugf("No comment in data store!")
-		comment, err = client.GetComment(commentId)
+		handler.Logd("No comment in data store!")
+		comment, err = handler.apiClient.GetComment(commentId)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+			return "", NewErrorWithMessageAndCode(err, "No comment found", http.StatusNotFound)
 		}
 
-		c.Debugf("Saving %v", comment)
-		if err = datastore.SaveComment(comment); err != nil {
-			c.Errorf("Error saving comment to data store: %v", err)
+		handler.Logd("Saving %v", comment)
+		if err = handler.dataStore.SaveComment(comment); err != nil {
+			handler.Loge("Error saving comment to data store: %v", err)
 		}
 	}
 
 	jsonData, err := json.Marshal(comment)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return "", NewError(err)
 	}
 
-	fmt.Fprintf(w, string(jsonData))
+	return string(jsonData), nil
 }
 
-func getCommentsForStory(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	storyId, _ := strconv.Atoi(vars["story"])
+func getCommentsForStory(handler *Handler) (string, *AppError) {
+	storyId, _ := strconv.Atoi(handler.vars["story"])
 
-	c := appengine.NewContext(r)
-
-	datastore := NewDb(c)
-
-	story, err := datastore.GetStory(storyId)
+	story, err := handler.dataStore.GetStory(storyId)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return "", NewError(err)
 	}
 
 	commentIds := story.Kids
 	if len(commentIds) == 0 {
-		fmt.Fprintf(w, "[]")
-		return
+		return "[]", nil
 	}
 
 	jsonData, err := json.Marshal(commentIds)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return "", NewError(err)
 	}
 
-	fmt.Fprintf(w, string(jsonData))
+	return string(jsonData), nil
 }
 
-func getCommentsForComment(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	commentId, _ := strconv.Atoi(vars["comment"])
+func getCommentsForComment(handler *Handler) (string, *AppError) {
+	commentId, _ := strconv.Atoi(handler.vars["comment"])
 
-	c := appengine.NewContext(r)
-
-	datastore := NewDb(c)
-
-	comment, err := datastore.GetComment(commentId)
+	comment, err := handler.dataStore.GetComment(commentId)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return "", NewErrorWithMessageAndCode(err, "No comment found", http.StatusNotFound)
 	}
 
 	commentIds := comment.Kids
 	if len(commentIds) == 0 {
-		fmt.Fprintf(w, "[]")
-		return
+		return "[]", nil
 	}
 
 	jsonData, err := json.Marshal(commentIds)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return "", NewError(err)
 	}
 
-	fmt.Fprintf(w, string(jsonData))
+	return string(jsonData), nil
 }
 
-func getTopStories(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
-
-	client := NewClient(c)
-	datastore := NewDb(c)
-	cache := NewCache(c)
-
-	storyIds, err := getTopStoryIds(c, cache, client)
+func getTopStories(handler *Handler) (string, *AppError) {
+	storyIds, err := handler.GetTopStoryIds()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return "", NewError(err)
 	}
 
-	stories, err := datastore.GetStories(storyIds)
+	stories, err := handler.dataStore.GetStories(storyIds)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return "", NewError(err)
 	}
 
 	jsonData, err := json.Marshal(stories)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return "", NewError(err)
 	}
 
-	fmt.Fprintf(w, string(jsonData))
-}
-
-func getTopStoryIds(context appengine.Context, cache *Cache, apiClient *HnApiClient) ([]int, error) {
-	topStories := cache.GetTopStories()
-	if topStories != nil {
-		return topStories, nil
-	}
-
-	topStories, err := apiClient.GetTopStories()
-	if err == nil {
-		cache.SetTopStories(topStories)
-	}
-
-	return topStories, err
+	return string(jsonData), nil
 }
