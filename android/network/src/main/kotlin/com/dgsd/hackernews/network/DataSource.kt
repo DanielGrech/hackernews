@@ -9,5 +9,11 @@ public interface DataSource {
 
     public fun getNewStories(): Observable<List<Story>>
 
+    public fun getAskStories(): Observable<List<Story>>
+
+    public fun getShowStories(): Observable<List<Story>>
+
+    public fun getJobStories(): Observable<List<Story>>
+
     public fun getStory(storyId: Long): Observable<Story>
 }

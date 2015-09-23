@@ -15,6 +15,9 @@ class DbOpenHelper(context: Context) : SQLiteOpenHelper(context, DbOpenHelper.DB
         db.execSQL(Tables.Stories.getCreateSql())
         db.execSQL(Tables.TopStoryIds.getCreateSql())
         db.execSQL(Tables.NewStoryIds.getCreateSql())
+        db.execSQL(Tables.AskStoryIds.getCreateSql())
+        db.execSQL(Tables.ShowStoryIds.getCreateSql())
+        db.execSQL(Tables.JobStoryIds.getCreateSql())
         db.execSQL(Tables.Comments.getCreateSql())
         db.execSQL(Tables.CommentIds.getCreateSql())
     }

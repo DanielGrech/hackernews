@@ -11,12 +11,25 @@ import com.squareup.sqlbrite.BriteDatabase
 import rx.Observable
 
 public class DbProvider(private val db: BriteDatabase) : DbDataSource {
+
     override fun getTopStories(): Observable<List<Story>> {
         return getStoriesFromIds(Tables.TopStoryIds.name(), Tables.SELECT_TOP_STORIES)
     }
 
     override fun getNewStories(): Observable<List<Story>> {
         return getStoriesFromIds(Tables.NewStoryIds.name(), Tables.SELECT_NEW_STORIES)
+    }
+
+    override fun getAskStories(): Observable<List<Story>> {
+        return getStoriesFromIds(Tables.AskStoryIds.name(), Tables.SELECT_ASK_STORIES)
+    }
+
+    override fun getShowStories(): Observable<List<Story>> {
+        return getStoriesFromIds(Tables.ShowStoryIds.name(), Tables.SELECT_SHOW_STORIES)
+    }
+
+    override fun getJobStories(): Observable<List<Story>> {
+        return getStoriesFromIds(Tables.JobStoryIds.name(), Tables.SELECT_JOB_STORIES)
     }
 
     override fun saveStory(story: Story) {
@@ -41,6 +54,18 @@ public class DbProvider(private val db: BriteDatabase) : DbDataSource {
 
     override fun saveNewStories(stories: List<Story>) {
         saveStories(Tables.NewStoryIds.name(), stories)
+    }
+
+    override fun saveAskStories(stories: List<Story>) {
+        saveStories(Tables.AskStoryIds.name(), stories)
+    }
+
+    override fun saveShowStories(stories: List<Story>) {
+        saveStories(Tables.ShowStoryIds.name(), stories)
+    }
+
+    override fun saveJobStories(stories: List<Story>) {
+        saveStories(Tables.JobStoryIds.name(), stories)
     }
 
     override fun saveComments(comments: List<Comment>) {

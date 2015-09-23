@@ -8,5 +8,7 @@ public interface StoryListMvpView : MvpView {
 
     fun showEmptyMessage(message: String)
 
+    fun showError(message: String)
+
     fun showLoading()
 }

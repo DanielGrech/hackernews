@@ -13,6 +13,9 @@ class Tables {
         val Stories: _Stories = _Stories()
         val TopStoryIds: _TopStoryIds = _TopStoryIds()
         val NewStoryIds: _NewStoryIds = _NewStoryIds()
+        val AskStoryIds: _AskStoryIds = _AskStoryIds()
+        val ShowStoryIds: _ShowStoryIds = _ShowStoryIds()
+        val JobStoryIds: _JobStoryIds = _JobStoryIds()
         val Comments: _Comments = _Comments()
         val CommentIds: _CommentIds = _CommentIds()
 
@@ -22,12 +25,15 @@ class Tables {
 
         val COL_TYPE_NOT_NULL = "NOT NULL"
 
-        val SELECT_TOP_STORIES = "SELECT s.* FROM ${TopStoryIds.name()} as t " +
+        private val SELECT_STORIES_TEMPLATE = "SELECT s.* FROM %s as t " +
                 "INNER JOIN ${Stories.name()} AS s " +
                 "ON t.${StoryIdTable.COL_ID} = s.${_Stories.COL_ID}"
-        val SELECT_NEW_STORIES = "SELECT s.* FROM ${NewStoryIds.name()} as t " +
-                "INNER JOIN ${Stories.name()} AS s " +
-                "ON t.${StoryIdTable.COL_ID} = s.${_Stories.COL_ID}"
+
+        val SELECT_TOP_STORIES = SELECT_STORIES_TEMPLATE.format(TopStoryIds.name())
+        val SELECT_NEW_STORIES = SELECT_STORIES_TEMPLATE.format(NewStoryIds.name())
+        val SELECT_ASK_STORIES = SELECT_STORIES_TEMPLATE.format(AskStoryIds.name())
+        val SELECT_SHOW_STORIES = SELECT_STORIES_TEMPLATE.format(ShowStoryIds.name())
+        val SELECT_JOB_STORIES = SELECT_STORIES_TEMPLATE.format(JobStoryIds.name())
     }
 
     abstract class Table<T> {
@@ -92,6 +98,36 @@ class Tables {
     class _NewStoryIds : StoryIdTable() {
         companion object {
             val TABLE_NAME = "new_story_ids"
+        }
+
+        override fun name(): String {
+            return TABLE_NAME
+        }
+    }
+
+    class _AskStoryIds : StoryIdTable() {
+        companion object {
+            val TABLE_NAME = "ask_story_ids"
+        }
+
+        override fun name(): String {
+            return TABLE_NAME
+        }
+    }
+
+    class _ShowStoryIds : StoryIdTable() {
+        companion object {
+            val TABLE_NAME = "show_story_ids"
+        }
+
+        override fun name(): String {
+            return TABLE_NAME
+        }
+    }
+
+    class _JobStoryIds : StoryIdTable() {
+        companion object {
+            val TABLE_NAME = "job_story_ids"
         }
 
         override fun name(): String {

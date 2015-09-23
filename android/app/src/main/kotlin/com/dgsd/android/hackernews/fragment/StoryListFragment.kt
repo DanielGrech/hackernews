@@ -1,6 +1,7 @@
 package com.dgsd.android.hackernews.fragment
 
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.widget.SwipeRefreshLayout
 import android.view.View
 import com.dgsd.android.hackernews.R
@@ -76,5 +77,13 @@ public class StoryListFragment: PresentableFragment<StoryListMvpView, StoryListP
 
     override fun showLoading() {
         loadingContentErrorView.showLoading()
+    }
+
+    override fun showError(message: String) {
+        if (recyclerView.adapter.itemCount == 0) {
+            showEmptyMessage(message)
+        } else {
+            Snackbar.make(loadingContentErrorView, message, Snackbar.LENGTH_SHORT).show()
+        }
     }
 }

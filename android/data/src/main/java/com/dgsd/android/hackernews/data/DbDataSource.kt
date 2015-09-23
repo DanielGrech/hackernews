@@ -14,6 +14,18 @@ public interface DbDataSource {
 
     public fun saveNewStories(stories: List<Story>)
 
+    public fun getAskStories(): Observable<List<Story>>
+
+    public fun saveAskStories(stories: List<Story>)
+
+    public fun getShowStories(): Observable<List<Story>>
+
+    public fun saveShowStories(stories: List<Story>)
+
+    public fun getJobStories(): Observable<List<Story>>
+
+    public fun saveJobStories(stories: List<Story>)
+
     public fun getStory(storyId: Long): Observable<Story>
 
     public fun getComments(parentId: Long): Observable<List<Comment>>

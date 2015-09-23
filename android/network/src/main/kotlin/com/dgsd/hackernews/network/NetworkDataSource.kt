@@ -1,6 +1,7 @@
 package com.dgsd.hackernews.network
 
 import com.dgsd.hackernews.model.Story
+import com.dgsd.hackernews.network.model.HnStory
 import com.dgsd.hackernews.network.utils.convert
 import com.dgsd.hackernews.network.utils.flatMapArray
 import com.squareup.okhttp.Interceptor
@@ -42,21 +43,23 @@ public class NetworkDataSource : DataSource {
     }
 
     override fun getTopStories(): Observable<List<Story>> {
-        return apiService.getTopStories()
-                .flatMapArray()
-                .map {
-                    it.convert()
-                }
-                .toList()
+        return apiService.getTopStories().process()
     }
 
     override fun getNewStories(): Observable<List<Story>> {
-        return apiService.getNewStories()
-                .flatMapArray()
-                .map {
-                    it.convert()
-                }
-                .toList()
+        return apiService.getNewStories().process()
+    }
+
+    override fun getAskStories(): Observable<List<Story>> {
+        return apiService.getAskStories().process()
+    }
+
+    override fun getShowStories(): Observable<List<Story>> {
+        return apiService.getShowStories().process()
+    }
+
+    override fun getJobStories(): Observable<List<Story>> {
+        return apiService.getJobStories().process()
     }
 
     override fun getStory(storyId: Long): Observable<Story> {
@@ -64,6 +67,14 @@ public class NetworkDataSource : DataSource {
                 .map {
                     it.convert()
                 }
+    }
+
+    private fun Observable<Array<HnStory>>.process(): Observable<List<Story>> {
+        return flatMapArray()
+                .map {
+                    it.convert()
+                }
+                .toList()
     }
 
     public class Builder {

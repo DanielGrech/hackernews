@@ -46,8 +46,11 @@ public class StoryListPresenter(view : StoryListMvpView, component : AppServices
                         getView().showStories(it)
                     }
                 }, {
-                    Timber.e(it, "Error getting top stories!")
-                    // TODO: Show ephemeral error (or full screen error if none visible)
+                    if (skipCache) {
+                        getView().showError(getContext().getString(R.string.error_retrieving_stories_ephemeral))
+                    } else {
+                        getView().showError(getContext().getString(R.string.error_retrieving_stories))
+                    }
                 })
     }
 
@@ -55,9 +58,9 @@ public class StoryListPresenter(view : StoryListMvpView, component : AppServices
         return when (pageType) {
             PageType.TOP -> dataSource.getTopStories(skipCache)
             PageType.NEW -> dataSource.getNewStories(skipCache)
-            PageType.ASK_HN -> emptyList<Story>().toSingletonObservable()
-            PageType.SHOW_HN -> emptyList<Story>().toSingletonObservable()
-            PageType.JOBS -> emptyList<Story>().toSingletonObservable()
+            PageType.ASK_HN -> dataSource.getAskStories(skipCache)
+            PageType.SHOW_HN -> dataSource.getShowStories(skipCache)
+            PageType.JOBS -> dataSource.getJobStories(skipCache)
         }
     }
 

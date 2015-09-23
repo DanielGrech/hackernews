@@ -2,6 +2,7 @@ package com.dgsd.android.hackernews.activity
 
 import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
@@ -12,7 +13,9 @@ import com.dgsd.android.hackernews.module.AppServicesComponent
 import com.dgsd.android.hackernews.mvp.presenter.MainPresenter
 import com.dgsd.android.hackernews.mvp.view.MainMvpView
 import com.dgsd.android.hackernews.util.getTitleRes
+import com.jakewharton.rxbinding.support.design.widget.RxTabLayout
 import kotlinx.android.synthetic.act_main.*
+import org.jetbrains.anko.toast
 
 public class MainActivity : PresentableActivity<MainMvpView, MainPresenter>(), MainMvpView {
 
@@ -35,6 +38,19 @@ public class MainActivity : PresentableActivity<MainMvpView, MainPresenter>(), M
         viewPager.adapter = SectionAdapter(supportFragmentManager)
 
         tabLayout.setupWithViewPager(viewPager)
+        tabLayout.setOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                toast(tab.position.toString())
+            }
+
+            override fun onTabReselected(p0: TabLayout.Tab?) {
+                // TODO: Scroll list to top..
+            }
+
+            override fun onTabUnselected(p0: TabLayout.Tab?) {
+                // No-op
+            }
+        })
     }
 
     private inner class SectionAdapter(fm : FragmentManager) : FragmentPagerAdapter(fm) {
