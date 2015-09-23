@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import com.dgsd.android.hackernews.R
+import com.dgsd.android.hackernews.util.onPreDraw
 import com.dgsd.hackernews.model.Story
 import org.jetbrains.anko.find
 import java.text.MessageFormat
@@ -38,6 +39,18 @@ public class StoryListItemView(context: Context, attrs: AttributeSet?, defStyle:
         storyCommentCount = find(R.id.storyCommentCount)
         storyDate = find(R.id.storyDate)
         storyAuthor = find(R.id.storyAuthor)
+
+        // Show dummy text so our views are sized appropriately
+        storyDate.text = " "
+        storyAuthor.text = " "
+
+        onPreDraw {
+            val lps = storyTitle.layoutParams as ViewGroup.MarginLayoutParams
+            lps.topMargin += storyDate.height
+            lps.bottomMargin += storyDate.height + ((storyCommentCount.height - storyDate.height) / 2)
+
+            storyTitle.layoutParams = lps
+        }
     }
 
     fun populate(story: Story) {

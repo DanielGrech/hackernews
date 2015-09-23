@@ -17,22 +17,25 @@ import java.util.*
  * @param action The action to perform
  */
 public fun View.onPreDraw(action: () -> Unit) {
-    getViewTreeObserver().addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+    viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
         override fun onPreDraw(): Boolean {
-            getViewTreeObserver().removeOnPreDrawListener(this)
-
-            val shouldExecute: Boolean
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                shouldExecute = isAttachedToWindow();
-            } else {
-                shouldExecute = isShown();
-            }
-
-            if (shouldExecute) {
+            viewTreeObserver.removeOnPreDrawListener(this)
+            if (isAttachedToWindow) {
                 action()
             }
 
             return true
+        }
+    })
+}
+
+public fun View.onLayout(action: () -> Unit) {
+    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            viewTreeObserver.removeOnGlobalLayoutListener(this)
+            if (isAttachedToWindow) {
+                action()
+            }
         }
     })
 }
