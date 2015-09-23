@@ -18,6 +18,7 @@ class Tables {
         val JobStoryIds: _JobStoryIds = _JobStoryIds()
         val Comments: _Comments = _Comments()
         val CommentIds: _CommentIds = _CommentIds()
+        val PollAnswers: _PollAnswers= _PollAnswers()
 
         val COL_TYPE_PK = "INTEGER PRIMARY KEY AUTOINCREMENT"
         val COL_TYPE_INTEGER = "INTEGER"
@@ -144,8 +145,10 @@ class Tables {
             val TABLE_NAME = "stories"
 
             val COL_ID = "_id"
+            val COL_TYPE = "_type"
             val COL_TIME = "_time"
             val COL_AUTHOR = "_author"
+            val COL_PARENT_ID = "_parent_id"
             val COL_TITLE = "_title"
             val COL_TEXT = "_text"
             val COL_URL = "_url"
@@ -161,7 +164,9 @@ class Tables {
         override fun columns(): Array<String> {
             return arrayOf(
                     COL_ID,
+                    COL_TYPE,
                     COL_TIME,
+                    COL_PARENT_ID,
                     COL_AUTHOR,
                     COL_TITLE,
                     COL_TEXT,
@@ -175,6 +180,8 @@ class Tables {
         override fun fromCursor(cursor: Cursor): Story {
             return Story(
                     id = cursor.getLong(COL_ID),
+                    type = Story.Type.valueOf(cursor.getString(COL_TYPE)),
+                    parentId = cursor.getLong(COL_PARENT_ID),
                     time = cursor.getLong(COL_TIME),
                     author = cursor.getString(COL_AUTHOR),
                     title = cursor.getString(COL_TITLE),
@@ -189,7 +196,9 @@ class Tables {
         override fun getColumnType(col: String): String {
             return when (col) {
                 COL_ID -> Tables.COL_TYPE_PK
+                COL_TYPE -> Tables.COL_TYPE_TEXT
                 COL_TIME -> Tables.COL_TYPE_INTEGER + " " + Tables.COL_TYPE_NOT_NULL
+                COL_PARENT_ID -> Tables.COL_TYPE_INTEGER
                 COL_AUTHOR -> Tables.COL_TYPE_TEXT
                 COL_TITLE -> Tables.COL_TYPE_TEXT
                 COL_TEXT -> Tables.COL_TYPE_TEXT
@@ -296,6 +305,45 @@ class Tables {
                     ", PRIMARY KEY ($COL_PARENT_ID, $COL_COMMENT_ID)" +
                     createSql.substring(lastParenth)
 
+        }
+    }
+
+    class _PollAnswers : Table<Long>() {
+
+        companion object {
+            val TABLE_NAME = "poll_answers"
+
+            val COL_PARENT_ID = "_parent_id"
+            val COL_ANSWER_ID = "_answer_id"
+        }
+
+        override fun name(): String {
+            return TABLE_NAME
+        }
+
+        override fun columns(): Array<String> {
+            return arrayOf(COL_PARENT_ID, COL_ANSWER_ID)
+        }
+
+        override fun fromCursor(cursor: Cursor): Long {
+            return cursor.getLong(COL_ANSWER_ID)
+        }
+
+        override fun getColumnType(col: String): String {
+            return when (col) {
+                COL_PARENT_ID -> Tables.COL_TYPE_INTEGER
+                COL_ANSWER_ID -> Tables.COL_TYPE_INTEGER
+                else -> ""
+            }
+        }
+
+        override fun getCreateSql(): String {
+            val createSql = super.getCreateSql()
+
+            val lastParenth = createSql.lastIndexOf(')')
+            return createSql.substring(0, lastParenth) +
+                    ", PRIMARY KEY ($COL_PARENT_ID, $COL_ANSWER_ID)" +
+                    createSql.substring(lastParenth)
         }
     }
 }

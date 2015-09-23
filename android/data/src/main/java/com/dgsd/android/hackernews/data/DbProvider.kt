@@ -41,6 +41,12 @@ public class DbProvider(private val db: BriteDatabase) : DbDataSource {
                     .with(Tables._CommentIds.COL_COMMENT_ID, it), CONFLICT_REPLACE)
         }
 
+        story.pollAnswers.forEach {
+            db.insert(Tables.PollAnswers.name(), ContentValues()
+                    .with(Tables._PollAnswers.COL_PARENT_ID, story.id)
+                    .with(Tables._PollAnswers.COL_ANSWER_ID, it), CONFLICT_REPLACE)
+        }
+
         saveComments(story.comments)
     }
 

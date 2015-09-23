@@ -20,6 +20,7 @@ class DbOpenHelper(context: Context) : SQLiteOpenHelper(context, DbOpenHelper.DB
         db.execSQL(Tables.JobStoryIds.getCreateSql())
         db.execSQL(Tables.Comments.getCreateSql())
         db.execSQL(Tables.CommentIds.getCreateSql())
+        db.execSQL(Tables.PollAnswers.getCreateSql())
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

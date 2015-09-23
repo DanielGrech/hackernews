@@ -22,7 +22,7 @@ type Item interface {
 type Story struct {
 	By           string    `json:"author"`
 	ID           int       `json:"id"`
-	Parent       int       `json:"parent,omitempty"`
+	Parent       int       `json:"parent_id,omitempty"`
 	Kids         []int     `json:"comment_ids"`
 	Score        int       `json:"score"`
 	Time         int       `json:"time"`

@@ -13,7 +13,6 @@ import com.dgsd.android.hackernews.module.AppServicesComponent
 import com.dgsd.android.hackernews.mvp.presenter.MainPresenter
 import com.dgsd.android.hackernews.mvp.view.MainMvpView
 import com.dgsd.android.hackernews.util.getTitleRes
-import com.jakewharton.rxbinding.support.design.widget.RxTabLayout
 import kotlinx.android.synthetic.act_main.*
 import org.jetbrains.anko.toast
 
@@ -40,7 +39,6 @@ public class MainActivity : PresentableActivity<MainMvpView, MainPresenter>(), M
         tabLayout.setupWithViewPager(viewPager)
         tabLayout.setOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                toast(tab.position.toString())
             }
 
             override fun onTabReselected(p0: TabLayout.Tab?) {

@@ -46,5 +46,21 @@ public fun HnStory.convert(): Story {
         item = item.copy(comments = this.comments.map { it.convert() }.toList())
     }
 
+    if (this.parentId > 0) {
+        item = item.copy(parentId = this.parentId)
+    }
+
+    if (this.parts != null) {
+        item = item.copy(pollAnswers = this.parts)
+    }
+
+    if (this.type != null) {
+        try {
+            item = item.copy(type = Story.Type.valueOf(this.type.toUpperCase()))
+        } catch (ex: IllegalArgumentException) {
+            item = item.copy(type = Story.Type.STORY)
+        }
+    }
+
     return item
 }

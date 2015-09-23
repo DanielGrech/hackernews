@@ -15,8 +15,17 @@ public class HnStory {
     @SerializedName("author")
     String author;
 
+    @SerializedName("type")
+    String type;
+
     @SerializedName("comment_ids")
     List<Long> commentIds;
+
+    @SerializedName("parts")
+    List<Long> parts;
+
+    @SerializedName("parent_id")
+    long parentId;
 
     @SerializedName("score")
     int score;
@@ -47,8 +56,20 @@ public class HnStory {
         return author;
     }
 
+    public String getType() {
+        return type;
+    }
+
     public List<Long> getCommentIds() {
         return commentIds;
+    }
+
+    public List<Long> getParts() {
+        return parts;
+    }
+
+    public long getParentId() {
+        return parentId;
     }
 
     public int getScore() {
