@@ -2,21 +2,21 @@ package com.dgsd.hackernews.network.utils
 
 import com.dgsd.hackernews.model.Comment
 import com.dgsd.hackernews.model.Story
-import com.dgsd.hackernews.network.model.HnComment
-import com.dgsd.hackernews.network.model.HnStory
+import hackernews.PbComment
+import hackernews.PbStory
 
-public fun HnComment.convert(): Comment {
+public fun PbComment.convert(): Comment {
     var item = Comment(
             id = this.id,
             time = this.time,
             author = this.author,
-            parentId = this.parentId,
+            parentId = this.parent_id,
             text = this.text,
-            commentCount = this.commentCount
+            commentCount = this.comment_count
     )
 
-    if (this.commentIds != null) {
-        item = item.copy(commentIds = this.commentIds)
+    if (this.comment_ids != null) {
+        item = item.copy(commentIds = this.comment_ids)
     }
 
     if (this.comments != null) {
@@ -26,7 +26,7 @@ public fun HnComment.convert(): Comment {
     return item
 }
 
-public fun HnStory.convert(): Story {
+public fun PbStory.convert(): Story {
     var item = Story(
             id = this.id,
             time = this.time,
@@ -35,19 +35,19 @@ public fun HnStory.convert(): Story {
             text = this.text,
             url = this.url,
             score = this.score,
-            commentCount = this.commentCount
+            commentCount = this.comment_count
     )
 
-    if (this.commentIds != null) {
-        item = item.copy(commentIds = this.commentIds)
+    if (this.comment_ids != null) {
+        item = item.copy(commentIds = this.comment_ids)
     }
 
     if (this.comments != null) {
         item = item.copy(comments = this.comments.map { it.convert() }.toList())
     }
 
-    if (this.parentId > 0) {
-        item = item.copy(parentId = this.parentId)
+    if (this.parent_id > 0) {
+        item = item.copy(parentId = this.parent_id)
     }
 
     if (this.parts != null) {

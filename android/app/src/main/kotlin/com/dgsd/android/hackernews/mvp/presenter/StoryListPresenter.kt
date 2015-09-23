@@ -46,6 +46,8 @@ public class StoryListPresenter(view : StoryListMvpView, component : AppServices
                         getView().showStories(it)
                     }
                 }, {
+                    Timber.e(it, "Error showing stories")
+
                     if (skipCache) {
                         getView().showError(getContext().getString(R.string.error_retrieving_stories_ephemeral))
                     } else {

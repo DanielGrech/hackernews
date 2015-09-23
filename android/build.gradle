@@ -70,6 +70,7 @@ subprojects {
                 rxLifecycle : "0.3.0",
                 calligraphy : "2.1.0",
                 retrofit : "2.0.0-beta1",
+                wire : "1.8.0",
                 easyDataStore : "1.0.2",
                 sqlbrite: "0.3.1",
                 gson : "2.3.1",

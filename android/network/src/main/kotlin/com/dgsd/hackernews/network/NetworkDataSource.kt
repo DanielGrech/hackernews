@@ -1,14 +1,15 @@
 package com.dgsd.hackernews.network
 
 import com.dgsd.hackernews.model.Story
-import com.dgsd.hackernews.network.model.HnStory
 import com.dgsd.hackernews.network.utils.convert
-import com.dgsd.hackernews.network.utils.flatMapArray
+import com.dgsd.hackernews.network.utils.flatMapList
 import com.squareup.okhttp.Interceptor
 import com.squareup.okhttp.OkHttpClient
-import retrofit.GsonConverterFactory
+import com.squareup.wire.Wire
+import hackernews.PbStoryList
 import retrofit.Retrofit
 import retrofit.RxJavaCallAdapterFactory
+import retrofit.WireConverterFactory
 import rx.Observable
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -36,7 +37,7 @@ public class NetworkDataSource : DataSource {
         apiService = Retrofit.Builder()
                 .baseUrl(builder.endpoint)
                 .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(WireConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build()
                 .create(ApiService::class.java)
@@ -63,17 +64,13 @@ public class NetworkDataSource : DataSource {
     }
 
     override fun getStory(storyId: Long): Observable<Story> {
-        return apiService.getStory(storyId)
-                .map {
-                    it.convert()
-                }
+        return apiService.getStory(storyId).map { it.convert() }
     }
 
-    private fun Observable<Array<HnStory>>.process(): Observable<List<Story>> {
-        return flatMapArray()
-                .map {
-                    it.convert()
-                }
+    private fun Observable<PbStoryList>.process(): Observable<List<Story>> {
+        return this.map { Wire.get(it.stories, PbStoryList.DEFAULT_STORIES) }
+                .flatMapList()
+                .map { it.convert() }
                 .toList()
     }
 

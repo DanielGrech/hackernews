@@ -1,27 +1,30 @@
 package com.dgsd.hackernews.network
 
-import com.dgsd.hackernews.network.model.HnStory
+import hackernews.PbStory
+import hackernews.PbStoryList
 import retrofit.http.GET
 import retrofit.http.Path
 import rx.Observable
 
+private val FORMAT = "proto"
+
 internal interface ApiService {
 
-    @GET("top")
-    fun getTopStories(): Observable<Array<HnStory>>
+    @GET("top?format=$FORMAT")
+    fun getTopStories(): Observable<PbStoryList>
 
-    @GET("new")
-    fun getNewStories(): Observable<Array<HnStory>>
+    @GET("new?format=$FORMAT")
+    fun getNewStories(): Observable<PbStoryList>
 
-    @GET("ask")
-    fun getAskStories(): Observable<Array<HnStory>>
+    @GET("ask?format=$FORMAT")
+    fun getAskStories(): Observable<PbStoryList>
 
-    @GET("show")
-    fun getShowStories(): Observable<Array<HnStory>>
+    @GET("show?format=$FORMAT")
+    fun getShowStories(): Observable<PbStoryList>
 
-    @GET("job")
-    fun getJobStories(): Observable<Array<HnStory>>
+    @GET("job?format=$FORMAT")
+    fun getJobStories(): Observable<PbStoryList>
 
-    @GET("story/{story_id}")
-    fun getStory(@Path("story_id") storyId: Long): Observable<HnStory>
+    @GET("story/{story_id}?format=$FORMAT")
+    fun getStory(@Path("story_id") storyId: Long): Observable<PbStory>
 }
