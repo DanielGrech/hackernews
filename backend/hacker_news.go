@@ -30,76 +30,76 @@ func init() {
 	http.Handle("/", router)
 }
 
-func getStory(handler *Handler) (string, *ApiError) {
+func getStory(handler *Handler) ([]byte, *ApiError) {
 	storyId, _ := strconv.Atoi(handler.vars["story"])
 
 	story, err := handler.GetStory(storyId, false)
 
 	if err != nil {
-		return "", NewErrorWithMessageAndCode(err, "No story found", http.StatusNotFound)
+		return nil, NewErrorWithMessageAndCode(err, "No story found", http.StatusNotFound)
 	}
 
-	return toJson(story)
+	return handler.EncodeStory(story)
 }
 
-func getComment(handler *Handler) (string, *ApiError) {
+func getComment(handler *Handler) ([]byte, *ApiError) {
 	commentId, _ := strconv.Atoi(handler.vars["comment"])
 
 	comment, err := handler.GetComment(commentId)
 	if err != nil {
-		return "", NewErrorWithMessageAndCode(err, "No comment found", http.StatusNotFound)
+		return nil, NewErrorWithMessageAndCode(err, "No comment found", http.StatusNotFound)
 	}
 
-	return toJson(comment)
+	return handler.EncodeComment(comment)
 }
 
-func getCommentIdsForStory(handler *Handler) (string, *ApiError) {
+func getCommentIdsForStory(handler *Handler) ([]byte, *ApiError) {
 	storyId, _ := strconv.Atoi(handler.vars["story"])
 
 	story, err := handler.GetStory(storyId, false)
 
 	if err != nil {
-		return "", NewError(err)
+		return nil, NewError(err)
 	}
 
-	return getIdsJson(story.Kids)
+	return handler.EncodeIds(story.Kids)
 }
 
-func getCommentIdsForComment(handler *Handler) (string, *ApiError) {
+func getCommentIdsForComment(handler *Handler) ([]byte, *ApiError) {
 	commentId, _ := strconv.Atoi(handler.vars["comment"])
 
 	comment, err := handler.dataStore.GetComment(commentId)
 	if err != nil {
-		return "", NewErrorWithMessageAndCode(err, "No comment found", http.StatusNotFound)
+		return nil, NewErrorWithMessageAndCode(err, "No comment found", http.StatusNotFound)
 	}
 
-	return getIdsJson(comment.Kids)
+	return handler.EncodeIds(comment.Kids)
 }
 
-func getTopStories(handler *Handler) (string, *ApiError) {
+func getTopStories(handler *Handler) ([]byte, *ApiError) {
 	return handler.getStoriesJson(handler.GetTopStoryIds)
 }
 
-func getNewStories(handler *Handler) (string, *ApiError) {
+func getNewStories(handler *Handler) ([]byte, *ApiError) {
 	return handler.getStoriesJson(handler.GetNewStoryIds)
 }
 
-func getAskStories(handler *Handler) (string, *ApiError) {
+func getAskStories(handler *Handler) ([]byte, *ApiError) {
 	return handler.getStoriesJson(handler.GetAskStoryIds)
 }
 
-func getShowStories(handler *Handler) (string, *ApiError) {
+func getShowStories(handler *Handler) ([]byte, *ApiError) {
 	return handler.getStoriesJson(handler.GetShowStoryIds)
 }
 
-func getJobStories(handler *Handler) (string, *ApiError) {
+func getJobStories(handler *Handler) ([]byte, *ApiError) {
 	return handler.getStoriesJson(handler.GetJobStoryIds)
 }
 
-func (handler *Handler) getStoriesJson(fn func() ([]int, error)) (string, *ApiError) {
+func (handler *Handler) getStoriesJson(fn func() ([]int, error)) ([]byte, *ApiError) {
 	storyIds, err := fn()
 	if err != nil {
-		return "", NewError(err)
+		return nil, NewError(err)
 	}
 
 	return handler.GetStoriesFromDataStore(storyIds)

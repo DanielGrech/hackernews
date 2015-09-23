@@ -2,7 +2,7 @@ package hackernews
 
 import (
 	"encoding/json"
-	"fmt"
+	"github.com/golang/protobuf/proto"
 	"net/http"
 )
 
@@ -12,7 +12,7 @@ type ApiError struct {
 	Code    int
 }
 
-type ApiHandler func(handler *Handler) (string, *ApiError)
+type ApiHandler func(handler *Handler) ([]byte, *ApiError)
 
 func NewErrorWithMessageAndCode(err error, message string, code int) *ApiError {
 	return &ApiError{
@@ -40,23 +40,105 @@ func (fn ApiHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		handler.Loge("Error executing request: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else {
-		fmt.Fprintf(w, json)
+		w.Write(json)
 	}
 }
 
-func getIdsJson(ids []int) (string, *ApiError) {
-	if len(ids) == 0 {
-		return "[]", nil
-	}
-
-	return toJson(ids)
-}
-
-func toJson(object interface{}) (string, *ApiError) {
-	jsonData, err := json.Marshal(object)
+func encodeAsJson(object interface{}) ([]byte, *ApiError) {
+	data, err := json.Marshal(object)
 	if err != nil {
-		return "", NewError(err)
+		return nil, NewError(err)
 	}
 
-	return string(jsonData), nil
+	return data, nil
+}
+
+func encodeAsProto(object proto.Message) ([]byte, *ApiError) {
+	data, err := proto.Marshal(object)
+	if err != nil {
+		return nil, NewError(err)
+	}
+
+	return data, nil
+}
+func (story *Story) ToProto() *PbStory {
+	return &PbStory{
+		Id:           proto.Int64(int64(story.ID)),
+		Time:         proto.Int64(int64(story.Time)),
+		Type:         proto.String(story.Type),
+		ParentId:     proto.Int64(int64(story.Parent)),
+		Author:       proto.String(story.By),
+		CommentIds:   toInt64Slice(story.Kids),
+		Score:        proto.Int32(int32(story.Score)),
+		Title:        proto.String(story.Title),
+		Text:         proto.String(story.Text),
+		Url:          proto.String(story.URL),
+		Parts:        toInt64Slice(story.Parts),
+		CommentCount: proto.Int32(int32(story.CommentCount)),
+		Comments:     toProtoCommentSlice(story.Comments),
+	}
+}
+
+func (comment *Comment) ToProto() *PbComment {
+	return &PbComment{
+		Id:           proto.Int64(int64(comment.ID)),
+		Time:         proto.Int64(int64(comment.Time)),
+		ParentId:     proto.Int64(int64(comment.Parent)),
+		Author:       proto.String(comment.By),
+		CommentIds:   toInt64Slice(comment.Kids),
+		Text:         proto.String(comment.Text),
+		CommentCount: proto.Int32(int32(comment.CommentCount)),
+		Comments:     toProtoCommentSlice(comment.Comments),
+	}
+}
+
+func ToStoryListProto(stories []*Story) *PbStoryList {
+	return &PbStoryList{
+		Stories: toProtoStorySlice(stories),
+	}
+}
+
+func ToIdsProto(ids []int) *PbIds {
+	return &PbIds{
+		Ids: toInt64Slice(ids),
+	}
+}
+
+func toProtoStorySlice(input []*Story) []*PbStory {
+	if len(input) == 0 {
+		return nil
+	}
+
+	retval := make([]*PbStory, len(input))
+	for index, val := range input {
+		retval[index] = val.ToProto()
+	}
+
+	return retval
+}
+
+func toProtoCommentSlice(input []Comment) []*PbComment {
+	if len(input) == 0 {
+		return nil
+	}
+
+	retval := make([]*PbComment, len(input))
+	for index, val := range input {
+		retval[index] = val.ToProto()
+	}
+
+	return retval
+}
+
+func toInt64Slice(input []int) []int64 {
+	if len(input) == 0 {
+		return nil
+	}
+
+	retval := make([]int64, len(input))
+	for index, val := range input {
+		retval[index] = int64(val)
+	}
+
+	return retval
 }

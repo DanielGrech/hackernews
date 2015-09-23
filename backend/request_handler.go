@@ -7,12 +7,16 @@ import (
 	"github.com/gorilla/mux"
 )
 
+const encodingProto = "proto"
+const encodingJson = "json"
+
 type Handler struct {
 	context   appengine.Context
 	apiClient *HnApiClient
 	dataStore *Db
 	cache     *Cache
 	vars      map[string]string
+	encoding  string
 }
 
 func NewHandler(r *http.Request) *Handler {
@@ -22,6 +26,7 @@ func NewHandler(r *http.Request) *Handler {
 	handler.dataStore = NewDb(handler.context)
 	handler.cache = NewCache(handler.context)
 	handler.vars = mux.Vars(r)
+	handler.encoding = r.FormValue("format")
 	return &handler
 }
 
@@ -31,6 +36,38 @@ func (handler *Handler) Logd(format string, args ...interface{}) {
 
 func (handler *Handler) Loge(format string, args ...interface{}) {
 	handler.context.Errorf(format, args)
+}
+
+func (handler *Handler) EncodeStories(stories []*Story) ([]byte, *ApiError) {
+	if handler.encoding == encodingProto {
+		return encodeAsProto(ToStoryListProto(stories))
+	} else {
+		return encodeAsJson(stories)
+	}
+}
+
+func (handler *Handler) EncodeStory(story *Story) ([]byte, *ApiError) {
+	if handler.encoding == encodingProto {
+		return encodeAsProto(story.ToProto())
+	} else {
+		return encodeAsJson(story)
+	}
+}
+
+func (handler *Handler) EncodeComment(comment *Comment) ([]byte, *ApiError) {
+	if handler.encoding == encodingProto {
+		return encodeAsProto(comment.ToProto())
+	} else {
+		return encodeAsJson(comment)
+	}
+}
+
+func (handler *Handler) EncodeIds(ids []int) ([]byte, *ApiError) {
+	if handler.encoding == encodingProto {
+		return encodeAsProto(ToIdsProto(ids))
+	} else {
+		return encodeAsJson(ids)
+	}
 }
 
 func (handler *Handler) cleanupOldData() {
@@ -138,13 +175,13 @@ func (handler *Handler) GetJobStoryIds() ([]int, error) {
 	)
 }
 
-func (handler *Handler) GetStoriesFromDataStore(ids []int) (string, *ApiError) {
+func (handler *Handler) GetStoriesFromDataStore(ids []int) ([]byte, *ApiError) {
 	stories, err := handler.dataStore.GetStories(ids)
 	if err != nil {
-		return "", NewError(err)
+		return nil, NewError(err)
 	}
 
-	return toJson(stories)
+	return handler.EncodeStories(stories)
 }
 
 func getStoryIds(fromCacheFunc func() []int, fromApiClientFunc func() ([]int, error), saveToCacheFunc func([]int)) ([]int, error) {

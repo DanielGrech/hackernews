@@ -1,0 +1,36 @@
+package hackernews;
+
+message PbStoryList {
+	repeated PbStory stories = 1;
+}
+
+message PbStory {
+	required int64 id = 1;
+	optional string author = 2;
+	optional int64 parent_id = 3;
+	repeated int64 comment_ids = 4 [packed=true];
+	optional int32 score= 5;
+	required int64 time = 6;
+	optional string title = 7;
+	optional string text = 8;
+	required string type = 9;
+	optional string url = 10;
+	repeated int64 parts = 11 [packed=true];
+	optional int32 comment_count = 12;
+	repeated PbComment comments = 13;
+}
+
+message PbComment {
+	required int64 id = 1;
+	optional string author = 2;
+	optional int64 parent_id = 3;
+	required int64 time = 4;
+	optional string text = 5;
+	repeated int64 comment_ids = 6 [packed=true];
+	optional int32 comment_count = 7;
+	repeated PbComment comments = 8;
+}
+
+message PbIds {
+	repeated int64 ids = 1;
+}
