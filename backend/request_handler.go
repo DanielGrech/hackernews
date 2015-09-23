@@ -2,7 +2,6 @@ package hackernews
 
 import (
 	"appengine"
-	"encoding/json"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -34,32 +33,85 @@ func (handler *Handler) Loge(format string, args ...interface{}) {
 	handler.context.Errorf(format, args)
 }
 
+func (handler *Handler) GetStory(storyId int, fetchComments bool) (*Story, error) {
+	story, err := handler.cache.GetStory(storyId)
+
+	if err != nil {
+		story, err = handler.dataStore.GetStory(storyId)
+		if err != nil {
+			story, err = handler.apiClient.GetStory(storyId)
+			if err != nil {
+				return nil, err
+			}
+
+			if fetchComments {
+				handler.fetchTopComments(story)
+			}
+
+			if err = handler.dataStore.SaveStory(story); err != nil {
+				handler.Loge("Error saving story to data store: %v", err)
+			}
+			handler.cache.SetStory(story)
+		}
+	}
+
+	return story, err
+}
+
+func (handler *Handler) GetComment(storyId int) (*Comment, error) {
+	comment, err := handler.cache.GetComment(storyId)
+
+	if err != nil {
+		comment, err = handler.dataStore.GetComment(storyId)
+		if err != nil {
+			comment, err = handler.apiClient.GetComment(storyId)
+			if err != nil {
+				return nil, err
+			}
+
+			if err = handler.dataStore.SaveComment(comment); err != nil {
+				handler.Loge("Error saving comment to data store: %v", err)
+			}
+			handler.cache.SetComment(comment)
+		}
+	}
+
+	return comment, err
+}
+
 func (handler *Handler) GetTopStoryIds() ([]int, error) {
-	topStories := handler.cache.GetTopStories()
-	if topStories != nil {
-		return topStories, nil
-	}
-
-	topStories, err := handler.apiClient.GetTopStories()
-	if err == nil {
-		handler.cache.SetTopStories(topStories)
-	}
-
-	return topStories, err
+	return getStoryIds(handler.cache.GetTopStories,
+		handler.apiClient.GetTopStories,
+		handler.cache.SetTopStories,
+	)
 }
 
 func (handler *Handler) GetNewStoryIds() ([]int, error) {
-	newStories := handler.cache.GetNewStories()
-	if newStories != nil {
-		return newStories, nil
-	}
+	return getStoryIds(handler.cache.GetNewStories,
+		handler.apiClient.GetNewStories,
+		handler.cache.SetNewStories,
+	)
+}
 
-	newStories, err := handler.apiClient.GetNewStories()
-	if err == nil {
-		handler.cache.SetNewStories(newStories)
-	}
+func (handler *Handler) GetAskStoryIds() ([]int, error) {
+	return getStoryIds(handler.cache.GetAskStories,
+		handler.apiClient.GetAskStories,
+		handler.cache.SetAskStories,
+	)
+}
 
-	return newStories, err
+func (handler *Handler) GetShowStoryIds() ([]int, error) {
+	return getStoryIds(handler.cache.GetShowStories,
+		handler.apiClient.GetShowStories,
+		handler.cache.SetShowStories,
+	)
+}
+
+func (handler *Handler) GetJobStoryIds() ([]int, error) {
+	return getStoryIds(handler.cache.GetJobStories,
+		handler.apiClient.GetJobStories,
+		handler.cache.SetJobStories,
+	)
 }
 
 func (handler *Handler) GetStoriesFromDataStore(ids []int) (string, *ApiError) {
@@ -68,10 +120,35 @@ func (handler *Handler) GetStoriesFromDataStore(ids []int) (string, *ApiError) {
 		return "", NewError(err)
 	}
 
-	jsonData, err := json.Marshal(stories)
-	if err != nil {
-		return "", NewError(err)
+	return toJson(stories)
+}
+
+func getStoryIds(fromCacheFunc func() []int, fromApiClientFunc func() ([]int, error), saveToCacheFunc func([]int)) ([]int, error) {
+	stories := fromCacheFunc()
+	if stories != nil {
+		return stories, nil
 	}
 
-	return string(jsonData), nil
+	stories, err := fromApiClientFunc()
+	if err == nil {
+		saveToCacheFunc(stories)
+	}
+
+	return stories, err
+}
+
+func (handler *Handler) fetchTopComments(story *Story) {
+	commentsToRetrieve := len(story.Kids)
+	if commentsToRetrieve > 5 {
+		commentsToRetrieve = 5
+	}
+
+	for i := 0; i < commentsToRetrieve; i++ {
+		commentId := story.Kids[i]
+
+		comment, err := handler.GetComment(commentId)
+		if err == nil {
+			story.Comments = append(story.Comments, *comment)
+		}
+	}
 }

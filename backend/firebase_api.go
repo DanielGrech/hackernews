@@ -35,6 +35,18 @@ func (hnc *HnApiClient) GetNewStories() (stories []int, e error) {
 	return hnc.getStories("newstories")
 }
 
+func (hnc *HnApiClient) GetAskStories() (stories []int, e error) {
+	return hnc.getStories("askstories")
+}
+
+func (hnc *HnApiClient) GetShowStories() (stories []int, e error) {
+	return hnc.getStories("showstories")
+}
+
+func (hnc *HnApiClient) GetJobStories() (stories []int, e error) {
+	return hnc.getStories("jobstories")
+}
+
 func (hnc *HnApiClient) GetStory(id int) (*Story, error) {
 	item, err := hnc.GetItem(id)
 	if err != nil {

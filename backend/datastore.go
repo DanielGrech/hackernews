@@ -32,8 +32,6 @@ func (db *Db) GetStory(id int) (*Story, error) {
 			comment, cErr := db.GetComment(commentId)
 			if cErr == nil {
 				story.Comments = append(story.Comments, *comment)
-			} else {
-				db.context.Warningf("Error getting comment from datastore: %v", cErr)
 			}
 		}
 	}
@@ -67,8 +65,6 @@ func (db *Db) GetStories(ids []int) ([]*Story, error) {
 				comment, cErr := db.GetComment(commentId)
 				if cErr == nil {
 					story.Comments = append(story.Comments, *comment)
-				} else {
-					db.context.Warningf("Error getting comment from datastore: %v -> %v", commentId, cErr)
 				}
 			}
 		}
@@ -93,8 +89,6 @@ func (db *Db) GetComment(id int) (*Comment, error) {
 			subComment, cErr := db.GetComment(commentId)
 			if cErr == nil {
 				comment.Comments = append(comment.Comments, *subComment)
-			} else {
-				db.context.Warningf("Error getting comment from datastore: %v", cErr)
 			}
 		}
 	}

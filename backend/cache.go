@@ -8,7 +8,11 @@ import (
 
 const cacheKeyTopStories = "top_stories"
 const cacheKeyNewStories = "new_stories"
+const cacheKeyAskStories = "ask_stories"
+const cacheKeyShowStories = "show_stories"
+const cacheKeyJobStories = "job_stories"
 const cacheKeyStoryPrefix = "story_"
+const cacheKeyCommentPrefix = "story_"
 
 type Cache struct {
 	context appengine.Context
@@ -38,6 +42,24 @@ func (cache *Cache) SetStory(story *Story) {
 	}
 }
 
+func (cache *Cache) GetComment(id int) (*Comment, error) {
+	var cacheEntry Comment
+	cacheKey := cacheKeyCommentPrefix + strconv.Itoa(id)
+	_, err := memcache.Gob.Get(cache.context, cacheKey, &cacheEntry)
+	return &cacheEntry, err
+}
+
+func (cache *Cache) SetComment(comment *Comment) {
+	item := &memcache.Item{
+		Key:    cacheKeyCommentPrefix + strconv.Itoa(comment.ID),
+		Object: *comment,
+	}
+
+	if err := memcache.Gob.Set(cache.context, item); err != nil {
+		cache.context.Warningf("Error saving comment to memcache: %v", err)
+	}
+}
+
 func (cache *Cache) GetTopStories() []int {
 	return cache.getIdsFromCache(cacheKeyTopStories)
 }
@@ -52,6 +74,30 @@ func (cache *Cache) GetNewStories() []int {
 
 func (cache *Cache) SetNewStories(storyIds []int) {
 	cache.putIdsInCache(storyIds, cacheKeyNewStories)
+}
+
+func (cache *Cache) GetAskStories() []int {
+	return cache.getIdsFromCache(cacheKeyAskStories)
+}
+
+func (cache *Cache) SetAskStories(storyIds []int) {
+	cache.putIdsInCache(storyIds, cacheKeyAskStories)
+}
+
+func (cache *Cache) GetShowStories() []int {
+	return cache.getIdsFromCache(cacheKeyShowStories)
+}
+
+func (cache *Cache) SetShowStories(storyIds []int) {
+	cache.putIdsInCache(storyIds, cacheKeyShowStories)
+}
+
+func (cache *Cache) GetJobStories() []int {
+	return cache.getIdsFromCache(cacheKeyJobStories)
+}
+
+func (cache *Cache) SetJobStories(storyIds []int) {
+	cache.putIdsInCache(storyIds, cacheKeyJobStories)
 }
 
 func (cache *Cache) putIdsInCache(ids []int, cacheKey string) {

@@ -1,7 +1,6 @@
 package hackernews
 
 import (
-	"encoding/json"
 	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
@@ -14,12 +13,18 @@ func init() {
 
 	router.Handle("/top", ApiHandler(getTopStories))
 	router.Handle("/new", ApiHandler(getNewStories))
+	router.Handle("/ask", ApiHandler(getAskStories))
+	router.Handle("/show", ApiHandler(getShowStories))
+	router.Handle("/job", ApiHandler(getJobStories))
 	router.Handle("/story/{story:[0-9]+}", ApiHandler(getStory))
-	router.Handle("/story/{story:[0-9]+}/comments", ApiHandler(getCommentsForStory))
+	router.Handle("/story/{story:[0-9]+}/comments", ApiHandler(getCommentIdsForStory))
 	router.Handle("/comment/{comment:[0-9]+}", ApiHandler(getComment))
-	router.Handle("/comment/{comment:[0-9]+}/comments", ApiHandler(getCommentsForComment))
+	router.Handle("/comment/{comment:[0-9]+}/comments", ApiHandler(getCommentIdsForComment))
 	router.Handle("/tasks/top_stories", ApiHandler(tasks.getTopStories))
 	router.Handle("/tasks/new_stories", ApiHandler(tasks.getNewStories))
+	router.Handle("/tasks/ask_stories", ApiHandler(tasks.getAskStories))
+	router.Handle("/tasks/show_stories", ApiHandler(tasks.getShowStories))
+	router.Handle("/tasks/job_stories", ApiHandler(tasks.getJobStories))
 
 	http.Handle("/", router)
 }
@@ -27,71 +32,39 @@ func init() {
 func getStory(handler *Handler) (string, *ApiError) {
 	storyId, _ := strconv.Atoi(handler.vars["story"])
 
-	story, err := handler.dataStore.GetStory(storyId)
-	if err != nil {
-		story, err = handler.apiClient.GetStory(storyId)
-		if err != nil {
-			return "", NewErrorWithMessage(err, "Error retrieving story")
-		}
+	story, err := handler.GetStory(storyId, false)
 
-		handler.dataStore.SaveStory(story)
+	if err != nil {
+		return "", NewErrorWithMessageAndCode(err, "No story found", http.StatusNotFound)
 	}
 
-	jsonData, err := json.Marshal(story)
-	if err != nil {
-		return "", NewError(err)
-	}
-
-	return string(jsonData), nil
+	return toJson(story)
 }
 
 func getComment(handler *Handler) (string, *ApiError) {
 	commentId, _ := strconv.Atoi(handler.vars["comment"])
 
-	comment, err := handler.dataStore.GetComment(commentId)
+	comment, err := handler.GetComment(commentId)
 	if err != nil {
-		handler.Logd("No comment in data store!")
-		comment, err = handler.apiClient.GetComment(commentId)
-		if err != nil {
-			return "", NewErrorWithMessageAndCode(err, "No comment found", http.StatusNotFound)
-		}
-
-		handler.Logd("Saving %v", comment)
-		if err = handler.dataStore.SaveComment(comment); err != nil {
-			handler.Loge("Error saving comment to data store: %v", err)
-		}
+		return "", NewErrorWithMessageAndCode(err, "No comment found", http.StatusNotFound)
 	}
 
-	jsonData, err := json.Marshal(comment)
-	if err != nil {
-		return "", NewError(err)
-	}
-
-	return string(jsonData), nil
+	return toJson(comment)
 }
 
-func getCommentsForStory(handler *Handler) (string, *ApiError) {
+func getCommentIdsForStory(handler *Handler) (string, *ApiError) {
 	storyId, _ := strconv.Atoi(handler.vars["story"])
 
-	story, err := handler.dataStore.GetStory(storyId)
+	story, err := handler.GetStory(storyId, false)
+
 	if err != nil {
 		return "", NewError(err)
 	}
 
-	commentIds := story.Kids
-	if len(commentIds) == 0 {
-		return "[]", nil
-	}
-
-	jsonData, err := json.Marshal(commentIds)
-	if err != nil {
-		return "", NewError(err)
-	}
-
-	return string(jsonData), nil
+	return getIdsJson(story.Kids)
 }
 
-func getCommentsForComment(handler *Handler) (string, *ApiError) {
+func getCommentIdsForComment(handler *Handler) (string, *ApiError) {
 	commentId, _ := strconv.Atoi(handler.vars["comment"])
 
 	comment, err := handler.dataStore.GetComment(commentId)
@@ -99,30 +72,31 @@ func getCommentsForComment(handler *Handler) (string, *ApiError) {
 		return "", NewErrorWithMessageAndCode(err, "No comment found", http.StatusNotFound)
 	}
 
-	commentIds := comment.Kids
-	if len(commentIds) == 0 {
-		return "[]", nil
-	}
-
-	jsonData, err := json.Marshal(commentIds)
-	if err != nil {
-		return "", NewError(err)
-	}
-
-	return string(jsonData), nil
+	return getIdsJson(comment.Kids)
 }
 
 func getTopStories(handler *Handler) (string, *ApiError) {
-	storyIds, err := handler.GetTopStoryIds()
-	if err != nil {
-		return "", NewError(err)
-	}
-
-	return handler.GetStoriesFromDataStore(storyIds)
+	return handler.getStoriesJson(handler.GetTopStoryIds)
 }
 
 func getNewStories(handler *Handler) (string, *ApiError) {
-	storyIds, err := handler.GetNewStoryIds()
+	return handler.getStoriesJson(handler.GetNewStoryIds)
+}
+
+func getAskStories(handler *Handler) (string, *ApiError) {
+	return handler.getStoriesJson(handler.GetAskStoryIds)
+}
+
+func getShowStories(handler *Handler) (string, *ApiError) {
+	return handler.getStoriesJson(handler.GetShowStoryIds)
+}
+
+func getJobStories(handler *Handler) (string, *ApiError) {
+	return handler.getStoriesJson(handler.GetJobStoryIds)
+}
+
+func (handler *Handler) getStoriesJson(fn func() ([]int, error)) (string, *ApiError) {
+	storyIds, err := fn()
 	if err != nil {
 		return "", NewError(err)
 	}

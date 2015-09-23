@@ -1,6 +1,7 @@
 package hackernews
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -10,6 +11,8 @@ type ApiError struct {
 	Message string
 	Code    int
 }
+
+type ApiHandler func(handler *Handler) (string, *ApiError)
 
 func NewErrorWithMessageAndCode(err error, message string, code int) *ApiError {
 	return &ApiError{
@@ -31,8 +34,6 @@ func (ae *ApiError) Error() string {
 	return ae.Err.Error()
 }
 
-type ApiHandler func(handler *Handler) (string, *ApiError)
-
 func (fn ApiHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	handler := NewHandler(r)
 	if json, err := fn(handler); err != nil {
@@ -40,4 +41,21 @@ func (fn ApiHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fmt.Fprintf(w, json)
 	}
+}
+
+func getIdsJson(ids []int) (string, *ApiError) {
+	if len(ids) == 0 {
+		return "[]", nil
+	}
+
+	return toJson(ids)
+}
+
+func toJson(object interface{}) (string, *ApiError) {
+	jsonData, err := json.Marshal(object)
+	if err != nil {
+		return "", NewError(err)
+	}
+
+	return string(jsonData), nil
 }
