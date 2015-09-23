@@ -17,6 +17,42 @@ func NewDb(c appengine.Context) *Db {
 	return &db
 }
 
+func (db *Db) DeleteStoriesNotIn(ids []int) {
+	allKeys := db.getAllStoryKeys()
+
+	var keysToKeep = make([]*datastore.Key, len(ids))
+	for _, id := range ids {
+		keysToKeep = append(keysToKeep, db.keyForStory(id))
+	}
+
+	keysToRemove := db.findDiff(allKeys, keysToKeep)
+
+	db.context.Debugf("Found keys to remove: %v", keysToRemove)
+
+	if len(keysToRemove) > 0 {
+		// Delete comments for story
+		for _, key := range keysToRemove {
+			story := new(Story)
+			if err := datastore.Get(db.context, key, story); err != nil {
+				db.context.Errorf("Error getting story: %v", err)
+			} else {
+				db.deleteComments(story.Kids)
+			}
+		}
+
+		// Delete our story items
+		if err := datastore.DeleteMulti(db.context, keysToRemove); err != nil {
+			db.context.Errorf("Error deleting old stories: %v", err)
+		}
+	}
+}
+
+func (db *Db) getAllStoryKeys() []*datastore.Key {
+	q := datastore.NewQuery("Story").KeysOnly()
+	keys, _ := q.GetAll(db.context, nil)
+	return keys
+}
+
 func (db *Db) SaveStory(story *Story) error {
 	key := db.keyForStory(story.ID)
 	_, err := datastore.Put(db.context, key, story)
@@ -94,6 +130,32 @@ func (db *Db) GetComment(id int) (*Comment, error) {
 	}
 
 	return comment, err
+}
+
+func (db *Db) deleteComments(commentIds []int) {
+	db.context.Debugf("Going to delete comments: %v", commentIds)
+	for _, commentId := range commentIds {
+		comment, err := db.GetComment(commentId)
+		if err == nil {
+			db.deleteComments(comment.Kids)
+		}
+		datastore.Delete(db.context, db.keyForComment(commentId))
+	}
+}
+
+func (db *Db) findDiff(allKeys []*datastore.Key, keysToKeep []*datastore.Key) []*datastore.Key {
+	w := 0
+loop:
+	for _, x := range allKeys {
+		for _, y := range keysToKeep {
+			if x.Equal(y) {
+				continue loop
+			}
+		}
+		allKeys[w] = x
+		w++
+	}
+	return allKeys[:w]
 }
 
 func (db *Db) keyForComment(id int) *datastore.Key {

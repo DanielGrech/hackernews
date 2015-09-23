@@ -24,6 +24,11 @@ func NewCache(c appengine.Context) *Cache {
 	return &cache
 }
 
+func (cache *Cache) RemoveStory(id int) error {
+	cacheKey := cacheKeyStoryPrefix + strconv.Itoa(id)
+	return memcache.Delete(cache.context, cacheKey)
+}
+
 func (cache *Cache) GetStory(id int) (*Story, error) {
 	var cacheEntry Story
 	cacheKey := cacheKeyStoryPrefix + strconv.Itoa(id)

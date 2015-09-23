@@ -25,6 +25,7 @@ func init() {
 	router.Handle("/tasks/ask_stories", ApiHandler(tasks.getAskStories))
 	router.Handle("/tasks/show_stories", ApiHandler(tasks.getShowStories))
 	router.Handle("/tasks/job_stories", ApiHandler(tasks.getJobStories))
+	router.Handle("/tasks/cleanup", ApiHandler(tasks.clearOldData))
 
 	http.Handle("/", router)
 }

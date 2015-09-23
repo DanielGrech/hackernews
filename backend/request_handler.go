@@ -33,6 +33,28 @@ func (handler *Handler) Loge(format string, args ...interface{}) {
 	handler.context.Errorf(format, args)
 }
 
+func (handler *Handler) cleanupOldData() {
+	// First, get ids of stories we still need
+
+	idFns := []func() ([]int, error){
+		handler.GetTopStoryIds,
+		handler.GetNewStoryIds,
+		handler.GetAskStoryIds,
+		handler.GetShowStoryIds,
+		handler.GetJobStoryIds,
+	}
+
+	ids := make([]int, 0)
+	for _, idFn := range idFns {
+		newIds, err := idFn()
+		if err == nil {
+			ids = append(ids, newIds...)
+		}
+	}
+
+	handler.dataStore.DeleteStoriesNotIn(ids)
+}
+
 func (handler *Handler) GetStory(storyId int, fetchComments bool) (*Story, error) {
 	story, err := handler.cache.GetStory(storyId)
 
@@ -42,6 +64,8 @@ func (handler *Handler) GetStory(storyId int, fetchComments bool) (*Story, error
 			story, err = handler.apiClient.GetStory(storyId)
 			if err != nil {
 				return nil, err
+			} else {
+				handler.Logd("Got story %v", *story)
 			}
 
 			if fetchComments {

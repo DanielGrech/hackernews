@@ -2,6 +2,11 @@ package hackernews
 
 type Tasks struct{}
 
+func (tasks *Tasks) clearOldData(handler *Handler) (string, *ApiError) {
+	handler.cleanupOldData()
+	return "Success", nil
+}
+
 func (tasks *Tasks) getTopStories(handler *Handler) (string, *ApiError) {
 	return tasks.getStoryIds(handler, handler.apiClient.GetTopStories, handler.cache.SetTopStories)
 }
