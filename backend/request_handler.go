@@ -65,7 +65,7 @@ func (handler *Handler) GetStory(storyId int, fetchComments bool) (*Story, error
 			if err != nil {
 				return nil, err
 			} else {
-				handler.Logd("Got story %v", *story)
+				handler.Logd("Got story %+v", *story)
 			}
 
 			if fetchComments {

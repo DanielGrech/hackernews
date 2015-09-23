@@ -37,6 +37,7 @@ func (ae *ApiError) Error() string {
 func (fn ApiHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	handler := NewHandler(r)
 	if json, err := fn(handler); err != nil {
+		handler.Loge("Error executing request: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else {
 		fmt.Fprintf(w, json)

@@ -53,9 +53,9 @@ func (hnc *HnApiClient) GetStory(id int) (*Story, error) {
 		return nil, err
 	}
 
-	if item.Type() != "story" {
+	if item.Type() == "comment" {
 		return nil, fmt.Errorf("Called GetStory with ID #%v "+
-			"which is not a story. It is a %v", id, item.Type())
+			"which is not a story. It is a comment.", id)
 	} else {
 		story := item.ToStory()
 		return &story, nil
