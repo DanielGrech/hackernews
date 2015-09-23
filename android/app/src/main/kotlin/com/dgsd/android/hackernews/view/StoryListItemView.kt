@@ -55,8 +55,8 @@ public class StoryListItemView(context: Context, attrs: AttributeSet?, defStyle:
 
     fun populate(story: Story) {
         storyTitle.text = story.title
-        storyCommentCount.text = MessageFormat.format(
-                context.getString(R.string.story_list_item_comments_template), story.commentCount)
+        storyCommentCount.text = MessageFormat.format(context.getString(R.string.story_list_item_comments_template),
+                story.commentCount, if (story.score <= 1) "No" else story.score.toString())
         storyAuthor.text = context.getString(R.string.story_list_item_author_template, story.author)
 
         val dateFlags = DateUtils.FORMAT_ABBREV_ALL.or(DateUtils.FORMAT_SHOW_TIME).or(DateUtils.FORMAT_SHOW_DATE)

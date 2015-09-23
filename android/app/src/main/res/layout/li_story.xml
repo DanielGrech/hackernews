@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/storyDate"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|start"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
@@ -29,7 +29,8 @@
         android:layout_gravity="start|center"
         android:layout_marginBottom="@dimen/padding_small"
         android:layout_marginTop="@dimen/padding_small"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textSize="@dimen/abc_text_size_title_material"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         tools:text="This invention will change the world" />
 
     <TextView
