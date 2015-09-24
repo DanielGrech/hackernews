@@ -11,4 +11,6 @@ public interface StoryMvpView : MvpView {
 
     fun showUri(uri: Uri)
 
+    fun setViewStoryButtonVisible(isVisible: Boolean)
+
 }

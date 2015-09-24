@@ -97,7 +97,7 @@ public class HNDataSource(private val apiDataSource: DataSource, private val dbD
                            saveFn: (List<Story>) -> Unit): Observable<List<Story>> {
         val apiObservable = apiFn().doOnNext {
             saveFn(it)
-            storyListCache[PageType.TOP] = it
+            storyListCache[pageType] = it
             it.forEach { story ->
                 storyCache.put(story.id, story)
             }

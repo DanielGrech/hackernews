@@ -33,10 +33,12 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
                     Timber.e(it, "Error getting story")
                     getView().showError(it.toString())
                 })
+
+        getView().setViewStoryButtonVisible(!story?.url.isNullOrBlank())
     }
 
     fun onViewStoryButtonClicked() {
-        if (story?.url != null) {
+        if (!story?.url.isNullOrBlank()) {
             getView().showUri(Uri.parse(story!!.url))
         }
     }

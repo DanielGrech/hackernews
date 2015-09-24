@@ -119,13 +119,13 @@ func (handler *Handler) GetStory(storyId int, fetchComments bool) (*Story, error
 	return story, err
 }
 
-func (handler *Handler) GetComment(storyId int) (*Comment, error) {
-	comment, err := handler.cache.GetComment(storyId)
+func (handler *Handler) GetComment(commentId int) (*Comment, error) {
+	comment, err := handler.cache.GetComment(commentId)
 
 	if err != nil {
-		comment, err = handler.dataStore.GetComment(storyId)
+		comment, err = handler.dataStore.GetComment(commentId)
 		if err != nil {
-			comment, err = handler.apiClient.GetComment(storyId)
+			comment, err = handler.apiClient.GetComment(commentId)
 			if err != nil {
 				return nil, err
 			}

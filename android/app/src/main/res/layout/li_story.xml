@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:layout_below="@id/storyTitle"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         tools:text="78 comments" />
 
     <TextView

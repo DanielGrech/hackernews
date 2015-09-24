@@ -9,7 +9,8 @@
     <string name="story_list_item_time_template">Posted %1$s</string>
     <string name="story_list_item_author_template">Posted by %1$s</string>
     <string name="story_list_item_comments_template">{1} votes · {0,choice,0#No comments|1#1 comment|1&lt;{0} comments}</string>
-    <string name="story_summary_string_template">{0} · {1} votes</string>
+    <string name="story_summary_string_template">%1$s · %2$s votes</string>
+    <string name="comment_list_item_header_template">%1$s · %2$s</string>
     <string name="view_story_action_button_label">View Story</string>
 
     <string name="error_retrieving_stories">Error retrieving stories</string>

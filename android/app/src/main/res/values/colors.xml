@@ -9,4 +9,6 @@
     <color name="view_story_action_btn_enabled">@color/accent</color>
     <color name="view_story_action_btn_pressed">#E85A26</color>
     <color name="view_story_action_btn_disabled">@color/divider</color>
+
+    <color name="bg_comment">#F6F6F6</color>
 </resources>

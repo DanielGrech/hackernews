@@ -11,20 +11,18 @@ import com.dgsd.android.hackernews.R
 import com.dgsd.android.hackernews.module.AppServicesComponent
 import com.dgsd.android.hackernews.mvp.presenter.StoryPresenter
 import com.dgsd.android.hackernews.mvp.view.StoryMvpView
-import com.dgsd.android.hackernews.util.CustomTabActivityHelper
-import com.dgsd.android.hackernews.util.getSubtitleView
-import com.dgsd.android.hackernews.util.getSummaryString
-import com.dgsd.android.hackernews.util.getTitleView
+import com.dgsd.android.hackernews.util.*
+import com.dgsd.android.hackernews.view.CommentRecyclerView
 import com.dgsd.hackernews.model.Story
-import kotlinx.android.synthetic.act_story.storyText
-import kotlinx.android.synthetic.act_story.toolbar
-import kotlinx.android.synthetic.act_story.viewStoryButton
+import kotlinx.android.synthetic.act_story.*
 import org.jetbrains.anko.*
 import timber.log.Timber
 
 public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>(), StoryMvpView, CustomTabActivityHelper.ConnectionCallback {
 
     private lateinit var customTabActivityHelper: CustomTabActivityHelper
+
+    private lateinit var recyclerView: CommentRecyclerView
 
     companion object {
 
@@ -52,6 +50,16 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
         viewStoryButton.onClick {
             presenter.onViewStoryButtonClicked()
         }
+
+        recyclerView = find(R.id.recyclerView)
+
+        recyclerView.setOnCommentClickListener { comment, view ->
+
+        }
+
+        recyclerView.setOnCommentIdClickListener { ids, view ->
+
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -60,7 +68,7 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.getItemId()) {
+        return when (item.itemId) {
             R.id.share -> {
 
                 return true
@@ -99,7 +107,8 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
     override fun showStory(story: Story) {
         toolbar.title = story.title
         toolbar.subtitle = story.getSummaryString(this)
-        storyText.text = story.text
+
+        recyclerView.setStory(story)
 
         val titleView = toolbar.getTitleView()
         titleView?.verticalPadding = dimen(R.dimen.padding_small)
@@ -119,6 +128,10 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
         CustomTabActivityHelper.openCustomTab(this, customTabIntent, uri) { activity, uri ->
             activity.browse(uri.toString())
         }
+    }
+
+    override fun setViewStoryButtonVisible(isVisible: Boolean) {
+        viewStoryButton.showWhen(isVisible)
     }
 
     override fun onCustomTabsDisconnected() {

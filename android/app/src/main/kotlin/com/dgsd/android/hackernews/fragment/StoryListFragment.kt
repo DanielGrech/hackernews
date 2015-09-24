@@ -58,7 +58,7 @@ public class StoryListFragment: PresentableFragment<StoryListMvpView, StoryListP
             view.startActivity(StoryActivity.getStartIntent(activity, story))
         }
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.primary)
+        swipeRefreshLayout.setColorSchemeResources(R.color.accent)
         swipeRefreshLayout.setOnRefreshListener {
             presenter.onRefreshRequested()
         }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.dgsd.android.hackernews.view.CommentListItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_comment"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/headerText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/accent"
+        android:paddingBottom="@dimen/padding_small"
+        android:paddingEnd="@dimen/padding_small"
+        android:paddingStart="@dimen/padding_small"
+        android:paddingTop="@dimen/padding_small"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:textColor="@android:color/white"
+        tools:text="dgrech · 6 hours ago" />
+
+    <TextView
+        android:id="@+id/commentText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_small"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        tools:text="Comment text goes here!" />
+
+
+</com.dgsd.android.hackernews.view.CommentListItemView>
