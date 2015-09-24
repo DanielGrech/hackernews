@@ -9,7 +9,3 @@ public fun <T> Observable<T>.filterNulls() : Observable<T> {
 public fun <T, S : List<T>> Observable<S>.flatMapList() : Observable<T> {
     return flatMap { Observable.from(it) }
 }
-
-public fun <T, S : Array<T>> Observable<S>.flatMapArray() : Observable<T> {
-    return flatMap { Observable.from(it) }
-}

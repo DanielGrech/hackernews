@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.dgsd.android.hackernews.view.CommentPlaceholderListItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?attr/actionBarSize"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingEnd="@dimen/padding_small"
+    android:paddingStart="@dimen/padding_small"
+    android:background="@drawable/bg_comment">
+
+    <TextView
+        android:id="@+id/placeholderText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:gravity="center"
+        tools:text="Load 12 more comments" />
+
+
+</com.dgsd.android.hackernews.view.CommentPlaceholderListItemView>
