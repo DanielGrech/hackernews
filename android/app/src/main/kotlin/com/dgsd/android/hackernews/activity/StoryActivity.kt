@@ -7,6 +7,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.customtabs.CustomTabsIntent
 import android.support.v7.widget.Toolbar
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.TextView
 import com.dgsd.android.hackernews.R
 import com.dgsd.android.hackernews.module.AppServicesComponent
@@ -55,6 +57,20 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.act_story, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.getItemId()) {
+            R.id.share -> {
+
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
     override fun onStart() {
         super.onStart()

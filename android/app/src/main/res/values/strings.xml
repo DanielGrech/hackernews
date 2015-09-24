@@ -13,4 +13,5 @@
 
     <string name="error_retrieving_stories">Error retrieving stories</string>
     <string name="error_retrieving_stories_ephemeral">Error retrieving stories</string>
+    <string name="share">Share</string>
 </resources>
