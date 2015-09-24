@@ -7,6 +7,8 @@ import com.dgsd.hackernews.network.DataSource
 import com.dgsd.hackernews.network.DbDataSource
 import com.dgsd.hackernews.network.utils.filterNulls
 import rx.Observable
+import rx.lang.kotlin.firstOrNull
+import rx.lang.kotlin.toSingletonObservable
 import java.util.*
 
 public class HNDataSource(private val apiDataSource: DataSource, private val dbDataSource: DbDataSource) : DataSource {
@@ -76,10 +78,17 @@ public class HNDataSource(private val apiDataSource: DataSource, private val dbD
                     dbDataSource.saveStory(it)
                     storyCache.put(it.id, it)
                 }
-        return dbDataSource.getStory(storyId)
-                .startWith(storyCache.get(storyId))
-                .filterNulls()
-                .switchIfEmpty(apiObservable)
+
+        val dbObservable = dbDataSource.getStory(storyId).firstOrNull().filterNulls()
+
+        val cachedData = storyCache.get(storyId)
+        val memoryCacheObservable = if (cachedData == null) {
+            Observable.empty()
+        } else {
+            cachedData.toSingletonObservable()
+        }
+
+        return Observable.mergeDelayError(memoryCacheObservable, dbObservable, apiObservable)
     }
 
     private fun getStories(pageType: PageType, skipCache: Boolean,
@@ -103,7 +112,7 @@ public class HNDataSource(private val apiDataSource: DataSource, private val dbD
             val memoryCacheObservable = if (cachedData.isEmpty()) {
                 Observable.empty<List<Story>>()
             } else {
-                Observable.just(cachedData)
+                cachedData.toSingletonObservable()
             }
 
             return Observable.mergeDelayError(memoryCacheObservable, dbObservable, apiObservable)

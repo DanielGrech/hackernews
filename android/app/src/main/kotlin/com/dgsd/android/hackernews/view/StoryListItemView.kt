@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import com.dgsd.android.hackernews.R
+import com.dgsd.android.hackernews.util.getDateTimeString
 import com.dgsd.android.hackernews.util.onPreDraw
 import com.dgsd.hackernews.model.Story
 import org.jetbrains.anko.find
@@ -59,9 +60,6 @@ public class StoryListItemView(context: Context, attrs: AttributeSet?, defStyle:
                 story.commentCount, if (story.score <= 1) "No" else story.score.toString())
         storyAuthor.text = context.getString(R.string.story_list_item_author_template, story.author)
 
-        val dateFlags = DateUtils.FORMAT_SHOW_TIME.or(DateUtils.FORMAT_SHOW_DATE)
-        val dateText = DateUtils.getRelativeTimeSpanString(TimeUnit.SECONDS.toMillis(story.time),
-                System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS, dateFlags)
-        storyDate.text = context.getString(R.string.story_list_item_time_template, dateText)
+        storyDate.text = context.getString(R.string.story_list_item_time_template, story.getDateTimeString())
     }
 }

@@ -7,6 +7,7 @@ import com.dgsd.android.hackernews.mvp.view.StoryMvpView
 import com.dgsd.android.hackernews.util.bind
 import com.dgsd.android.hackernews.util.onIoThread
 import com.dgsd.hackernews.model.Story
+import timber.log.Timber
 import javax.inject.Inject
 
 public class StoryPresenter(view: StoryMvpView, val component: AppServicesComponent, val storyId: Long) : Presenter<StoryMvpView>(view, component) {
@@ -29,6 +30,7 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
                     story = it
                     getView().showStory(it)
                 }, {
+                    Timber.e(it, "Error getting story")
                     getView().showError(it.toString())
                 })
     }

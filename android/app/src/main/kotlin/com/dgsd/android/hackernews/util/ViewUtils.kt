@@ -115,10 +115,14 @@ public fun View.startActivity(intent: Intent) {
     context.startActivity(intent, activityOpts.toBundle())
 }
 
-public fun Toolbar.setTitleMultiline() {
+public fun Toolbar.getTitleView(): TextView? {
     val field = javaClass.getDeclaredField("mTitleTextView")
     field?.isAccessible = true
-    val titleView = field?.get(this) as TextView?
-    titleView?.verticalPadding = this.context.dimen(R.dimen.padding_small)
-    titleView?.singleLine = false
+    return field?.get(this) as TextView?
+}
+
+public fun Toolbar.getSubtitleView(): TextView? {
+    val field = javaClass.getDeclaredField("mSubtitleTextView")
+    field?.isAccessible = true
+    return field?.get(this) as TextView?
 }
