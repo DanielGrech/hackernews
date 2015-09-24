@@ -3,11 +3,18 @@ package com.dgsd.android.hackernews.util
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
+import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.ImageView
+import android.widget.TextView
+import com.dgsd.android.hackernews.R
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.act_story.toolbar
+import org.jetbrains.anko.dimen
+import org.jetbrains.anko.singleLine
+import org.jetbrains.anko.verticalPadding
 import java.util.*
 
 /**
@@ -106,4 +113,12 @@ public fun View.startActivity(intent: Intent) {
         activityOpts = ActivityOptions.makeScaleUpAnimation(this, width / 2, height / 2, width, height)
     }
     context.startActivity(intent, activityOpts.toBundle())
+}
+
+public fun Toolbar.setTitleMultiline() {
+    val field = javaClass.getDeclaredField("mTitleTextView")
+    field?.isAccessible = true
+    val titleView = field?.get(this) as TextView?
+    titleView?.verticalPadding = this.context.dimen(R.dimen.padding_small)
+    titleView?.singleLine = false
 }

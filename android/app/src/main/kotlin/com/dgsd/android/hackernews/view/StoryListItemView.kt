@@ -59,8 +59,9 @@ public class StoryListItemView(context: Context, attrs: AttributeSet?, defStyle:
                 story.commentCount, if (story.score <= 1) "No" else story.score.toString())
         storyAuthor.text = context.getString(R.string.story_list_item_author_template, story.author)
 
-        val dateFlags = DateUtils.FORMAT_ABBREV_ALL.or(DateUtils.FORMAT_SHOW_TIME).or(DateUtils.FORMAT_SHOW_DATE)
-        val dateText = DateUtils.formatDateTime(context, TimeUnit.SECONDS.toMillis(story.time), dateFlags)
+        val dateFlags = DateUtils.FORMAT_SHOW_TIME.or(DateUtils.FORMAT_SHOW_DATE)
+        val dateText = DateUtils.getRelativeTimeSpanString(TimeUnit.SECONDS.toMillis(story.time),
+                System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS, dateFlags)
         storyDate.text = context.getString(R.string.story_list_item_time_template, dateText)
     }
 }

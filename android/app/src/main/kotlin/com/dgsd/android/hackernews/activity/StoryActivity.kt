@@ -2,20 +2,23 @@ package com.dgsd.android.hackernews.activity
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.support.customtabs.CustomTabsIntent
+import android.support.v7.widget.Toolbar
+import android.widget.TextView
 import com.dgsd.android.hackernews.R
 import com.dgsd.android.hackernews.module.AppServicesComponent
 import com.dgsd.android.hackernews.mvp.presenter.StoryPresenter
 import com.dgsd.android.hackernews.mvp.view.StoryMvpView
 import com.dgsd.android.hackernews.util.CustomTabActivityHelper
+import com.dgsd.android.hackernews.util.setTitleMultiline
 import com.dgsd.hackernews.model.Story
 import kotlinx.android.synthetic.act_story.storyText
 import kotlinx.android.synthetic.act_story.toolbar
 import kotlinx.android.synthetic.act_story.viewStoryButton
-import org.jetbrains.anko.browse
-import org.jetbrains.anko.onClick
+import org.jetbrains.anko.*
 import timber.log.Timber
 
 public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>(), StoryMvpView, CustomTabActivityHelper.ConnectionCallback {
@@ -37,6 +40,8 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(toolbar)
+
+        toolbar.setTitleMultiline()
 
         with (supportActionBar) {
             setDisplayHomeAsUpEnabled(true)
