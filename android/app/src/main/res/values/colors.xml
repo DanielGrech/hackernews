@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#FF8937</color>
-    <color name="primary_dark">#E85A26</color>
-    <color name="accent">#9A9A9A</color>
+    <color name="primary">#3D3D3D</color>
+    <color name="primary_dark">#313131</color>
+    <color name="accent">#FF8937</color>
     <color name="divider">#B3B3B3</color>
     <color name="window_background">#FFFFFF</color>
 
-    <color name="view_story_action_btn_enabled">@color/primary</color>
-    <color name="view_story_action_btn_pressed">@color/primary_dark</color>
+    <color name="view_story_action_btn_enabled">@color/accent</color>
+    <color name="view_story_action_btn_pressed">#E85A26</color>
     <color name="view_story_action_btn_disabled">@color/divider</color>
 </resources>

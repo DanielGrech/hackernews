@@ -9,4 +9,6 @@
     </style>
 
     <style name="AppTheme" parent="AppThemeBase" />
+
+    <style name="AppTheme.Main" parent="AppTheme" />
 </resources>
