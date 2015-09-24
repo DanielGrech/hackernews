@@ -84,7 +84,7 @@ public class DbProvider(private val db: BriteDatabase) : DbDataSource {
                     Tables.Stories.fromCursor(it)
                 }
 
-        val commentObservable = getComments(storyId)
+        val commentObservable = getComments(storyId).defaultIfEmpty(emptyList())
 
         return Observable.zip(storyObservable, commentObservable) { story, comments ->
             story.copy(comments = comments)

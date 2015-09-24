@@ -1,5 +1,6 @@
 package com.dgsd.android.hackernews.adapter
 
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import com.dgsd.android.hackernews.view.CommentListItemView
 import com.dgsd.android.hackernews.view.CommentPlaceholderListItemView
 import com.dgsd.hackernews.model.Comment
 import com.dgsd.hackernews.model.Story
+import org.jetbrains.anko.find
 
 public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.CommentViewHolder>() {
 
@@ -41,10 +43,14 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
                 CommentPlaceholderListItemView.inflate(parent)
             }
             CommentListAdapter.VIEW_TYPE_STORY_TEXT -> {
-                val storyTextView = LayoutInflater.from(parent.context)
-                        .inflate(R.layout.li_story_text, parent, false) as TextView
+                val storyCardView = LayoutInflater.from(parent.context)
+                        .inflate(R.layout.li_story_text, parent, false) as CardView
+                val storyTextView = storyCardView.find<TextView>(R.id.text)
                 storyTextView.movementMethod = LinkMovementMethod.getInstance()
-                storyTextView
+
+                storyCardView.tag = storyTextView
+
+                storyCardView
             }
             else -> {
                 throw IllegalStateException("Unknown viewType: $viewType")
@@ -126,7 +132,7 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
                     (itemView as CommentPlaceholderListItemView).populate(item.commentIds!!)
                 }
                 CommentListAdapter.VIEW_TYPE_STORY_TEXT -> {
-                    (itemView as TextView).text = item.storyText
+                    (itemView.tag as TextView).text = item.storyText
                 }
             }
         }
