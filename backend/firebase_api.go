@@ -4,6 +4,7 @@ import (
 	"appengine"
 	"appengine/urlfetch"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"strconv"
@@ -93,6 +94,9 @@ func (hnc *HnApiClient) GetItem(id int) (item item, e error) {
 	}
 
 	err = json.Unmarshal(body, &item)
+	if len(item) == 0 {
+		return nil, errors.New("Null reponse received from API")
+	}
 
 	return item, err
 }
