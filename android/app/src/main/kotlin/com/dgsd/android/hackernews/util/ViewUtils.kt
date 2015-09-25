@@ -2,19 +2,11 @@ package com.dgsd.android.hackernews.util
 
 import android.app.ActivityOptions
 import android.content.Intent
-import android.os.Build
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.ImageView
 import android.widget.TextView
-import com.dgsd.android.hackernews.R
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.act_story.toolbar
-import org.jetbrains.anko.dimen
-import org.jetbrains.anko.singleLine
-import org.jetbrains.anko.verticalPadding
 import java.util.*
 
 /**
@@ -82,19 +74,17 @@ public fun View.showWhen(condition : Boolean) {
     }
 }
 
+
+public fun View.hideWhen(condition : Boolean) {
+    showWhen(!condition)
+}
+
 public fun View.isGone(): Boolean {
     return this.getVisibility() == View.GONE
 }
 
 public fun View.isVisible(): Boolean {
     return this.getVisibility() == View.VISIBLE
-}
-
-public fun ImageView.setImageUrl(url: String) {
-    Picasso.with(this.getContext())
-            .load(url)
-            .fit()
-            .into(this)
 }
 
 public fun ViewGroup.children(): List<View> {

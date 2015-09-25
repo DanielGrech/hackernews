@@ -16,4 +16,9 @@
     <string name="error_retrieving_stories">Error retrieving stories</string>
     <string name="error_retrieving_stories_ephemeral">Error retrieving stories</string>
     <string name="share">Share</string>
+
+    <plurals name="load_more_comments">
+        <item quantity="one">Tap to load %1$s more comment</item>
+        <item quantity="other">Tap to load %1$s more comments</item>
+    </plurals>
 </resources>

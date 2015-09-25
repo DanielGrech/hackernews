@@ -12,12 +12,11 @@ dependencies {
     compile project(":model")
     compile "com.squareup.retrofit:retrofit:${versions.retrofit}"
     compile "com.squareup.retrofit:converter-wire:${versions.retrofit}"
-    compile "com.squareup.wire:wire-runtime:${versions.wire}"
     compile "com.squareup.retrofit:adapter-rxjava:${versions.retrofit}"
+    compile "com.squareup.wire:wire-runtime:${versions.wire}"
     compile "com.squareup.okhttp:okhttp:${versions.okHttp}"
     compile "io.reactivex:rxjava:${versions.rxJava}"
     compile "io.reactivex:rxkotlin:${versions.rxKotlin}"
-    compile "com.google.code.gson:gson:${versions.gson}"
 
     testCompile "junit:junit:${versions.junit}"
     testCompile "org.mockito:mockito-core:${versions.mockito}"

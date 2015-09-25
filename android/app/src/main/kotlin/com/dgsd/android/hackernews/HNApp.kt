@@ -14,16 +14,11 @@ import com.facebook.stetho.Stetho
 import com.facebook.stetho.timber.StethoTree
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
-import com.squareup.picasso.Cache
-import com.squareup.picasso.LruCache
-import com.squareup.picasso.Picasso
 import timber.log.Timber
 
 abstract class HNApp : Application() {
 
     var refWatcher: RefWatcher = RefWatcher.DISABLED
-
-    private lateinit var picassoImageCache: Cache
 
     private lateinit var appServicesComponent: AppServicesComponent
 
@@ -45,9 +40,7 @@ abstract class HNApp : Application() {
         super.onTrimMemory(level)
 
         if (level >= ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
-            Timber.d("Android is suggesting to trim memory .. clearing picasso cache. Level = %s", level)
-            // Clear our picasso cache
-            picassoImageCache.clear()
+            Timber.d("Android is suggesting to trim memoryLevel = %s", level)
         }
     }
 
@@ -75,18 +68,6 @@ abstract class HNApp : Application() {
             Timber.plant(CrashlyticsLogger())
         }
         registerActivityLifecycleCallbacks(LoggingLifecycleCallbacks())
-
-        createPicassoCache()
-    }
-
-    /**
-     * Installs a custom picasso instance with a memory cache that can be controlled
-     */
-    private fun createPicassoCache() {
-        picassoImageCache = LruCache(this)
-        Picasso.setSingletonInstance(Picasso.Builder(this)
-                .memoryCache(picassoImageCache)
-                .build())
     }
 
     protected open fun enableDebugTools() {

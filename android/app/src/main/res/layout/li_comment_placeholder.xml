@@ -3,20 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_comment"
     android:minHeight="?attr/actionBarSize"
-    android:orientation="vertical"
-    android:gravity="center"
     android:paddingEnd="@dimen/padding_small"
-    android:paddingStart="@dimen/padding_small"
-    android:background="@drawable/bg_comment">
+    android:paddingStart="@dimen/padding_small">
 
     <TextView
         android:id="@+id/placeholderText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:layout_gravity="center"
         android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         tools:text="Load 12 more comments" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="gone"
+        style="?android:attr/android:progressBarStyleSmall"/>
 
 
 </com.dgsd.android.hackernews.view.CommentPlaceholderListItemView>
