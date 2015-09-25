@@ -15,6 +15,7 @@ import com.dgsd.android.hackernews.view.CommentPlaceholderListItemView
 import com.dgsd.hackernews.model.Comment
 import com.dgsd.hackernews.model.Story
 import org.jetbrains.anko.find
+import timber.log.Timber
 import java.util.*
 
 public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.CommentViewHolder>() {
@@ -71,6 +72,8 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
     }
 
     fun setStory(story: Story) {
+        val oldItems = items.clone() as ArrayList<ListItem>
+
         items.clear()
 
         if (!story.text.isNullOrEmpty()) {
@@ -81,7 +84,16 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
 
         addComments(commentIdToCommentMap, story.commentIds, 0)
 
-        notifyItemRangeChanged(0, itemCount);
+        val startRange = items.mapIndexed { index, item ->
+            if (!item.equals(oldItems.getOrNull(index))) {
+                index
+            } else {
+                -1
+            }
+        }.filter { it >= 0 }.firstOrNull() ?: 0
+
+        Timber.d("Notifying items changed: $startRange --> $itemCount")
+        notifyItemRangeChanged(startRange, itemCount);
     }
 
     private fun addComments(commentMap: Map<Long, Comment>, commentIds: List<Long>, indentationLevel: Int) {

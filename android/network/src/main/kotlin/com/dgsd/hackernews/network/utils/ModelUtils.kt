@@ -39,11 +39,11 @@ public fun PbStory.convert(): Story {
     )
 
     if (this.comment_ids != null) {
-        item = item.copy(commentIds = this.comment_ids)
+        item = item.copy(commentIds = this.comment_ids.sortedDescending())
     }
 
     if (this.comments != null) {
-        item = item.copy(comments = this.comments.map { it.convert() }.toList())
+        item = item.copy(comments = this.comments.map { it.convert() }.sortedByDescending { it -> it.time  }.toList())
     }
 
     if (this.parent_id > 0) {
