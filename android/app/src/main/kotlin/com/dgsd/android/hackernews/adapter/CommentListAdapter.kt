@@ -90,10 +90,14 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
             } else {
                 -1
             }
-        }.filter { it >= 0 }.firstOrNull() ?: 0
+        }.filter { it >= 0 }.firstOrNull() ?: -1
 
-        Timber.d("Notifying items changed: $startRange --> $itemCount")
-        notifyItemRangeChanged(startRange, itemCount);
+        if (startRange >= 0) {
+            Timber.d("Notifying items changed: $startRange --> $itemCount")
+            notifyItemRangeChanged(startRange, itemCount);
+        } else {
+            Timber.d("No items updated")
+        }
     }
 
     private fun addComments(commentMap: Map<Long, Comment>, commentIds: List<Long>, indentationLevel: Int) {

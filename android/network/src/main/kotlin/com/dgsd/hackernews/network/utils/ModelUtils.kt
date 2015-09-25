@@ -18,11 +18,11 @@ public fun PbComment.convert(): Comment {
     )
 
     if (this.comment_ids != null) {
-        item = item.copy(commentIds = this.comment_ids)
+        item = item.copy(commentIds = this.comment_ids.sortedDescending())
     }
 
     if (this.comments != null) {
-        item = item.copy(comments = this.comments.map { it.convert() }.toList())
+        item = item.copy(comments = this.comments.map { it.convert() }.sortedByDescending { it -> it.time  }.toList())
     }
 
     return item
