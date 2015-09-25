@@ -18,6 +18,8 @@ message PbStory {
 	repeated int64 parts = 11 [packed=true];
 	optional int32 comment_count = 12;
 	repeated PbComment comments = 13;
+	optional bool deleted = 14;
+	optional bool dead = 15;
 }
 
 message PbComment {
@@ -29,6 +31,8 @@ message PbComment {
 	repeated int64 comment_ids = 6 [packed=true];
 	optional int32 comment_count = 7;
 	repeated PbComment comments = 8;
+	optional bool deleted = 9;
+	optional bool dead = 10;
 }
 
 message PbIds {

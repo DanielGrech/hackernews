@@ -12,6 +12,8 @@ public fun PbComment.convert(): Comment {
             author = this.author,
             parentId = this.parent_id,
             text = this.text,
+            deleted = this.deleted,
+            dead =  this.dead,
             commentCount = this.comment_count
     )
 
@@ -35,6 +37,8 @@ public fun PbStory.convert(): Story {
             text = this.text,
             url = this.url,
             score = this.score,
+            deleted = this.deleted,
+            dead =  this.dead,
             commentCount = this.comment_count
     )
 

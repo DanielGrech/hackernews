@@ -7,6 +7,7 @@ import com.squareup.wire.ProtoField;
 import java.util.Collections;
 import java.util.List;
 
+import static com.squareup.wire.Message.Datatype.BOOL;
 import static com.squareup.wire.Message.Datatype.INT32;
 import static com.squareup.wire.Message.Datatype.INT64;
 import static com.squareup.wire.Message.Datatype.STRING;
@@ -25,6 +26,8 @@ public final class PbComment extends Message {
   public static final List<Long> DEFAULT_COMMENT_IDS = Collections.emptyList();
   public static final Integer DEFAULT_COMMENT_COUNT = 0;
   public static final List<PbComment> DEFAULT_COMMENTS = Collections.emptyList();
+  public static final Boolean DEFAULT_DELETED = false;
+  public static final Boolean DEFAULT_DEAD = false;
 
   @ProtoField(tag = 1, type = INT64, label = REQUIRED)
   public final Long id;
@@ -50,7 +53,13 @@ public final class PbComment extends Message {
   @ProtoField(tag = 8, label = REPEATED, messageType = PbComment.class)
   public final List<PbComment> comments;
 
-  public PbComment(Long id, String author, Long parent_id, Long time, String text, List<Long> comment_ids, Integer comment_count, List<PbComment> comments) {
+  @ProtoField(tag = 9, type = BOOL)
+  public final Boolean deleted;
+
+  @ProtoField(tag = 10, type = BOOL)
+  public final Boolean dead;
+
+  public PbComment(Long id, String author, Long parent_id, Long time, String text, List<Long> comment_ids, Integer comment_count, List<PbComment> comments, Boolean deleted, Boolean dead) {
     this.id = id;
     this.author = author;
     this.parent_id = parent_id;
@@ -59,10 +68,12 @@ public final class PbComment extends Message {
     this.comment_ids = immutableCopyOf(comment_ids);
     this.comment_count = comment_count;
     this.comments = immutableCopyOf(comments);
+    this.deleted = deleted;
+    this.dead = dead;
   }
 
   private PbComment(Builder builder) {
-    this(builder.id, builder.author, builder.parent_id, builder.time, builder.text, builder.comment_ids, builder.comment_count, builder.comments);
+    this(builder.id, builder.author, builder.parent_id, builder.time, builder.text, builder.comment_ids, builder.comment_count, builder.comments, builder.deleted, builder.dead);
     setBuilder(builder);
   }
 
@@ -78,7 +89,9 @@ public final class PbComment extends Message {
         && equals(text, o.text)
         && equals(comment_ids, o.comment_ids)
         && equals(comment_count, o.comment_count)
-        && equals(comments, o.comments);
+        && equals(comments, o.comments)
+        && equals(deleted, o.deleted)
+        && equals(dead, o.dead);
   }
 
   @Override
@@ -93,6 +106,8 @@ public final class PbComment extends Message {
       result = result * 37 + (comment_ids != null ? comment_ids.hashCode() : 1);
       result = result * 37 + (comment_count != null ? comment_count.hashCode() : 0);
       result = result * 37 + (comments != null ? comments.hashCode() : 1);
+      result = result * 37 + (deleted != null ? deleted.hashCode() : 0);
+      result = result * 37 + (dead != null ? dead.hashCode() : 0);
       hashCode = result;
     }
     return result;
@@ -108,6 +123,8 @@ public final class PbComment extends Message {
     public List<Long> comment_ids;
     public Integer comment_count;
     public List<PbComment> comments;
+    public Boolean deleted;
+    public Boolean dead;
 
     public Builder() {
     }
@@ -123,6 +140,8 @@ public final class PbComment extends Message {
       this.comment_ids = copyOf(message.comment_ids);
       this.comment_count = message.comment_count;
       this.comments = copyOf(message.comments);
+      this.deleted = message.deleted;
+      this.dead = message.dead;
     }
 
     public Builder id(Long id) {
@@ -162,6 +181,16 @@ public final class PbComment extends Message {
 
     public Builder comments(List<PbComment> comments) {
       this.comments = checkForNulls(comments);
+      return this;
+    }
+
+    public Builder deleted(Boolean deleted) {
+      this.deleted = deleted;
+      return this;
+    }
+
+    public Builder dead(Boolean dead) {
+      this.dead = dead;
       return this;
     }
 

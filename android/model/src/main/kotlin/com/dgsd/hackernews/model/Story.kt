@@ -16,6 +16,8 @@ public data class Story(
         val pollAnswers: List<Long> = emptyList(),
         val commentIds: List<Long> = emptyList(),
         val comments: List<Comment> = emptyList(),
+        val deleted: Boolean = false,
+        val dead: Boolean = false,
         val dateRetrieved: Long = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())) {
 
     public enum class Type {

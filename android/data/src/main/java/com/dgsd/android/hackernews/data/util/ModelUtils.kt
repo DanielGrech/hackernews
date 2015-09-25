@@ -18,6 +18,8 @@ public fun Story.toContentValues(): ContentValues {
             .with(Tables._Stories.COL_URL, this.url)
             .with(Tables._Stories.COL_COMMENT_COUNT, this.commentCount)
             .with(Tables._Stories.COL_SCORE, this.score)
+            .with(Tables._Stories.COL_DELETED, if(this.deleted) 1 else 0)
+            .with(Tables._Stories.COL_DEAD, if(this.dead) 1 else 0)
             .with(Tables._Stories.COL_RETRIEVE_DATE, dateRetrieved)
 }
 
@@ -28,5 +30,7 @@ public fun Comment.toContentValues(): ContentValues {
             .with(Tables._Comments.COL_AUTHOR, this.author)
             .with(Tables._Comments.COL_PARENT_ID, this.parentId)
             .with(Tables._Comments.COL_TEXT, this.text)
+            .with(Tables._Comments.COL_DELETED, if(this.deleted) 1 else 0)
+            .with(Tables._Comments.COL_DEAD, if(this.dead) 1 else 0)
             .with(Tables._Comments.COL_COMMENT_COUNT, this.commentCount)
 }

@@ -46,5 +46,9 @@ public class CommentListItemView(context: Context, attrs: AttributeSet?, defStyl
         headerText.text = comment.getSummaryString(context)
         commentText.text = comment.getHtmlContent()
         commentText.movementMethod = LinkMovementMethod.getInstance()
+
+        if (comment.deadOrDeleted()) {
+            commentText.text = context.getString(R.string.comment_list_item_removed_message)
+        }
     }
 }

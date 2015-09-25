@@ -18,6 +18,11 @@ public class HNDataSource(private val apiDataSource: DataSource, private val dbD
 
     private var storyCache: LongSparseArray<Story> = LongSparseArray()
 
+    public fun clearMemoryCache() {
+        storyListCache.clear()
+        storyListCache.clear()
+    }
+
     public fun getTopStories(skipCache: Boolean): Observable<List<Story>> {
         return getStories(PageType.TOP, skipCache,
                 { apiDataSource.getTopStories() },

@@ -7,14 +7,64 @@ import (
 	"appengine/datastore"
 )
 
+const dbKeyTopStories = "top_stories"
+const dbKeyNewStories = "new_stories"
+const dbKeyAskStories = "ask_stories"
+const dbKeyShowStories = "show_stories"
+const dbKeyJobStories = "job_stories"
+
 type Db struct {
 	context appengine.Context
+}
+
+type IdList struct {
+	Ids []int
 }
 
 func NewDb(c appengine.Context) *Db {
 	var db Db
 	db.context = c
 	return &db
+}
+
+func (db *Db) SaveTopStoryIds(ids []int) error {
+	return db.saveStoryIds(dbKeyTopStories, ids)
+}
+
+func (db *Db) SaveNewStoryIds(ids []int) error {
+	return db.saveStoryIds(dbKeyNewStories, ids)
+}
+
+func (db *Db) SaveAskStoryIds(ids []int) error {
+	return db.saveStoryIds(dbKeyAskStories, ids)
+}
+
+func (db *Db) SaveShowStoryIds(ids []int) error {
+	return db.saveStoryIds(dbKeyShowStories, ids)
+}
+
+func (db *Db) SaveJobStoryIds(ids []int) error {
+	return db.saveStoryIds(dbKeyJobStories, ids)
+}
+
+func (db *Db) GetTopStoryIds() ([]int, error) {
+	return db.getStoryIds(dbKeyTopStories)
+}
+
+func (db *Db) GetNewStoryIds() ([]int, error) {
+	return db.getStoryIds(dbKeyNewStories)
+}
+
+func (db *Db) GetAskStoryIds() ([]int, error) {
+	return db.getStoryIds(dbKeyAskStories)
+}
+
+func (db *Db) GetShowStoryIds() ([]int, error) {
+	return db.getStoryIds(dbKeyShowStories)
+}
+
+func (db *Db) GetJobStoryIds() ([]int, error) {
+	return db.getStoryIds(dbKeyJobStories)
 }
 
 func (db *Db) DeleteStoriesNotIn(ids []int) {
@@ -156,6 +206,34 @@ loop:
 		w++
 	}
 	return allKeys[:w]
+}
+
+func (db *Db) saveStoryIds(listType string, ids []int) error {
+	var idList IdList
+	idList.Ids = ids
+
+	_, err := datastore.Put(db.context, db.keyForIdList(listType), &idList)
+	return err
+}
+
+func (db *Db) getStoryIds(listType string) ([]int, error) {
+	idList := new(IdList)
+	err := datastore.Get(db.context, db.keyForIdList(listType), &idList)
+	if err != nil {
+		return idList.Ids, nil
+	} else {
+		return nil, err
+	}
+}
+
+func (db *Db) keyForIdList(listType string) *datastore.Key {
+	return datastore.NewKey(
+		db.context,
+		"IdList",
+		"list_"+listType,
+		0,
+		nil,
+	)
 }
 
 func (db *Db) keyForComment(id int) *datastore.Key {

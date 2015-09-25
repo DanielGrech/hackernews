@@ -55,6 +55,8 @@ type PbStory struct {
 	Parts            []int64      `protobuf:"varint,11,rep,packed,name=parts" json:"parts,omitempty"`
 	CommentCount     *int32       `protobuf:"varint,12,opt,name=comment_count" json:"comment_count,omitempty"`
 	Comments         []*PbComment `protobuf:"bytes,13,rep,name=comments" json:"comments,omitempty"`
+	Deleted          *bool        `protobuf:"varint,14,opt,name=deleted" json:"deleted,omitempty"`
+	Dead             *bool        `protobuf:"varint,15,opt,name=dead" json:"dead,omitempty"`
 	XXX_unrecognized []byte       `json:"-"`
 }
 
@@ -153,6 +155,20 @@ func (m *PbStory) GetComments() []*PbComment {
 	return nil
 }
 
+func (m *PbStory) GetDeleted() bool {
+	if m != nil && m.Deleted != nil {
+		return *m.Deleted
+	}
+	return false
+}
+
+func (m *PbStory) GetDead() bool {
+	if m != nil && m.Dead != nil {
+		return *m.Dead
+	}
+	return false
+}
+
 type PbComment struct {
 	Id               *int64       `protobuf:"varint,1,req,name=id" json:"id,omitempty"`
 	Author           *string      `protobuf:"bytes,2,opt,name=author" json:"author,omitempty"`
@@ -162,6 +178,8 @@ type PbComment struct {
 	CommentIds       []int64      `protobuf:"varint,6,rep,packed,name=comment_ids" json:"comment_ids,omitempty"`
 	CommentCount     *int32       `protobuf:"varint,7,opt,name=comment_count" json:"comment_count,omitempty"`
 	Comments         []*PbComment `protobuf:"bytes,8,rep,name=comments" json:"comments,omitempty"`
+	Deleted          *bool        `protobuf:"varint,9,opt,name=deleted" json:"deleted,omitempty"`
+	Dead             *bool        `protobuf:"varint,10,opt,name=dead" json:"dead,omitempty"`
 	XXX_unrecognized []byte       `json:"-"`
 }
 
@@ -223,6 +241,20 @@ func (m *PbComment) GetComments() []*PbComment {
 		return m.Comments
 	}
 	return nil
+}
+
+func (m *PbComment) GetDeleted() bool {
+	if m != nil && m.Deleted != nil {
+		return *m.Deleted
+	}
+	return false
+}
+
+func (m *PbComment) GetDead() bool {
+	if m != nil && m.Dead != nil {
+		return *m.Dead
+	}
+	return false
 }
 
 type PbIds struct {

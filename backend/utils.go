@@ -76,6 +76,8 @@ func (story *Story) ToProto() *PbStory {
 		Parts:        toInt64Slice(story.Parts),
 		CommentCount: proto.Int32(int32(story.CommentCount)),
 		Comments:     toProtoCommentSlice(story.Comments),
+		Deleted:      proto.Bool(story.Deleted),
+		Dead:         proto.Bool(story.Dead),
 	}
 }
 
@@ -89,6 +91,8 @@ func (comment *Comment) ToProto() *PbComment {
 		Text:         proto.String(comment.Text),
 		CommentCount: proto.Int32(int32(comment.CommentCount)),
 		Comments:     toProtoCommentSlice(comment.Comments),
+		Deleted:      proto.Bool(comment.Deleted),
+		Dead:         proto.Bool(comment.Dead),
 	}
 }
 

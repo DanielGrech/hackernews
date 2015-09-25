@@ -142,6 +142,7 @@ func (handler *Handler) GetComment(commentId int) (*Comment, error) {
 
 func (handler *Handler) GetTopStoryIds() ([]int, error) {
 	return getStoryIds(handler.cache.GetTopStories,
+		handler.dataStore.GetTopStoryIds,
 		handler.apiClient.GetTopStories,
 		handler.cache.SetTopStories,
 	)
@@ -149,6 +150,7 @@ func (handler *Handler) GetTopStoryIds() ([]int, error) {
 
 func (handler *Handler) GetNewStoryIds() ([]int, error) {
 	return getStoryIds(handler.cache.GetNewStories,
+		handler.dataStore.GetNewStoryIds,
 		handler.apiClient.GetNewStories,
 		handler.cache.SetNewStories,
 	)
@@ -156,6 +158,7 @@ func (handler *Handler) GetNewStoryIds() ([]int, error) {
 
 func (handler *Handler) GetAskStoryIds() ([]int, error) {
 	return getStoryIds(handler.cache.GetAskStories,
+		handler.dataStore.GetAskStoryIds,
 		handler.apiClient.GetAskStories,
 		handler.cache.SetAskStories,
 	)
@@ -163,6 +166,7 @@ func (handler *Handler) GetAskStoryIds() ([]int, error) {
 
 func (handler *Handler) GetShowStoryIds() ([]int, error) {
 	return getStoryIds(handler.cache.GetShowStories,
+		handler.dataStore.GetShowStoryIds,
 		handler.apiClient.GetShowStories,
 		handler.cache.SetShowStories,
 	)
@@ -170,6 +174,7 @@ func (handler *Handler) GetShowStoryIds() ([]int, error) {
 
 func (handler *Handler) GetJobStoryIds() ([]int, error) {
 	return getStoryIds(handler.cache.GetJobStories,
+		handler.dataStore.GetJobStoryIds,
 		handler.apiClient.GetJobStories,
 		handler.cache.SetJobStories,
 	)
@@ -184,13 +189,19 @@ func (handler *Handler) GetStoriesFromDataStore(ids []int) ([]byte, *ApiError) {
 	return handler.EncodeStories(stories)
 }
 
-func getStoryIds(fromCacheFunc func() []int, fromApiClientFunc func() ([]int, error), saveToCacheFunc func([]int)) ([]int, error) {
+func getStoryIds(fromCacheFunc func() []int, fromDbFunc func() ([]int, error), fromApiClientFunc func() ([]int, error), saveToCacheFunc func([]int)) ([]int, error) {
 	stories := fromCacheFunc()
 	if stories != nil {
 		return stories, nil
 	}
 
-	stories, err := fromApiClientFunc()
+	stories, err := fromDbFunc()
+	if err == nil {
+		saveToCacheFunc(stories)
+		return stories, err
+	}
+
+	stories, err = fromApiClientFunc()
 	if err == nil {
 		saveToCacheFunc(stories)
 	}

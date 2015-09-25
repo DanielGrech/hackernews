@@ -4,12 +4,12 @@ import android.app.Application
 import android.content.ComponentCallbacks2
 import android.os.StrictMode
 import com.crashlytics.android.Crashlytics
-import com.dgsd.android.hackernews.BuildConfig
 import com.dgsd.android.hackernews.module.AppServicesComponent
 import com.dgsd.android.hackernews.module.HNModule
 import com.dgsd.android.hackernews.util.Api
 import com.dgsd.android.hackernews.util.CrashlyticsLogger
 import com.dgsd.android.hackernews.util.LoggingLifecycleCallbacks
+import com.dgsd.android.hackernews.util.clearHtmlContentCache
 import com.facebook.stetho.Stetho
 import com.facebook.stetho.timber.StethoTree
 import com.squareup.leakcanary.LeakCanary
@@ -41,6 +41,9 @@ abstract class HNApp : Application() {
 
         if (level >= ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
             Timber.d("Android is suggesting to trim memoryLevel = %s", level)
+            clearHtmlContentCache()
+
+            appServicesComponent.dataSource().clearMemoryCache()
         }
     }
 

@@ -103,10 +103,12 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
             if (comment == null) {
                 commentIdsToAdd.add(commentId)
             } else {
-                items.add(ListItem(comment = comment, indentationLevel = indentationLevel))
+                if (!comment.hasBeenRemoved()) {
+                    items.add(ListItem(comment = comment, indentationLevel = indentationLevel))
 
-                // Add the comments of this comment
-                addComments(commentMap.plus(comment.comments.groupById()), comment.commentIds, indentationLevel + 1)
+                    // Add the comments of this comment
+                    addComments(commentMap.plus(comment.comments.groupById()), comment.commentIds, indentationLevel + 1)
+                }
             }
         }
 

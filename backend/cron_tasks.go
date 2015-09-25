@@ -8,26 +8,26 @@ func (tasks *Tasks) clearOldData(handler *Handler) ([]byte, *ApiError) {
 }
 
 func (tasks *Tasks) getTopStories(handler *Handler) ([]byte, *ApiError) {
-	return tasks.getStoryIds(handler, handler.apiClient.GetTopStories, handler.cache.SetTopStories)
+	return tasks.getStoryIds(handler, handler.apiClient.GetTopStories, handler.cache.SetTopStories, handler.dataStore.SaveTopStoryIds)
 }
 
 func (tasks *Tasks) getNewStories(handler *Handler) ([]byte, *ApiError) {
-	return tasks.getStoryIds(handler, handler.apiClient.GetNewStories, handler.cache.SetNewStories)
+	return tasks.getStoryIds(handler, handler.apiClient.GetNewStories, handler.cache.SetNewStories, handler.dataStore.SaveNewStoryIds)
 }
 
 func (tasks *Tasks) getAskStories(handler *Handler) ([]byte, *ApiError) {
-	return tasks.getStoryIds(handler, handler.apiClient.GetAskStories, handler.cache.SetAskStories)
+	return tasks.getStoryIds(handler, handler.apiClient.GetAskStories, handler.cache.SetAskStories, handler.dataStore.SaveAskStoryIds)
 }
 
 func (tasks *Tasks) getShowStories(handler *Handler) ([]byte, *ApiError) {
-	return tasks.getStoryIds(handler, handler.apiClient.GetShowStories, handler.cache.SetShowStories)
+	return tasks.getStoryIds(handler, handler.apiClient.GetShowStories, handler.cache.SetShowStories, handler.dataStore.SaveShowStoryIds)
 }
 
 func (tasks *Tasks) getJobStories(handler *Handler) ([]byte, *ApiError) {
-	return tasks.getStoryIds(handler, handler.apiClient.GetJobStories, handler.cache.SetJobStories)
+	return tasks.getStoryIds(handler, handler.apiClient.GetJobStories, handler.cache.SetJobStories, handler.dataStore.SaveJobStoryIds)
 }
 
-func (tasks *Tasks) getStoryIds(handler *Handler, fromApiClientFn func() ([]int, error), saveToCacheFn func([]int)) ([]byte, *ApiError) {
+func (tasks *Tasks) getStoryIds(handler *Handler, fromApiClientFn func() ([]int, error), saveToCacheFn func([]int), saveToDbFn func([]int) error) ([]byte, *ApiError) {
 	storyIds, err := fromApiClientFn()
 	if err != nil {
 		return nil, NewError(err)
@@ -36,12 +36,16 @@ func (tasks *Tasks) getStoryIds(handler *Handler, fromApiClientFn func() ([]int,
 	}
 
 	for index, id := range storyIds {
-		if index < 5 {
+		if index < 2 {
 			_, err := handler.GetStory(id, true)
 			if err != nil {
 				return nil, NewError(err)
 			}
 		}
+	}
+
+	if err = saveToDbFn(storyIds); err != nil {
+		return nil, NewError(err)
 	}
 
 	saveToCacheFn(storyIds)

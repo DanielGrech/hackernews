@@ -14,6 +14,11 @@ import java.util.concurrent.TimeUnit
 private val storyHtmlContentCache = LruCache<Long, CharSequence>(20)
 private val commentHtmlContentCache = LruCache<Long, CharSequence>(20)
 
+public fun clearHtmlContentCache() {
+    storyHtmlContentCache.evictAll()
+    commentHtmlContentCache.evictAll()
+}
+
 @StringRes
 public fun PageType.getTitleRes(): Int {
     return when (this) {
@@ -31,8 +36,12 @@ public fun Story.getSummaryString(context: Context): String {
 }
 
 public fun Comment.getSummaryString(context: Context): String {
-    return context.getString(R.string.comment_list_item_header_template,
-            author, getDateTimeString())
+    return if (deadOrDeleted()) {
+        context.getString(R.string.comment_list_item_header_template_removed)
+    } else {
+        context.getString(R.string.comment_list_item_header_template,
+                author, getDateTimeString())
+    }
 }
 
 public fun List<Comment>.groupById(): Map<Long, Comment> {

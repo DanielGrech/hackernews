@@ -29,13 +29,13 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
                 .subscribe({
                     story = it
                     getView().showStory(it)
+
+                    getView().setViewStoryButtonVisible(!story?.url.isNullOrBlank())
                 }, {
                     // TODO: Proper error messages..
                     Timber.e(it, "Error getting story")
                     getView().showError(it.toString())
                 })
-
-        getView().setViewStoryButtonVisible(!story?.url.isNullOrBlank())
     }
 
     fun onViewStoryButtonClicked() {

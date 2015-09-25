@@ -8,5 +8,16 @@ public data class Comment(
         var parentId: Long = -1,
         val commentCount: Int = -1,
         val commentIds: List<Long> = emptyList(),
-        val comments: List<Comment> = emptyList()) {
+        val comments: List<Comment> = emptyList(),
+        val deleted: Boolean = false,
+        val dead: Boolean = false) {
+
+    fun hasBeenRemoved(): Boolean {
+        return deadOrDeleted() && commentIds.isEmpty()
+    }
+
+    fun deadOrDeleted(): Boolean {
+        return deleted || dead
+    }
+
 }

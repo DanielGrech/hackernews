@@ -13,6 +13,11 @@ public fun Cursor.getInt(colName: String): Int {
     return if (isNull(colIndex)) -1 else getInt(colIndex)
 }
 
+public fun Cursor.getBool(colName: String): Boolean {
+    val colIndex = getColumnIndexOrThrow(colName)
+    return if (isNull(colIndex)) false else getInt(colIndex) > 0
+}
+
 public fun Cursor.getString(colName: String): String {
     return getString(getColumnIndexOrThrow(colName))
 }

@@ -12,7 +12,7 @@ const cacheKeyAskStories = "ask_stories"
 const cacheKeyShowStories = "show_stories"
 const cacheKeyJobStories = "job_stories"
 const cacheKeyStoryPrefix = "story_"
-const cacheKeyCommentPrefix = "story_"
+const cacheKeyCommentPrefix = "comment_"
 
 type Cache struct {
 	context appengine.Context

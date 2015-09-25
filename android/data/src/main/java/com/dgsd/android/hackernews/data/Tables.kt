@@ -1,6 +1,7 @@
 package com.dgsd.android.hackernews.data
 
 import android.database.Cursor
+import com.dgsd.android.moodtracker.data.util.getBool
 import com.dgsd.android.moodtracker.data.util.getInt
 import com.dgsd.android.moodtracker.data.util.getLong
 import com.dgsd.android.moodtracker.data.util.getString
@@ -155,6 +156,8 @@ class Tables {
             val COL_COMMENT_COUNT = "_comment_count"
             val COL_SCORE = "_score"
             val COL_RETRIEVE_DATE = "_date_retrieved"
+            val COL_DELETED = "_deleted"
+            val COL_DEAD = "_dead"
         }
 
         override fun name(): String {
@@ -173,6 +176,8 @@ class Tables {
                     COL_URL,
                     COL_COMMENT_COUNT,
                     COL_SCORE,
+                    COL_DELETED,
+                    COL_DEAD,
                     COL_RETRIEVE_DATE
             )
         }
@@ -189,6 +194,8 @@ class Tables {
                     url = cursor.getString(COL_URL),
                     commentCount = cursor.getInt(COL_COMMENT_COUNT),
                     score = cursor.getInt(COL_SCORE),
+                    deleted = cursor.getBool(COL_DELETED),
+                    dead = cursor.getBool(COL_DEAD),
                     dateRetrieved = cursor.getLong(COL_RETRIEVE_DATE)
             )
         }
@@ -205,6 +212,8 @@ class Tables {
                 COL_URL -> Tables.COL_TYPE_TEXT
                 COL_COMMENT_COUNT -> Tables.COL_TYPE_INTEGER
                 COL_SCORE -> Tables.COL_TYPE_INTEGER
+                COL_DELETED -> Tables.COL_TYPE_INTEGER
+                COL_DEAD -> Tables.COL_TYPE_INTEGER
                 COL_RETRIEVE_DATE -> Tables.COL_TYPE_INTEGER
                 else -> ""
             }
@@ -224,6 +233,8 @@ class Tables {
             val COL_TEXT = "_text"
             val COL_PARENT_ID = "_parent_id"
             val COL_COMMENT_COUNT = "_comment_count"
+            val COL_DELETED = "_deleted"
+            val COL_DEAD = "_dead"
         }
 
         override fun name(): String {
@@ -237,7 +248,9 @@ class Tables {
                     COL_AUTHOR,
                     COL_PARENT_ID,
                     COL_TEXT,
-                    COL_COMMENT_COUNT
+                    COL_COMMENT_COUNT,
+                    COL_DELETED,
+                    COL_DEAD
             )
         }
 
@@ -248,6 +261,8 @@ class Tables {
                     author = cursor.getString(COL_AUTHOR),
                     parentId = cursor.getLong(COL_PARENT_ID),
                     text = cursor.getString(COL_TEXT),
+                    deleted = cursor.getBool(COL_DELETED),
+                    dead = cursor.getBool(COL_DEAD),
                     commentCount = cursor.getInt(COL_COMMENT_COUNT)
             )
         }
@@ -260,6 +275,8 @@ class Tables {
                 COL_PARENT_ID -> Tables.COL_TYPE_INTEGER
                 COL_TEXT -> Tables.COL_TYPE_TEXT
                 COL_COMMENT_COUNT -> Tables.COL_TYPE_INTEGER
+                COL_DELETED -> Tables.COL_TYPE_INTEGER
+                COL_DEAD -> Tables.COL_TYPE_INTEGER
                 else -> ""
             }
         }
