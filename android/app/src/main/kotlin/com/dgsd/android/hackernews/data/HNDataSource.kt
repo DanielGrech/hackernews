@@ -10,6 +10,7 @@ import rx.Observable
 import rx.lang.kotlin.firstOrNull
 import rx.lang.kotlin.toSingletonObservable
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 public class HNDataSource(private val apiDataSource: DataSource, private val dbDataSource: DbDataSource) : DataSource {
 
@@ -50,6 +51,10 @@ public class HNDataSource(private val apiDataSource: DataSource, private val dbD
                 { apiDataSource.getJobStories() },
                 { dbDataSource.getJobStories() },
                 { stories -> dbDataSource.saveJobStories(stories) })
+    }
+
+    public fun getComments(storyId: Long, commentIds: LongArray): Observable<Story> {
+        return getStory(storyId).delay(2, TimeUnit.SECONDS)
     }
 
     override fun getTopStories(): Observable<List<Story>> {

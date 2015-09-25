@@ -14,9 +14,9 @@ import com.dgsd.android.hackernews.mvp.view.StoryMvpView
 import com.dgsd.android.hackernews.util.*
 import com.dgsd.android.hackernews.view.CommentRecyclerView
 import com.dgsd.hackernews.model.Story
-import kotlinx.android.synthetic.act_story.*
+import kotlinx.android.synthetic.act_story.toolbar
+import kotlinx.android.synthetic.act_story.viewStoryButton
 import org.jetbrains.anko.*
-import timber.log.Timber
 
 public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>(), StoryMvpView, CustomTabActivityHelper.ConnectionCallback {
 
@@ -57,8 +57,8 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
 
         }
 
-        recyclerView.setOnCommentIdClickListener { ids, view ->
-
+        recyclerView.setOnCommentPlaceholderClickListener{ ids, view ->
+            presenter.onCommentPlaceholderClicked(ids)
         }
     }
 
@@ -100,8 +100,13 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
         return this
     }
 
+    override fun showPlaceholderAsLoading(commentIds: List<Long>, showLoading: Boolean) {
+        recyclerView.setCommentPlaceholderLoading(commentIds, showLoading)
+    }
+
     override fun showError(message: String) {
-        Timber.d("SHOW ERROR: " + message)
+        // TODO: Show proper error!
+        toast(message)
     }
 
     override fun showStory(story: Story) {

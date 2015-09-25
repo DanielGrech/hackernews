@@ -30,6 +30,7 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
                     story = it
                     getView().showStory(it)
                 }, {
+                    // TODO: Proper error messages..
                     Timber.e(it, "Error getting story")
                     getView().showError(it.toString())
                 })
@@ -41,5 +42,24 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
         if (!story?.url.isNullOrBlank()) {
             getView().showUri(Uri.parse(story!!.url))
         }
+    }
+
+    fun onCommentPlaceholderClicked(commentIds: List<Long>) {
+        getView().showPlaceholderAsLoading(commentIds, true)
+        dataSource.getComments(storyId, commentIds.toLongArray())
+                .bind(getView())
+                .onIoThread()
+                .subscribe({
+                    story = it
+                    getView().showStory(it)
+
+                    getView().showPlaceholderAsLoading(commentIds, false)
+                }, {
+                    // TODO: Proper error messages..
+                    Timber.e(it, "Error getting comments")
+                    getView().showError(it.toString())
+
+                    getView().showPlaceholderAsLoading(commentIds, false)
+                })
     }
 }

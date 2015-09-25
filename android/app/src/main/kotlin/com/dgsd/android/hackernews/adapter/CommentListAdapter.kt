@@ -15,6 +15,7 @@ import com.dgsd.android.hackernews.view.CommentPlaceholderListItemView
 import com.dgsd.hackernews.model.Comment
 import com.dgsd.hackernews.model.Story
 import org.jetbrains.anko.find
+import java.util.*
 
 public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.CommentViewHolder>() {
 
@@ -24,11 +25,13 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
         public val VIEW_TYPE_COMMENT_PLACEHOLDER = 2
     }
 
-    private var onCommentIdsClickListener: (comment: List<Long>, View) -> Unit = { ids, v -> }
+    private var onCommentPlaceholderClickListener: (comment: List<Long>, View) -> Unit = { ids, v -> }
 
     private var onCommentClickListener: (Comment, View) -> Unit = { c, v -> }
 
     private val items = arrayListOf<ListItem>()
+
+    val commentPlaceholderLoadingSet = HashSet<List<Long>>()
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         holder.populate(items[position])
@@ -78,7 +81,7 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
 
         addComments(commentIdToCommentMap, story.commentIds, 0)
 
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0, itemCount);
     }
 
     private fun addComments(commentMap: Map<Long, Comment>, commentIds: List<Long>, indentationLevel: Int) {
@@ -101,12 +104,26 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
 
     }
 
+    public fun setCommentPlaceholderLoading(commentIds: List<Long>, showLoading: Boolean) {
+        if (showLoading) {
+            commentPlaceholderLoadingSet.add(commentIds)
+        } else {
+            commentPlaceholderLoadingSet.remove(commentIds)
+        }
+
+        with (items.indexOfFirst { commentIds.equals(it.commentIds) }) {
+            if (this >= 0) {
+                notifyItemChanged(this)
+            }
+        }
+    }
+
     public fun setOnCommentClickListener(listener: (Comment, View) -> Unit) {
         onCommentClickListener = listener
     }
 
-    public fun setOnCommentIdClickListener(listener: (List<Long>, View) -> Unit) {
-        onCommentIdsClickListener = listener
+    public fun setOnCommentPlaceholderClickListener(listener: (List<Long>, View) -> Unit) {
+        onCommentPlaceholderClickListener = listener
     }
 
     inner class CommentViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
@@ -119,7 +136,7 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
             val item = items[position]
             when (item.getType()) {
                 CommentListAdapter.VIEW_TYPE_COMMENT -> onCommentClickListener(item.comment!!, v)
-                CommentListAdapter.VIEW_TYPE_COMMENT_PLACEHOLDER -> onCommentIdsClickListener(item.commentIds!!, v)
+                CommentListAdapter.VIEW_TYPE_COMMENT_PLACEHOLDER -> onCommentPlaceholderClickListener(item.commentIds!!, v)
             }
         }
 
@@ -129,7 +146,11 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
                     (itemView as CommentListItemView).populate(item.comment!!)
                 }
                 CommentListAdapter.VIEW_TYPE_COMMENT_PLACEHOLDER -> {
-                    (itemView as CommentPlaceholderListItemView).populate(item.commentIds!!)
+                    val commentIds = item.commentIds!!
+                    with (itemView as CommentPlaceholderListItemView) {
+                        populate(commentIds)
+                        setLoading(commentPlaceholderLoadingSet.contains(commentIds))
+                    }
                 }
                 CommentListAdapter.VIEW_TYPE_STORY_TEXT -> {
                     (itemView.tag as TextView).text = item.storyText

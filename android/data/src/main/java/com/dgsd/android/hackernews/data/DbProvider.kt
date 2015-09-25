@@ -9,6 +9,7 @@ import com.dgsd.hackernews.model.Story
 import com.dgsd.hackernews.network.DbDataSource
 import com.squareup.sqlbrite.BriteDatabase
 import rx.Observable
+import rx.lang.kotlin.toObservable
 
 public class DbProvider(private val db: BriteDatabase) : DbDataSource {
 
@@ -52,6 +53,14 @@ public class DbProvider(private val db: BriteDatabase) : DbDataSource {
 
     override fun saveComment(comment: Comment) {
         db.insert(Tables.Comments.name(), comment.toContentValues(), CONFLICT_REPLACE)
+
+        comment.commentIds.forEach {
+            db.insert(Tables.CommentIds.name(), ContentValues()
+                    .with(Tables._CommentIds.COL_PARENT_ID, comment.id)
+                    .with(Tables._CommentIds.COL_COMMENT_ID, it), CONFLICT_REPLACE)
+        }
+
+        comment.comments.forEach { saveComment(it) }
     }
 
     override fun saveTopStories(stories: List<Story>) {
@@ -79,23 +88,43 @@ public class DbProvider(private val db: BriteDatabase) : DbDataSource {
     }
 
     override fun getStory(storyId: Long): Observable<Story> {
+        val commentObservable = getComments(storyId).defaultIfEmpty(emptyList())
+        val commentIdObservable = getCommentIds(storyId).defaultIfEmpty(emptyList())
         val storyObservable = db.createQuery(Tables.Comments.name(), Tables.Stories.SELECT_BY_ID, storyId.toString())
                 .mapToOne {
                     Tables.Stories.fromCursor(it)
                 }
 
-        val commentObservable = getComments(storyId).defaultIfEmpty(emptyList())
-
-        return Observable.zip(storyObservable, commentObservable) { story, comments ->
-            story.copy(comments = comments)
+        return Observable.zip(storyObservable, commentObservable, commentIdObservable) { story, comments, commentIds ->
+            story.copy(comments = comments, commentIds = commentIds)
         }
+    }
+
+    private fun getCommentIds(parentId: Long): Observable<List<Long>> {
+        return db.createQuery(Tables.CommentIds.name(), Tables.CommentIds.SELECT_ALL_FOR_ITEM, parentId.toString())
+                .mapToList {
+                    Tables.CommentIds.fromCursor(it)
+                }
     }
 
     override fun getComments(parentId: Long): Observable<List<Comment>> {
         return db.createQuery(Tables.Comments.name(), Tables.Comments.SELECT_ALL_FOR_ITEM, parentId.toString())
-                .mapToList {
-                    Tables.Comments.fromCursor(it)
+                .mapToList { Tables.Comments.fromCursor(it) }
+                .firstOrDefault(emptyList())
+                .flatMap { it.toObservable() }
+                .flatMap { comment ->
+                    getCommentIds(comment.id).firstOrDefault(emptyList()).map { ids ->
+                        comment to ids
+                    }
                 }
+                .map { it.first.copy(commentIds = it.second) }
+                .flatMap { comment ->
+                    getComments(comment.id).firstOrDefault(emptyList()).map { comments ->
+                        comment to comments
+                    }
+                }
+                .map { it.first.copy(comments = it.second) }
+                .toList()
     }
 
     private fun getStoriesFromIds(tableName: String, query: String): Observable<List<Story>> {

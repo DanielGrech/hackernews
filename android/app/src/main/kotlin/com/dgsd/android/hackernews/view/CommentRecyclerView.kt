@@ -45,8 +45,8 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
         (adapter as CommentListAdapter).setOnCommentClickListener(listener)
     }
 
-    public fun setOnCommentIdClickListener(listener: (List<Long>, View) -> Unit) {
-        (adapter as CommentListAdapter).setOnCommentIdClickListener(listener)
+    public fun setOnCommentPlaceholderClickListener(listener: (List<Long>, View) -> Unit) {
+        (adapter as CommentListAdapter).setOnCommentPlaceholderClickListener(listener)
     }
 
     public class IndentItemDecoration(val indentSize: Int, val verticalPadding: Int, val lineWidth: Int, val indentationColors: IntArray) : RecyclerView.ItemDecoration() {
@@ -114,5 +114,9 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
                 outRect.bottom = verticalPadding
             }
         }
+    }
+
+    fun setCommentPlaceholderLoading(commentIds: List<Long>, showLoading: Boolean) {
+        (adapter as CommentListAdapter).setCommentPlaceholderLoading(commentIds, showLoading)
     }
 }

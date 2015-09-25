@@ -13,4 +13,6 @@ public interface StoryMvpView : MvpView {
 
     fun setViewStoryButtonVisible(isVisible: Boolean)
 
+    fun showPlaceholderAsLoading(commentIds: List<Long>, showLoading: Boolean)
+
 }

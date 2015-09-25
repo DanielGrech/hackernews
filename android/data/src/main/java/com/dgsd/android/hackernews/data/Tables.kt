@@ -267,6 +267,8 @@ class Tables {
 
     class _CommentIds : Table<Long>() {
 
+        val SELECT_ALL_FOR_ITEM = "SELECT * FROM $TABLE_NAME WHERE $COL_PARENT_ID = ?"
+
         companion object {
             val TABLE_NAME = "comment_ids"
 
