@@ -95,7 +95,6 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
             }
         }
 
-
         override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
             val vh = parent.getChildViewHolder(view) as CommentListAdapter.CommentViewHolder
             outRect.left = indentSize * vh.getIndentationLevel()
