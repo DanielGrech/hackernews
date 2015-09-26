@@ -91,7 +91,7 @@ func (cache *Cache) SetStories(typeKey string, stories []*Story) {
 }
 
 func (cache *Cache) ClearStories(typeKey string) {
-	if err := memcache.Delete(cache.context, typeKey); err != nil {
+	if err := memcache.Delete(cache.context, typeKey); err != nil && err != memcache.ErrCacheMiss {
 		cache.context.Warningf("Error clearing stories from memcache: %v", typeKey, err)
 	}
 }
