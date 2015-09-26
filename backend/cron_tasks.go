@@ -17,22 +17,27 @@ func (tasks *Tasks) clearOldData(handler *Handler) ([]byte, *ApiError) {
 }
 
 func (tasks *Tasks) getTopStories(handler *Handler) ([]byte, *ApiError) {
+	defer func() { handler.cache.ClearStories(cacheKeyTopStoriesList) }()
 	return tasks.getStoryIds(handler, handler.apiClient.GetTopStories, handler.cache.SetTopStories, handler.dataStore.SaveTopStoryIds)
 }
 
 func (tasks *Tasks) getNewStories(handler *Handler) ([]byte, *ApiError) {
+	defer func() { handler.cache.ClearStories(cacheKeyNewStoriesList) }()
 	return tasks.getStoryIds(handler, handler.apiClient.GetNewStories, handler.cache.SetNewStories, handler.dataStore.SaveNewStoryIds)
 }
 
 func (tasks *Tasks) getAskStories(handler *Handler) ([]byte, *ApiError) {
+	defer func() { handler.cache.ClearStories(cacheKeyAskStoriesList) }()
 	return tasks.getStoryIds(handler, handler.apiClient.GetAskStories, handler.cache.SetAskStories, handler.dataStore.SaveAskStoryIds)
 }
 
 func (tasks *Tasks) getShowStories(handler *Handler) ([]byte, *ApiError) {
+	defer func() { handler.cache.ClearStories(cacheKeyShowStoriesList) }()
 	return tasks.getStoryIds(handler, handler.apiClient.GetShowStories, handler.cache.SetShowStories, handler.dataStore.SaveShowStoryIds)
 }
 
 func (tasks *Tasks) getJobStories(handler *Handler) ([]byte, *ApiError) {
+	defer func() { handler.cache.ClearStories(cacheKeyJobStoriesList) }()
 	return tasks.getStoryIds(handler, handler.apiClient.GetJobStories, handler.cache.SetJobStories, handler.dataStore.SaveJobStoryIds)
 }
 
@@ -76,7 +81,7 @@ func getStories(handler *Handler, storyIds []int) error {
 			defer wg.Done()
 			for storyId := range ch {
 				handler.Logd("Attempting to fetch story %v", storyId)
-				story, err := handler.GetStory(storyId, true)
+				story, err := handler.GetStory(storyId, true, false)
 				storyCh <- &FetchStoryResult{story: story, err: err}
 			}
 		}()

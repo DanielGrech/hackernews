@@ -35,7 +35,7 @@ func init() {
 func getStory(handler *Handler) ([]byte, *ApiError) {
 	storyId, _ := strconv.Atoi(handler.vars["story"])
 
-	story, err := handler.GetStory(storyId, false)
+	story, err := handler.GetStory(storyId, false, true)
 
 	if err != nil {
 		return nil, NewErrorWithMessageAndCode(err, "No story found", http.StatusNotFound)
@@ -59,7 +59,7 @@ func getComments(handler *Handler) ([]byte, *ApiError) {
 			for commentId := range ch {
 				comment, err := handler.GetComment(commentId)
 				if err != nil {
-					handler.Loge("Error getting comment %v", commentId, err)
+					handler.Loge("Error getting comment %v: %v", commentId, err)
 				}
 
 				commentCh <- comment
@@ -101,7 +101,7 @@ func getComment(handler *Handler) ([]byte, *ApiError) {
 func getCommentIdsForStory(handler *Handler) ([]byte, *ApiError) {
 	storyId, _ := strconv.Atoi(handler.vars["story"])
 
-	story, err := handler.GetStory(storyId, false)
+	story, err := handler.GetStory(storyId, false, false)
 
 	if err != nil {
 		return nil, NewError(err)
@@ -122,30 +122,35 @@ func getCommentIdsForComment(handler *Handler) ([]byte, *ApiError) {
 }
 
 func getTopStories(handler *Handler) ([]byte, *ApiError) {
-	return handler.getStoriesJson(handler.GetTopStoryIds)
+	return getStoriesJson(handler, handler.GetTopStoryIds, cacheKeyTopStoriesList)
 }
 
 func getNewStories(handler *Handler) ([]byte, *ApiError) {
-	return handler.getStoriesJson(handler.GetNewStoryIds)
+	return getStoriesJson(handler, handler.GetNewStoryIds, cacheKeyNewStoriesList)
 }
 
 func getAskStories(handler *Handler) ([]byte, *ApiError) {
-	return handler.getStoriesJson(handler.GetAskStoryIds)
+	return getStoriesJson(handler, handler.GetAskStoryIds, cacheKeyAskStoriesList)
 }
 
 func getShowStories(handler *Handler) ([]byte, *ApiError) {
-	return handler.getStoriesJson(handler.GetShowStoryIds)
+	return getStoriesJson(handler, handler.GetShowStoryIds, cacheKeyShowStoriesList)
 }
 
 func getJobStories(handler *Handler) ([]byte, *ApiError) {
-	return handler.getStoriesJson(handler.GetJobStoryIds)
+	return getStoriesJson(handler, handler.GetJobStoryIds, cacheKeyJobStoriesList)
 }
 
-func (handler *Handler) getStoriesJson(fn func() ([]int, error)) ([]byte, *ApiError) {
-	storyIds, err := fn()
+func getStoriesJson(handler *Handler, idsFn func() ([]int, error), key string) ([]byte, *ApiError) {
+	storyIds, err := idsFn()
 	if err != nil {
 		return nil, NewError(err)
 	}
 
-	return handler.GetStoriesFromDataStore(storyIds)
+	stories, err := handler.GetStories(storyIds, key)
+	if err != nil {
+		return nil, NewError(err)
+	}
+
+	return handler.EncodeStories(stories)
 }

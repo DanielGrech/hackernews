@@ -105,11 +105,11 @@ func (handler *Handler) cleanupOldData() {
 	handler.dataStore.DeleteStoriesNotIn(ids)
 }
 
-func (handler *Handler) GetStory(storyId int, fetchComments bool) (*Story, error) {
+func (handler *Handler) GetStory(storyId int, enableApiCommentFetch bool, enableDbCommentFetch bool) (*Story, error) {
 	story, err := handler.cache.GetStory(storyId)
 
 	if err != nil {
-		story, err = handler.dataStore.GetStory(storyId)
+		story, err = handler.dataStore.GetStory(storyId, enableDbCommentFetch)
 		if err != nil {
 			story, err = handler.apiClient.GetStory(storyId)
 			if err != nil {
@@ -118,7 +118,7 @@ func (handler *Handler) GetStory(storyId int, fetchComments bool) (*Story, error
 				handler.Logd("Got story %+v", story.ID, story.Title)
 			}
 
-			if fetchComments {
+			if enableApiCommentFetch {
 				handler.fetchTopComments(story)
 			}
 
@@ -126,7 +126,7 @@ func (handler *Handler) GetStory(storyId int, fetchComments bool) (*Story, error
 				handler.Loge("Error saving story to data store: %v", err)
 			}
 			handler.cache.SetStory(story)
-		} else {
+		} else if enableDbCommentFetch {
 			handler.cache.SetStory(story)
 		}
 	}
@@ -149,6 +149,13 @@ func (handler *Handler) GetComment(commentId int) (*Comment, error) {
 				handler.Loge("Error saving comment to data store: %v", err)
 			}
 			handler.cache.SetComment(comment)
+
+			for _, subcommentId := range comment.Kids {
+				_, err = handler.GetComment(subcommentId)
+				if err != nil {
+					handler.Loge("Error getting subcomment: %v", err)
+				}
+			}
 		} else {
 			handler.cache.SetComment(comment)
 		}
@@ -197,13 +204,19 @@ func (handler *Handler) GetJobStoryIds() ([]int, error) {
 	)
 }
 
-func (handler *Handler) GetStoriesFromDataStore(ids []int) ([]byte, *ApiError) {
-	stories, err := handler.dataStore.GetStories(ids)
-	if err != nil {
-		return nil, NewError(err)
+func (handler *Handler) GetStories(ids []int, typeKey string) ([]*Story, error) {
+	stories := handler.cache.GetStories(typeKey)
+	if len(stories) == 0 {
+		stories, err := handler.dataStore.GetStories(ids, false)
+		if err == nil {
+			handler.cache.SetStories(typeKey, stories)
+			return stories, nil
+		} else {
+			return nil, err
+		}
 	}
 
-	return handler.EncodeStories(stories)
+	return stories, nil
 }
 
 func getStoryIds(fromCacheFunc func() []int, fromDbFunc func() ([]int, error), fromApiClientFunc func() ([]int, error), saveToCacheFunc func([]int)) ([]int, error) {

@@ -109,11 +109,11 @@ func (db *Db) SaveStory(story *Story) error {
 	return err
 }
 
-func (db *Db) GetStory(id int) (*Story, error) {
+func (db *Db) GetStory(id int, includeComments bool) (*Story, error) {
 	story := new(Story)
 	key := db.keyForStory(id)
 	err := datastore.Get(db.context, key, story)
-	if err == nil {
+	if err == nil && includeComments {
 		for _, commentId := range story.Kids {
 			comment, cErr := db.GetComment(commentId)
 			if cErr == nil {
@@ -124,7 +124,7 @@ func (db *Db) GetStory(id int) (*Story, error) {
 	return story, err
 }
 
-func (db *Db) GetStories(ids []int) ([]*Story, error) {
+func (db *Db) GetStories(ids []int, includeComments bool) ([]*Story, error) {
 	keys := make([]*datastore.Key, 0, len(ids))
 
 	for _, id := range ids {
@@ -146,11 +146,13 @@ func (db *Db) GetStories(ids []int) ([]*Story, error) {
 	if len(stories) == 0 {
 		return nil, err
 	} else {
-		for _, story := range stories {
-			for _, commentId := range story.Kids {
-				comment, cErr := db.GetComment(commentId)
-				if cErr == nil {
-					story.Comments = append(story.Comments, comment)
+		if includeComments {
+			for _, story := range stories {
+				for _, commentId := range story.Kids {
+					comment, cErr := db.GetComment(commentId)
+					if cErr == nil {
+						story.Comments = append(story.Comments, comment)
+					}
 				}
 			}
 		}

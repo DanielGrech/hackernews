@@ -23,7 +23,7 @@ type Story struct {
 	By           string     `json:"author"`
 	ID           int        `json:"id"`
 	Parent       int        `json:"parent_id,omitempty"`
-	Kids         []int      `json:"comment_ids"`
+	Kids         []int      `json:"comment_ids,omitempty"`
 	Score        int        `json:"score"`
 	Time         int        `json:"time"`
 	Title        string     `json:"title"`
@@ -40,7 +40,7 @@ type Story struct {
 type Comment struct {
 	By           string     `json:"author"`
 	ID           int        `json:"id"`
-	Kids         []int      `json:"comment_ids"`
+	Kids         []int      `json:"comment_ids,omitempty"`
 	Parent       int        `json:"parent"`
 	Text         string     `json:"text" datastore:",noindex"`
 	Time         int        `json:"time"`

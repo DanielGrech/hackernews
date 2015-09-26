@@ -11,6 +11,13 @@ const cacheKeyNewStories = "new_stories"
 const cacheKeyAskStories = "ask_stories"
 const cacheKeyShowStories = "show_stories"
 const cacheKeyJobStories = "job_stories"
+
+const cacheKeyTopStoriesList = "top_stories_list"
+const cacheKeyNewStoriesList = "new_stories_list"
+const cacheKeyAskStoriesList = "ask_stories_list"
+const cacheKeyShowStoriesList = "show_stories_list"
+const cacheKeyJobStoriesList = "job_stories_list"
+
 const cacheKeyStoryPrefix = "story_"
 const cacheKeyCommentPrefix = "comment_"
 
@@ -57,6 +64,35 @@ func (cache *Cache) SetComment(comment *Comment) {
 
 	if err := memcache.Gob.Set(cache.context, item); err != nil {
 		cache.context.Warningf("Error saving comment to memcache: %v", err)
+	}
+}
+
+func (cache *Cache) GetStories(typeKey string) []*Story {
+	var cacheEntry []*Story
+	if _, err := memcache.Gob.Get(cache.context, typeKey, &cacheEntry); err != nil {
+		if err != memcache.ErrCacheMiss {
+			cache.context.Warningf("Error getting stories from memcache: %v", err)
+		}
+		return nil
+	} else {
+		return cacheEntry
+	}
+}
+
+func (cache *Cache) SetStories(typeKey string, stories []*Story) {
+	item := &memcache.Item{
+		Key:    typeKey,
+		Object: stories,
+	}
+
+	if err := memcache.Gob.Set(cache.context, item); err != nil {
+		cache.context.Warningf("Error saving stories to memcache: %v", typeKey, err)
+	}
+}
+
+func (cache *Cache) ClearStories(typeKey string) {
+	if err := memcache.Delete(cache.context, typeKey); err != nil {
+		cache.context.Warningf("Error clearing stories from memcache: %v", typeKey, err)
 	}
 }
 
