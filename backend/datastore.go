@@ -117,7 +117,7 @@ func (db *Db) GetStory(id int) (*Story, error) {
 		for _, commentId := range story.Kids {
 			comment, cErr := db.GetComment(commentId)
 			if cErr == nil {
-				story.Comments = append(story.Comments, *comment)
+				story.Comments = append(story.Comments, comment)
 			}
 		}
 	}
@@ -150,7 +150,7 @@ func (db *Db) GetStories(ids []int) ([]*Story, error) {
 			for _, commentId := range story.Kids {
 				comment, cErr := db.GetComment(commentId)
 				if cErr == nil {
-					story.Comments = append(story.Comments, *comment)
+					story.Comments = append(story.Comments, comment)
 				}
 			}
 		}
@@ -174,7 +174,7 @@ func (db *Db) GetComment(id int) (*Comment, error) {
 		for _, commentId := range comment.Kids {
 			subComment, cErr := db.GetComment(commentId)
 			if cErr == nil {
-				comment.Comments = append(comment.Comments, *subComment)
+				comment.Comments = append(comment.Comments, subComment)
 			}
 		}
 	}

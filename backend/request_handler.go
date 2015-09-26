@@ -3,6 +3,7 @@ package hackernews
 import (
 	"appengine"
 	"net/http"
+	"net/url"
 
 	"github.com/gorilla/mux"
 )
@@ -11,12 +12,13 @@ const encodingProto = "proto"
 const encodingJson = "json"
 
 type Handler struct {
-	context   appengine.Context
-	apiClient *HnApiClient
-	dataStore *Db
-	cache     *Cache
-	vars      map[string]string
-	encoding  string
+	context     appengine.Context
+	apiClient   *HnApiClient
+	dataStore   *Db
+	cache       *Cache
+	vars        map[string]string
+	queryParams url.Values
+	encoding    string
 }
 
 func NewHandler(r *http.Request) *Handler {
@@ -27,6 +29,8 @@ func NewHandler(r *http.Request) *Handler {
 	handler.cache = NewCache(handler.context)
 	handler.vars = mux.Vars(r)
 	handler.encoding = r.FormValue("format")
+	handler.queryParams = r.URL.Query()
+
 	return &handler
 }
 
@@ -51,6 +55,14 @@ func (handler *Handler) EncodeStory(story *Story) ([]byte, *ApiError) {
 		return encodeAsProto(story.ToProto())
 	} else {
 		return encodeAsJson(story)
+	}
+}
+
+func (handler *Handler) EncodeComments(comments []*Comment) ([]byte, *ApiError) {
+	if handler.encoding == encodingProto {
+		return encodeAsProto(ToCommentListProto(comments))
+	} else {
+		return encodeAsJson(comments)
 	}
 }
 
@@ -220,7 +232,7 @@ func (handler *Handler) fetchTopComments(story *Story) {
 
 		comment, err := handler.GetComment(commentId)
 		if err == nil {
-			story.Comments = append(story.Comments, *comment)
+			story.Comments = append(story.Comments, comment)
 		}
 	}
 }

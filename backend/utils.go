@@ -102,6 +102,12 @@ func ToStoryListProto(stories []*Story) *PbStoryList {
 	}
 }
 
+func ToCommentListProto(comments []*Comment) *PbCommentList {
+	return &PbCommentList{
+		Comments: toProtoCommentSlice(comments),
+	}
+}
+
 func ToIdsProto(ids []int) *PbIds {
 	return &PbIds{
 		Ids: toInt64Slice(ids),
@@ -121,7 +127,7 @@ func toProtoStorySlice(input []*Story) []*PbStory {
 	return retval
 }
 
-func toProtoCommentSlice(input []Comment) []*PbComment {
+func toProtoCommentSlice(input []*Comment) []*PbComment {
 	if len(input) == 0 {
 		return nil
 	}

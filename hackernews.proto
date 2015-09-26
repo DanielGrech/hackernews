@@ -4,6 +4,10 @@ message PbStoryList {
 	repeated PbStory stories = 1;
 }
 
+message PbCommentList {
+	repeated PbComment comments = 1;
+}
+
 message PbStory {
 	required int64 id = 1;
 	optional string author = 2;

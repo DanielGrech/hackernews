@@ -10,6 +10,7 @@ It is generated from these files:
 
 It has these top-level messages:
 	PbStoryList
+	PbCommentList
 	PbStory
 	PbComment
 	PbIds
@@ -37,6 +38,22 @@ func (*PbStoryList) ProtoMessage()    {}
 func (m *PbStoryList) GetStories() []*PbStory {
 	if m != nil {
 		return m.Stories
+	}
+	return nil
+}
+
+type PbCommentList struct {
+	Comments         []*PbComment `protobuf:"bytes,1,rep,name=comments" json:"comments,omitempty"`
+	XXX_unrecognized []byte       `json:"-"`
+}
+
+func (m *PbCommentList) Reset()         { *m = PbCommentList{} }
+func (m *PbCommentList) String() string { return proto.CompactTextString(m) }
+func (*PbCommentList) ProtoMessage()    {}
+
+func (m *PbCommentList) GetComments() []*PbComment {
+	if m != nil {
+		return m.Comments
 	}
 	return nil
 }
