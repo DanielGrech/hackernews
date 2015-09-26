@@ -7,7 +7,9 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"strconv"
+	"time"
 )
 
 type HnApiClient struct {
@@ -22,6 +24,18 @@ func NewClient(context appengine.Context) *HnApiClient {
 	hnc.Suffix = ".json"
 	hnc.context = context
 	return &hnc
+}
+
+func (hnc *HnApiClient) NewUrlClient() *http.Client {
+	var client = http.Client{
+		Transport: &urlfetch.Transport{
+			Context: hnc.context,
+			AllowInvalidServerCertificate: true,
+			Deadline:                      time.Minute,
+		},
+	}
+
+	return &client
 }
 
 func (hnc *HnApiClient) fullUrl(urlPart string) string {
@@ -81,7 +95,7 @@ func (hnc *HnApiClient) GetComment(id int) (*Comment, error) {
 func (hnc *HnApiClient) GetItem(id int) (item item, e error) {
 	url := hnc.fullUrl("item/" + strconv.Itoa(id))
 
-	client := urlfetch.Client(hnc.context)
+	client := hnc.NewUrlClient()
 
 	resp, err := client.Get(url)
 	if err != nil {
@@ -104,7 +118,7 @@ func (hnc *HnApiClient) GetItem(id int) (item item, e error) {
 func (hnc *HnApiClient) getStories(urlPath string) (stories []int, e error) {
 	url := hnc.fullUrl(urlPath)
 
-	client := urlfetch.Client(hnc.context)
+	client := hnc.NewUrlClient()
 
 	resp, err := client.Get(url)
 	if err != nil {

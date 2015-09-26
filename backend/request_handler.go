@@ -4,6 +4,7 @@ import (
 	"appengine"
 	"net/http"
 	"net/url"
+	"sync"
 
 	"github.com/gorilla/mux"
 )
@@ -114,7 +115,7 @@ func (handler *Handler) GetStory(storyId int, fetchComments bool) (*Story, error
 			if err != nil {
 				return nil, err
 			} else {
-				handler.Logd("Got story %+v", *story)
+				handler.Logd("Got story %+v", story.ID, story.Title)
 			}
 
 			if fetchComments {
@@ -124,6 +125,8 @@ func (handler *Handler) GetStory(storyId int, fetchComments bool) (*Story, error
 			if err = handler.dataStore.SaveStory(story); err != nil {
 				handler.Loge("Error saving story to data store: %v", err)
 			}
+			handler.cache.SetStory(story)
+		} else {
 			handler.cache.SetStory(story)
 		}
 	}
@@ -145,6 +148,8 @@ func (handler *Handler) GetComment(commentId int) (*Comment, error) {
 			if err = handler.dataStore.SaveComment(comment); err != nil {
 				handler.Loge("Error saving comment to data store: %v", err)
 			}
+			handler.cache.SetComment(comment)
+		} else {
 			handler.cache.SetComment(comment)
 		}
 	}
@@ -222,16 +227,42 @@ func getStoryIds(fromCacheFunc func() []int, fromDbFunc func() ([]int, error), f
 }
 
 func (handler *Handler) fetchTopComments(story *Story) {
-	commentsToRetrieve := len(story.Kids)
-	if commentsToRetrieve > 5 {
-		commentsToRetrieve = 5
+	commentIds := story.Kids
+
+	commentIdsToFetch := len(commentIds)
+
+	const workers = 5
+	ch := make(chan int, workers)
+	commentCh := make(chan *Comment, commentIdsToFetch)
+
+	var wg sync.WaitGroup
+	wg.Add(workers)
+	for i := 0; i < workers; i++ {
+		go func() {
+			defer wg.Done()
+			for commentId := range ch {
+				comment, err := handler.GetComment(commentId)
+				if err != nil {
+					handler.Loge("Error getting comment %v", commentId, err)
+				} else {
+					handler.Logd("Got comment %v", commentId, comment.Parent)
+				}
+
+				commentCh <- comment
+			}
+		}()
 	}
 
-	for i := 0; i < commentsToRetrieve; i++ {
-		commentId := story.Kids[i]
+	for _, id := range commentIds {
+		ch <- id
+	}
 
-		comment, err := handler.GetComment(commentId)
-		if err == nil {
+	close(ch)
+	wg.Wait()
+
+	for i := 0; i < commentIdsToFetch; i++ {
+		comment := <-commentCh
+		if comment != nil {
 			story.Comments = append(story.Comments, comment)
 		}
 	}

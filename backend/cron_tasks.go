@@ -1,6 +1,15 @@
 package hackernews
 
+import (
+	"sync"
+)
+
 type Tasks struct{}
+
+type FetchStoryResult struct {
+	story *Story
+	err   error
+}
 
 func (tasks *Tasks) clearOldData(handler *Handler) ([]byte, *ApiError) {
 	handler.cleanupOldData()
@@ -35,13 +44,15 @@ func (tasks *Tasks) getStoryIds(handler *Handler, fromApiClientFn func() ([]int,
 		handler.Logd("Got story ids from network: %v", storyIds)
 	}
 
-	for index, id := range storyIds {
-		if index < 2 {
-			_, err := handler.GetStory(id, true)
-			if err != nil {
-				return nil, NewError(err)
-			}
-		}
+	storiesToRetrieve := len(storyIds)
+	if storiesToRetrieve > 200 {
+		storiesToRetrieve = 200
+	}
+
+	storyIds = storyIds[:storiesToRetrieve]
+
+	if err = getStories(handler, storyIds); err != nil {
+		return nil, NewError(err)
 	}
 
 	if err = saveToDbFn(storyIds); err != nil {
@@ -51,4 +62,43 @@ func (tasks *Tasks) getStoryIds(handler *Handler, fromApiClientFn func() ([]int,
 	saveToCacheFn(storyIds)
 
 	return nil, nil
+}
+
+func getStories(handler *Handler, storyIds []int) error {
+	const workers = 50
+	ch := make(chan int, workers)
+	storyCh := make(chan *FetchStoryResult, len(storyIds))
+
+	var wg sync.WaitGroup
+	wg.Add(workers)
+	for i := 0; i < workers; i++ {
+		go func() {
+			defer wg.Done()
+			for storyId := range ch {
+				handler.Logd("Attempting to fetch story %v", storyId)
+				story, err := handler.GetStory(storyId, true)
+				storyCh <- &FetchStoryResult{story: story, err: err}
+			}
+		}()
+	}
+
+	for _, id := range storyIds {
+		ch <- id
+	}
+
+	close(ch)
+	wg.Wait()
+
+	stories := []*Story{}
+
+	for i := 0; i < len(storyIds); i++ {
+		result := <-storyCh
+		if result.err != nil {
+			return result.err
+		} else {
+			stories = append(stories, result.story)
+		}
+	}
+
+	return nil
 }
