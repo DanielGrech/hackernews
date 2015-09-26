@@ -4,6 +4,7 @@ import hackernews.PbStory
 import hackernews.PbStoryList
 import retrofit.http.GET
 import retrofit.http.Path
+import retrofit.http.Query
 import rx.Observable
 
 private val FORMAT = "proto"
@@ -24,6 +25,9 @@ internal interface ApiService {
 
     @GET("job?format=$FORMAT")
     fun getJobStories(): Observable<PbStoryList>
+
+//    @GET("comments?format=$FORMAT")
+//    fun getComments(@Query("id") vararg ids: Int)
 
     @GET("story/{story_id}?format=$FORMAT")
     fun getStory(@Path("story_id") storyId: Long): Observable<PbStory>

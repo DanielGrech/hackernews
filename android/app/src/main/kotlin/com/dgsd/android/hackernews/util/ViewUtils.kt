@@ -1,13 +1,19 @@
 package com.dgsd.android.hackernews.util
 
 import android.app.ActivityOptions
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.support.annotation.ColorInt
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.TextView
+import com.dgsd.android.hackernews.R
 import java.util.*
+
+var indentationColors: IntArray? = null
 
 /**
  * Runs the given action in an {@link OnPreDrawListener}
@@ -115,4 +121,15 @@ public fun Toolbar.getSubtitleView(): TextView? {
     val field = javaClass.getDeclaredField("mSubtitleTextView")
     field?.isAccessible = true
     return field?.get(this) as TextView?
+}
+
+@ColorInt
+public fun getCommentColorForIndentation(context: Context, indentation: Int): Int {
+    if (indentationColors == null) {
+        indentationColors = context.resources.getIntArray(R.array.comment_indentation_colors)
+    }
+
+    val level = if (indentation == 0) 0 else (indentation - 1)
+    val size = indentationColors!!.size()
+    return indentationColors!![indentation % size]
 }

@@ -9,6 +9,7 @@ import android.view.View
 import com.dgsd.android.hackernews.R
 import com.dgsd.android.hackernews.adapter.CommentListAdapter
 import com.dgsd.android.hackernews.util.children
+import com.dgsd.android.hackernews.util.getCommentColorForIndentation
 import com.dgsd.hackernews.model.Comment
 import com.dgsd.hackernews.model.Story
 import org.jetbrains.anko.dimen
@@ -26,11 +27,10 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
         layoutManager = LinearLayoutManager(context)
         adapter = CommentListAdapter()
 
-        addItemDecoration(IndentItemDecoration(
+        addItemDecoration(IndentItemDecoration(context,
                 context.dimen(R.dimen.padding_default),
                 context.dimen(R.dimen.padding_default),
-                context.dip(1),
-                context.resources.getIntArray(R.array.comment_indentation_colors)))
+                context.dip(1)))
 
         (adapter as CommentListAdapter).setOnCommentClickListener { Comment, view ->
             onClickListener(Comment, view)
@@ -49,18 +49,23 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
         (adapter as CommentListAdapter).setOnCommentPlaceholderClickListener(listener)
     }
 
-    public class IndentItemDecoration(val indentSize: Int, val verticalPadding: Int, val lineWidth: Int, val indentationColors: IntArray) : RecyclerView.ItemDecoration() {
+    public class IndentItemDecoration(val context: Context, val indentSize: Int, val verticalPadding: Int, val lineWidth: Int) : RecyclerView.ItemDecoration() {
 
-        private val paint: Paint
+        private val linePaint: Paint
+
+        private val circlePaint: Paint
 
         private val path: Path
 
         private val dottedPathEffect: DashPathEffect
 
         init {
-            paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
-            paint.style = Paint.Style.STROKE
-            paint.strokeWidth = lineWidth.toFloat()
+            linePaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
+            linePaint.style = Paint.Style.STROKE
+            linePaint.strokeWidth = lineWidth.toFloat()
+
+            circlePaint = Paint(linePaint)
+            circlePaint.style = Paint.Style.FILL_AND_STROKE
 
             path = Path()
 
@@ -80,17 +85,30 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
 
                     val lineStartX = (indentation * indentSize).toFloat()
                     val lineEndX = (indentation * indentSize).toFloat()
-                    val lineStartY = parent.layoutManager.getDecoratedTop(it).toFloat()
-                    val lineEndY = parent.layoutManager.getDecoratedBottom(it).toFloat() - (if (!drawAsDotted && isCommentPlaceholder) verticalPadding else 0)
+                    var lineStartY = parent.layoutManager.getDecoratedTop(it).toFloat()
+                    var lineEndY = parent.layoutManager.getDecoratedBottom(it).toFloat()
 
-                    paint.color = indentationColors[(indentation - 1) % indentationColors.size()]
-                    paint.setPathEffect(if (drawAsDotted) dottedPathEffect else null)
+                    if (!drawAsDotted) {
+                        lineStartY += verticalPadding
+                    }
+
+                    if (!drawAsDotted && isCommentPlaceholder) {
+                        lineEndY -= verticalPadding
+                    }
+
+                    circlePaint.color = getCommentColorForIndentation(context, indentation)
+                    linePaint.color = circlePaint.color
+                    linePaint.setPathEffect(if (drawAsDotted) dottedPathEffect else null)
 
                     path.reset()
                     path.moveTo(lineStartX, lineStartY)
                     path.lineTo(lineEndX, lineEndY)
 
-                    canvas.drawPath(path, paint)
+                    canvas.drawPath(path, linePaint)
+
+                    if (!drawAsDotted) {
+                        canvas.drawCircle(lineStartX, lineStartY, 12f, circlePaint)
+                    }
                 }
             }
         }

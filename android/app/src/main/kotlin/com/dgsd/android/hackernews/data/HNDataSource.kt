@@ -109,7 +109,9 @@ public class HNDataSource(private val apiDataSource: DataSource, private val dbD
             saveFn(it)
             storyListCache[pageType] = it
             it.forEach { story ->
-                storyCache.put(story.id, story)
+                if (storyCache.get(story.id) == null) {
+                    storyCache.put(story.id, story)
+                }
             }
         }
 

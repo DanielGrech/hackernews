@@ -161,7 +161,7 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
         public fun populate(item: ListItem) {
             when (item.getType()) {
                 CommentListAdapter.VIEW_TYPE_COMMENT -> {
-                    (itemView as CommentListItemView).populate(item.comment!!)
+                    (itemView as CommentListItemView).populate(item.comment!!, item.indentationLevel)
                 }
                 CommentListAdapter.VIEW_TYPE_COMMENT_PLACEHOLDER -> {
                     val commentIds = item.commentIds!!
