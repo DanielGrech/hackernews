@@ -15,9 +15,10 @@
     <string name="comment_list_item_removed_message">This comment has been removed</string>
     <string name="view_story_action_button_label">View Story</string>
 
-    <string name="error_retrieving_stories">Error retrieving stories</string>
+    <string name="error_retrieving_stories">Error retrieving stories.\nClick here to try again</string>
     <string name="error_retrieving_stories_ephemeral">Error retrieving stories</string>
     <string name="share">Share</string>
+    <string name="retry">Retry</string>
 
     <plurals name="load_more_comments">
         <item quantity="one">Tap to load %1$s more comment</item>

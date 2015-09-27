@@ -4,14 +4,11 @@ import com.dgsd.android.hackernews.R
 import com.dgsd.android.hackernews.data.HNDataSource
 import com.dgsd.android.hackernews.model.PageType
 import com.dgsd.android.hackernews.module.AppServicesComponent
-import com.dgsd.android.hackernews.mvp.view.MainMvpView
 import com.dgsd.android.hackernews.mvp.view.StoryListMvpView
 import com.dgsd.android.hackernews.util.bind
 import com.dgsd.android.hackernews.util.onIoThread
 import com.dgsd.hackernews.model.Story
-import com.dgsd.hackernews.network.DataSource
 import rx.Observable
-import rx.lang.kotlin.toSingletonObservable
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -20,6 +17,8 @@ public class StoryListPresenter(view : StoryListMvpView, component : AppServices
 
     @Inject
     lateinit val dataSource: HNDataSource
+
+    var hasLoadedStories = false
 
     init {
         component.inject(this)
@@ -41,14 +40,16 @@ public class StoryListPresenter(view : StoryListMvpView, component : AppServices
                 .onIoThread()
                 .subscribe({
                     if (it.isEmpty()) {
+                        hasLoadedStories = false
                         getView().showEmptyMessage(getContext().getString(R.string.empty_stories))
                     } else {
+                        hasLoadedStories = true
                         getView().showStories(it)
                     }
                 }, {
                     Timber.e(it, "Error showing stories")
 
-                    if (skipCache) {
+                    if (hasLoadedStories) {
                         getView().showError(getContext().getString(R.string.error_retrieving_stories_ephemeral))
                     } else {
                         getView().showError(getContext().getString(R.string.error_retrieving_stories))

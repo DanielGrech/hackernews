@@ -15,6 +15,7 @@ import com.dgsd.android.hackernews.view.LceViewGroup
 import com.dgsd.android.hackernews.view.StoryRecyclerView
 import com.dgsd.hackernews.model.Story
 import org.jetbrains.anko.find
+import org.jetbrains.anko.onClick
 
 public class StoryListFragment: PresentableFragment<StoryListMvpView, StoryListPresenter>(), StoryListMvpView {
 
@@ -73,6 +74,7 @@ public class StoryListFragment: PresentableFragment<StoryListMvpView, StoryListP
     override fun showEmptyMessage(message: String) {
         swipeRefreshLayout.isRefreshing = false
         loadingContentErrorView.showError(message)
+        loadingContentErrorView.errorMessage.setOnClickListener(null)
     }
 
     override fun showLoading() {
@@ -80,10 +82,21 @@ public class StoryListFragment: PresentableFragment<StoryListMvpView, StoryListP
     }
 
     override fun showError(message: String) {
+        swipeRefreshLayout.isRefreshing = false
+
         if (recyclerView.adapter.itemCount == 0) {
             showEmptyMessage(message)
+            loadingContentErrorView.errorMessage.onClick {
+                showLoading()
+                presenter.onRefreshRequested()
+            }
         } else {
-            Snackbar.make(loadingContentErrorView, message, Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(loadingContentErrorView, message, Snackbar.LENGTH_SHORT)
+                    .setAction(R.string.retry) {
+                        swipeRefreshLayout.isRefreshing = true
+                        presenter.onRefreshRequested()
+                    }
+                    .show()
         }
     }
 }
