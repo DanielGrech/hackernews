@@ -219,9 +219,9 @@ func (db *Db) saveStoryIds(listType string, ids []int) error {
 }
 
 func (db *Db) getStoryIds(listType string) ([]int, error) {
-	idList := new(IdList)
+	var idList IdList
 	err := datastore.Get(db.context, db.keyForIdList(listType), &idList)
-	if err != nil {
+	if err == nil {
 		return idList.Ids, nil
 	} else {
 		return nil, err

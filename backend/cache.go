@@ -96,6 +96,13 @@ func (cache *Cache) ClearStories(typeKey string) {
 	}
 }
 
+func (cache *Cache) ClearStory(storyId int) {
+	key := cacheKeyStoryPrefix + strconv.Itoa(storyId)
+	if err := memcache.Delete(cache.context, key); err != nil && err != memcache.ErrCacheMiss {
+		cache.context.Warningf("Error clearing storiy from memcache: %v", key, err)
+	}
+}
+
 func (cache *Cache) GetTopStories() []int {
 	return cache.getIdsFromCache(cacheKeyTopStories)
 }

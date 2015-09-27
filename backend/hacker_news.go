@@ -45,6 +45,7 @@ func getStory(handler *Handler) ([]byte, *ApiError) {
 }
 
 func getComments(handler *Handler) ([]byte, *ApiError) {
+	storyId := handler.queryParams["story"]
 	commentIds := handler.queryParams["id"]
 
 	const workers = 5
@@ -84,6 +85,13 @@ func getComments(handler *Handler) ([]byte, *ApiError) {
 		}
 	}
 
+	if len(storyId) > 0 {
+		id, err := strconv.Atoi(storyId[0])
+		if err == nil {
+			handler.cache.ClearStory(id)
+		}
+	}
+
 	return handler.EncodeComments(comments)
 }
 
@@ -93,6 +101,8 @@ func getComment(handler *Handler) ([]byte, *ApiError) {
 	comment, err := handler.GetComment(commentId)
 	if err != nil {
 		return nil, NewErrorWithMessageAndCode(err, "No comment found", http.StatusNotFound)
+	} else {
+		handler.cache.ClearStory(comment.Parent)
 	}
 
 	return handler.EncodeComment(comment)

@@ -165,41 +165,46 @@ func (handler *Handler) GetComment(commentId int) (*Comment, error) {
 }
 
 func (handler *Handler) GetTopStoryIds() ([]int, error) {
-	return getStoryIds(handler.cache.GetTopStories,
+	return handler.getStoryIds(handler.cache.GetTopStories,
 		handler.dataStore.GetTopStoryIds,
 		handler.apiClient.GetTopStories,
+		handler.dataStore.SaveTopStoryIds,
 		handler.cache.SetTopStories,
 	)
 }
 
 func (handler *Handler) GetNewStoryIds() ([]int, error) {
-	return getStoryIds(handler.cache.GetNewStories,
+	return handler.getStoryIds(handler.cache.GetNewStories,
 		handler.dataStore.GetNewStoryIds,
 		handler.apiClient.GetNewStories,
+		handler.dataStore.SaveNewStoryIds,
 		handler.cache.SetNewStories,
 	)
 }
 
 func (handler *Handler) GetAskStoryIds() ([]int, error) {
-	return getStoryIds(handler.cache.GetAskStories,
+	return handler.getStoryIds(handler.cache.GetAskStories,
 		handler.dataStore.GetAskStoryIds,
 		handler.apiClient.GetAskStories,
+		handler.dataStore.SaveAskStoryIds,
 		handler.cache.SetAskStories,
 	)
 }
 
 func (handler *Handler) GetShowStoryIds() ([]int, error) {
-	return getStoryIds(handler.cache.GetShowStories,
+	return handler.getStoryIds(handler.cache.GetShowStories,
 		handler.dataStore.GetShowStoryIds,
 		handler.apiClient.GetShowStories,
+		handler.dataStore.SaveShowStoryIds,
 		handler.cache.SetShowStories,
 	)
 }
 
 func (handler *Handler) GetJobStoryIds() ([]int, error) {
-	return getStoryIds(handler.cache.GetJobStories,
+	return handler.getStoryIds(handler.cache.GetJobStories,
 		handler.dataStore.GetJobStoryIds,
 		handler.apiClient.GetJobStories,
+		handler.dataStore.SaveJobStoryIds,
 		handler.cache.SetJobStories,
 	)
 }
@@ -219,9 +224,9 @@ func (handler *Handler) GetStories(ids []int, typeKey string) ([]*Story, error) 
 	return stories, nil
 }
 
-func getStoryIds(fromCacheFunc func() []int, fromDbFunc func() ([]int, error), fromApiClientFunc func() ([]int, error), saveToCacheFunc func([]int)) ([]int, error) {
+func (handler *Handler) getStoryIds(fromCacheFunc func() []int, fromDbFunc func() ([]int, error), fromApiClientFunc func() ([]int, error), saveToDbFn func([]int) error, saveToCacheFunc func([]int)) ([]int, error) {
 	stories := fromCacheFunc()
-	if stories != nil {
+	if stories != nil && len(stories) > 0 {
 		return stories, nil
 	}
 
@@ -233,7 +238,10 @@ func getStoryIds(fromCacheFunc func() []int, fromDbFunc func() ([]int, error), f
 
 	stories, err = fromApiClientFunc()
 	if err == nil {
-		saveToCacheFunc(stories)
+		err = saveToDbFn(stories)
+		if err == nil {
+			saveToCacheFunc(stories)
+		}
 	}
 
 	return stories, err
