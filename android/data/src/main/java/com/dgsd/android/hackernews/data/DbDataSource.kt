@@ -35,4 +35,6 @@ public interface DbDataSource {
     public fun saveStory(story: Story)
 
     public fun saveComment(comment: Comment)
+
+    public fun clearOldData(): Int
 }

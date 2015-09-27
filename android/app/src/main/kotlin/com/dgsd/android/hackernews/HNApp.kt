@@ -14,7 +14,11 @@ import com.facebook.stetho.Stetho
 import com.facebook.stetho.timber.StethoTree
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
+import rx.Observable
+import rx.lang.kotlin.deferredObservable
+import rx.schedulers.Schedulers
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 abstract class HNApp : Application() {
 
@@ -22,7 +26,7 @@ abstract class HNApp : Application() {
 
     private lateinit var appServicesComponent: AppServicesComponent
 
-    protected abstract fun createAppServicesComponent() : AppServicesComponent
+    protected abstract fun createAppServicesComponent(): AppServicesComponent
 
     override fun onCreate() {
         super.onCreate()
@@ -34,6 +38,8 @@ abstract class HNApp : Application() {
         enableAppOnlyFunctionality()
 
         appServicesComponent = createAppServicesComponent()
+
+        clearOldAppData()
     }
 
     override fun onTrimMemory(level: Int) {
@@ -55,7 +61,7 @@ abstract class HNApp : Application() {
         return appServicesComponent
     }
 
-    protected fun getModule() : HNModule {
+    protected fun getModule(): HNModule {
         return HNModule(this);
     }
 
@@ -88,5 +94,17 @@ abstract class HNApp : Application() {
             // LeakCanary causes a crash on M Developer Preview
             refWatcher = LeakCanary.install(this)
         }
+    }
+
+    protected fun clearOldAppData() {
+        deferredObservable {
+            Observable.just(appServicesComponent.dataSource().clearOldData())
+        }.delay(2, TimeUnit.SECONDS, Schedulers.newThread())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe({
+                    Timber.d("Successfully cleared $it old data items")
+                }, {
+                    Timber.e(it, "Error clearing old data")
+                })
     }
 }

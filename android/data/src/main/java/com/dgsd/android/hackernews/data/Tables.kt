@@ -36,6 +36,11 @@ class Tables {
         val SELECT_ASK_STORIES = SELECT_STORIES_TEMPLATE.format(AskStoryIds.name())
         val SELECT_SHOW_STORIES = SELECT_STORIES_TEMPLATE.format(ShowStoryIds.name())
         val SELECT_JOB_STORIES = SELECT_STORIES_TEMPLATE.format(JobStoryIds.name())
+
+        val DELETE_UNUSED_DATA_CLAUSE = "${_Stories.COL_ID} NOT IN" +
+                arrayOf(TopStoryIds, NewStoryIds, AskStoryIds, ShowStoryIds, JobStoryIds)
+                        .map { "SELECT _id FROM ${it.name()}" }
+                        .join(separator = " UNION ", prefix = "(", postfix = ")")
     }
 
     abstract class Table<T> {

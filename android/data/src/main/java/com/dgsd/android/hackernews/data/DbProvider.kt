@@ -13,6 +13,10 @@ import rx.lang.kotlin.toObservable
 
 public class DbProvider(private val db: BriteDatabase) : DbDataSource {
 
+    override fun clearOldData(): Int {
+        return db.delete(Tables.Stories.name(), Tables.DELETE_UNUSED_DATA_CLAUSE)
+    }
+
     override fun getTopStories(): Observable<List<Story>> {
         return getStoriesFromIds(Tables.TopStoryIds.name(), Tables.SELECT_TOP_STORIES)
     }

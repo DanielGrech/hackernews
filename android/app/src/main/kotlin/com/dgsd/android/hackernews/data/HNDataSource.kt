@@ -28,6 +28,10 @@ public class HNDataSource(private val apiDataSource: DataSource, private val dbD
         storyListCache.clear()
     }
 
+    public fun clearOldData(): Int {
+        return dbDataSource.clearOldData()
+    }
+
     public fun getTopStories(skipCache: Boolean): Observable<List<Story>> {
         return getStories(PageType.TOP, skipCache,
                 { apiDataSource.getTopStories() },
