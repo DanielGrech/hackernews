@@ -9,6 +9,8 @@ public interface StoryMvpView : MvpView {
 
     fun showError(message: String)
 
+    fun showEphemeralError(message: String)
+
     fun showUri(uri: Uri)
 
     fun setViewStoryButtonVisible(isVisible: Boolean)

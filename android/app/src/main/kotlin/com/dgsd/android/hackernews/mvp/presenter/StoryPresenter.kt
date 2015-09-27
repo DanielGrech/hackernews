@@ -48,9 +48,8 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
                     onStoryLoaded(it)
                     getView().showPlaceholderAsLoading(commentIds, false)
                 }, {
-                    // TODO: Proper error messages..
                     Timber.e(it, "Error getting comments")
-                    getView().showError(it.toString())
+                    getView().showEphemeralError(getContext().getString(R.string.error_retrieving_comments_ephemeral))
                     getView().showPlaceholderAsLoading(commentIds, false)
                 })
     }
@@ -62,9 +61,12 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
                 .subscribe({
                     onStoryLoaded(it)
                 }, {
-                    // TODO: Proper error messages..
                     Timber.e(it, "Error getting story")
-                    getView().showError(it.toString())
+                    if (this.story?.hasComments() ?:false) {
+                        getView().showEphemeralError(getContext().getString(R.string.error_retrieving_comments_ephemeral))
+                    } else {
+                        getView().showError(getContext().getString(R.string.error_retrieving_comments))
+                    }
                 })
     }
 

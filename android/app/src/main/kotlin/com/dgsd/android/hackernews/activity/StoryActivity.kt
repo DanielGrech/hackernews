@@ -125,12 +125,12 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
 
     override fun showError(message: String) {
         swipeRefreshLayout.isRefreshing = false
+        loadingContentErrorView.showError(message)
+    }
 
-        if (recyclerView.adapter.itemCount == 0) {
-            loadingContentErrorView.showError(message)
-        } else {
-            toast(message)
-        }
+    override fun showEphemeralError(message: String) {
+        swipeRefreshLayout.isRefreshing = false
+        toast(message)
     }
 
     override fun showStory(story: Story) {
@@ -167,7 +167,7 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
 
     override fun showNoCommentsMessage(message: String) {
         if (recyclerView.adapter.itemCount == 0) {
-            loadingContentErrorView.showError(message)
+            showError(message)
         } else {
             recyclerView.showNoCommentsMessage(message)
         }

@@ -19,6 +19,8 @@
 
     <string name="error_retrieving_stories">Error retrieving stories.\nClick here to try again</string>
     <string name="error_retrieving_stories_ephemeral">Error retrieving stories</string>
+    <string name="error_retrieving_comments">Error retrieving comments\nClick here to try again</string>
+    <string name="error_retrieving_comments_ephemeral">Error retrieving comments</string>
     <string name="share">Share</string>
     <string name="retry">Retry</string>
 
