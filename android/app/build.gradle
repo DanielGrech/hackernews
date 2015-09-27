@@ -44,6 +44,7 @@ android {
         buildConfigField "String", "BUILD_NUMBER", "\"${getCiBuildNumber()}\""
         buildConfigField "boolean", "CRASHLYTICS_ENABLED", "${isCiBuild()}"
         buildConfigField "boolean", "LEAK_CANARY_ENABLED", "${!isCiBuild()}"
+        buildConfigField "long", "STORY_LIST_NETWORK_CACHE_TIME", "${1000L * 60L * 60L * 5L}"
 
         manifestPlaceholders = [
                 // Want QA's to get a crash free build, but devs on their local machine

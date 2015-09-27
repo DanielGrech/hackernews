@@ -1,6 +1,8 @@
 package com.dgsd.android.hackernews.data
 
 import android.support.v4.util.LongSparseArray
+import android.util.SparseLongArray
+import com.dgsd.android.hackernews.BuildConfig
 import com.dgsd.android.hackernews.model.PageType
 import com.dgsd.hackernews.model.Story
 import com.dgsd.hackernews.network.DataSource
@@ -9,6 +11,7 @@ import com.dgsd.hackernews.network.utils.filterNulls
 import rx.Observable
 import rx.lang.kotlin.firstOrNull
 import rx.lang.kotlin.toSingletonObservable
+import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -105,14 +108,22 @@ public class HNDataSource(private val apiDataSource: DataSource, private val dbD
                            apiFn: () -> Observable<List<Story>>,
                            dbFn: () -> Observable<List<Story>>,
                            saveFn: (List<Story>) -> Unit): Observable<List<Story>> {
-        val apiObservable = apiFn().doOnNext {
-            saveFn(it)
-            storyListCache[pageType] = it
-            it.forEach { story ->
-                if (storyCache.get(story.id) == null) {
-                    storyCache.put(story.id, story)
+        val apiObservable: Observable<List<Story>>;
+        if (skipCache || shouldMakeNetworkCall(pageType)) {
+            apiObservable = apiFn().doOnNext {
+                networkCallTimeArray.put(pageType.ordinal(), System.currentTimeMillis())
+
+                saveFn(it)
+                storyListCache[pageType] = it
+                it.forEach { story ->
+                    if (storyCache.get(story.id) == null) {
+                        storyCache.put(story.id, story)
+                    }
                 }
             }
+        } else {
+            Timber.d("Already made a recent network call. Skipping...")
+            apiObservable = Observable.empty()
         }
 
         if (skipCache) {
@@ -131,4 +142,10 @@ public class HNDataSource(private val apiDataSource: DataSource, private val dbD
         }
     }
 
+    private val networkCallTimeArray = SparseLongArray()
+
+    private fun shouldMakeNetworkCall(pageType: PageType): Boolean {
+        val lastCallTime = networkCallTimeArray.get(pageType.ordinal(), -1)
+        return System.currentTimeMillis() - BuildConfig.STORY_LIST_NETWORK_CACHE_TIME > lastCallTime
+    }
 }
