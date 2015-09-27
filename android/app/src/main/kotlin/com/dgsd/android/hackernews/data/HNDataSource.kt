@@ -135,7 +135,13 @@ public class HNDataSource(private val apiDataSource: DataSource, private val dbD
         if (skipCache) {
             return apiObservable
         } else {
-            val dbObservable = dbFn().firstOrDefault(emptyList()).filter { it.isNotEmpty() }
+            val dbObservable = dbFn().firstOrDefault(emptyList())
+                    .filter { it.isNotEmpty() }
+                    .doOnNext {
+                        if (storyListCache.getOrImplicitDefault(pageType).isEmpty()) {
+                            storyListCache[pageType] = it
+                        }
+                    }
 
             val cachedData = storyListCache.getOrImplicitDefault(pageType)
             val memoryCacheObservable = if (cachedData.isEmpty()) {
