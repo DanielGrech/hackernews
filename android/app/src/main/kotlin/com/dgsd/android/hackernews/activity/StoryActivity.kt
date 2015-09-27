@@ -146,6 +146,16 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
         }
     }
 
+    override fun showNoCommentsMessage(message: String) {
+        if (recyclerView.adapter.itemCount == 0) {
+            swipeRefreshLayout.hide()
+            errorMessage.show()
+            errorMessage.text = message
+        } else {
+            recyclerView.showNoCommentsMessage(message)
+        }
+    }
+
     override fun setViewStoryButtonVisible(isVisible: Boolean) {
         viewStoryButton.showWhen(isVisible)
     }

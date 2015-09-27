@@ -13,6 +13,7 @@
     <string name="comment_list_item_header_template">%1$s · %2$s</string>
     <string name="comment_list_item_header_template_removed">Unknown</string>
     <string name="comment_list_item_removed_message">This comment has been removed</string>
+    <string name="comment_list_no_comments">No comments</string>
     <string name="view_story_action_button_label">View Story</string>
 
     <string name="error_retrieving_stories">Error retrieving stories.\nClick here to try again</string>

@@ -15,4 +15,6 @@ public interface StoryMvpView : MvpView {
 
     fun showPlaceholderAsLoading(commentIds: List<Long>, showLoading: Boolean)
 
+    fun showNoCommentsMessage(message: String)
+
 }

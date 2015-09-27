@@ -41,6 +41,10 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
         (adapter as CommentListAdapter).setStory(story)
     }
 
+    fun showNoCommentsMessage(message: String) {
+        (adapter as CommentListAdapter).showNoCommentsMessage(message)
+    }
+
     public fun setOnCommentClickListener(listener: (Comment, View) -> Unit) {
         (adapter as CommentListAdapter).setOnCommentClickListener(listener)
     }

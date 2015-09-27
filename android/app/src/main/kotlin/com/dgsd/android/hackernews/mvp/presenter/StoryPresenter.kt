@@ -1,6 +1,7 @@
 package com.dgsd.android.hackernews.mvp.presenter
 
 import android.net.Uri
+import com.dgsd.android.hackernews.R
 import com.dgsd.android.hackernews.data.HNDataSource
 import com.dgsd.android.hackernews.module.AppServicesComponent
 import com.dgsd.android.hackernews.mvp.view.StoryMvpView
@@ -43,14 +44,12 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
                 .bind(getView())
                 .onIoThread()
                 .subscribe({
-                    story = it
-                    getView().showStory(it)
+                    onStoryLoaded(it)
                     getView().showPlaceholderAsLoading(commentIds, false)
                 }, {
                     // TODO: Proper error messages..
                     Timber.e(it, "Error getting comments")
                     getView().showError(it.toString())
-
                     getView().showPlaceholderAsLoading(commentIds, false)
                 })
     }
@@ -60,10 +59,7 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
                 .bind(getView())
                 .onIoThread()
                 .subscribe({
-                    story = it
-                    getView().showStory(it)
-
-                    getView().setViewStoryButtonVisible(!story?.url.isNullOrBlank())
+                    onStoryLoaded(it)
                 }, {
                     // TODO: Proper error messages..
                     Timber.e(it, "Error getting story")
@@ -71,4 +67,18 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
                 })
     }
 
+    private fun onStoryLoaded(story: Story) {
+        this.story = story
+        getView().showStory(story)
+        getView().setViewStoryButtonVisible(!story.url.isNullOrBlank())
+
+        if (story.hasComments()) {
+            if (story.hasCommentsToLoad()) {
+                onCommentPlaceholderClicked(story.commentIds)
+            }
+        } else {
+            getView().showNoCommentsMessage(getContext().getString(R.string.comment_list_no_comments))
+        }
+
+    }
 }

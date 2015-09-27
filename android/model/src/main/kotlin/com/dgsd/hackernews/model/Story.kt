@@ -24,4 +24,12 @@ public data class Story(
         STORY, JOB, POLL, POLL_ANSWER
     }
 
+    public fun hasComments(): Boolean {
+        return commentIds.isNotEmpty()
+    }
+
+    public fun hasCommentsToLoad(): Boolean {
+        return hasComments() && comments.isEmpty()
+    }
+
 }

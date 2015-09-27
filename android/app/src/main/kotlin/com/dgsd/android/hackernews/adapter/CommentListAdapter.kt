@@ -24,6 +24,7 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
         public val VIEW_TYPE_COMMENT = 0
         public val VIEW_TYPE_STORY_TEXT = 1
         public val VIEW_TYPE_COMMENT_PLACEHOLDER = 2
+        public val VIEW_TYPE_NO_COMMENTS = 3
     }
 
     private var onCommentPlaceholderClickListener: (comment: List<Long>, View) -> Unit = { ids, v -> }
@@ -40,6 +41,10 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder? {
         val view: View = when (viewType) {
+            CommentListAdapter.VIEW_TYPE_NO_COMMENTS -> {
+                LayoutInflater.from(parent.context)
+                        .inflate(R.layout.li_no_comments, parent, false)
+            }
             CommentListAdapter.VIEW_TYPE_COMMENT -> {
                 CommentListItemView.inflate(parent)
             }
@@ -69,6 +74,11 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
 
     override fun getItemCount(): Int {
         return items.size()
+    }
+
+    fun showNoCommentsMessage(message: String) {
+        items.add(ListItem(noCommentMessage = message))
+        notifyDataSetChanged()
     }
 
     fun setStory(story: Story) {
@@ -160,6 +170,9 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
 
         public fun populate(item: ListItem) {
             when (item.getType()) {
+                CommentListAdapter.VIEW_TYPE_NO_COMMENTS -> {
+                    (itemView as TextView).text = item.noCommentMessage
+                }
                 CommentListAdapter.VIEW_TYPE_COMMENT -> {
                     (itemView as CommentListItemView).populate(item.comment!!, item.indentationLevel)
                 }
@@ -182,13 +195,15 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
     }
 
     private data class ListItem(val commentIds: List<Long>? = null, val comment: Comment? = null,
-                                val storyText: CharSequence? = null, val indentationLevel: Int = 0) {
+                                val storyText: CharSequence? = null, val indentationLevel: Int = 0,
+                                val noCommentMessage: CharSequence? = null) {
 
         fun getType(): Int {
             return when {
                 comment != null -> return CommentListAdapter.VIEW_TYPE_COMMENT
                 commentIds != null -> return CommentListAdapter.VIEW_TYPE_COMMENT_PLACEHOLDER
                 storyText != null -> return CommentListAdapter.VIEW_TYPE_STORY_TEXT
+                noCommentMessage != null -> return CommentListAdapter.VIEW_TYPE_NO_COMMENTS
                 else -> throw IllegalStateException("Unknown view type for: " + this)
             }
         }
