@@ -14,8 +14,7 @@ import com.dgsd.android.hackernews.mvp.view.StoryMvpView
 import com.dgsd.android.hackernews.util.*
 import com.dgsd.android.hackernews.view.CommentRecyclerView
 import com.dgsd.hackernews.model.Story
-import kotlinx.android.synthetic.act_story.toolbar
-import kotlinx.android.synthetic.act_story.viewStoryButton
+import kotlinx.android.synthetic.act_story.*
 import org.jetbrains.anko.*
 
 public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>(), StoryMvpView, CustomTabActivityHelper.ConnectionCallback {
@@ -59,6 +58,11 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
 
         recyclerView.setOnCommentPlaceholderClickListener{ ids, view ->
             presenter.onCommentPlaceholderClicked(ids)
+        }
+
+        swipeRefreshLayout.setColorSchemeResources(R.color.accent)
+        swipeRefreshLayout.setOnRefreshListener {
+            presenter.onRefreshRequested()
         }
     }
 
@@ -105,11 +109,15 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
     }
 
     override fun showError(message: String) {
+        swipeRefreshLayout.isRefreshing = false
+
         // TODO: Show proper error!
         toast(message)
     }
 
     override fun showStory(story: Story) {
+        swipeRefreshLayout.isRefreshing = false
+
         this.title = story.title
         toolbar.title = story.title
         toolbar.subtitle = story.getSummaryString(this)
@@ -126,6 +134,8 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
     }
 
     override fun showUri(uri: Uri) {
+        swipeRefreshLayout.isRefreshing = false
+
         val customTabIntent = CustomTabsIntent.Builder()
                 .setShowTitle(true)
                 .setToolbarColor(getColor(R.color.primary))

@@ -21,21 +21,13 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
         component.inject(this)
     }
 
+    fun onRefreshRequested() {
+        loadStory(true)
+    }
+
     override fun onStart() {
         super.onStart()
-        dataSource.getStory(storyId)
-                .bind(getView())
-                .onIoThread()
-                .subscribe({
-                    story = it
-                    getView().showStory(it)
-
-                    getView().setViewStoryButtonVisible(!story?.url.isNullOrBlank())
-                }, {
-                    // TODO: Proper error messages..
-                    Timber.e(it, "Error getting story")
-                    getView().showError(it.toString())
-                })
+        loadStory(false)
     }
 
     fun onViewStoryButtonClicked() {
@@ -62,4 +54,21 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
                     getView().showPlaceholderAsLoading(commentIds, false)
                 })
     }
+
+    private fun loadStory(skipCache: Boolean) {
+        dataSource.getStory(storyId, skipCache)
+                .bind(getView())
+                .onIoThread()
+                .subscribe({
+                    story = it
+                    getView().showStory(it)
+
+                    getView().setViewStoryButtonVisible(!story?.url.isNullOrBlank())
+                }, {
+                    // TODO: Proper error messages..
+                    Timber.e(it, "Error getting story")
+                    getView().showError(it.toString())
+                })
+    }
+
 }

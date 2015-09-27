@@ -96,11 +96,23 @@ public class HNDataSource(private val apiDataSource: DataSource, private val dbD
     }
 
     override fun getStory(storyId: Long): Observable<Story> {
-        val apiObservable = apiDataSource.getStory(storyId)
-                .doOnNext {
-                    dbDataSource.saveStory(it)
-                    storyCache.put(it.id, it)
-                }
+        return getStory(storyId, false)
+    }
+
+    fun getStory(storyId: Long, skipCache: Boolean): Observable<Story> {
+        val apiObservable: Observable<Story>
+
+        if (skipCache) {
+            apiObservable = apiDataSource.getStory(storyId)
+                    .doOnNext {
+                        dbDataSource.saveStory(it)
+                        storyCache.put(it.id, it)
+                    }
+
+            return apiObservable
+        } else {
+            apiObservable = Observable.empty()
+        }
 
         val dbObservable = dbDataSource.getStory(storyId).firstOrNull().filterNulls()
 

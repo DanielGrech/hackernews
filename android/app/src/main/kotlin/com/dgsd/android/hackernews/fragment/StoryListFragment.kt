@@ -78,6 +78,7 @@ public class StoryListFragment: PresentableFragment<StoryListMvpView, StoryListP
     }
 
     override fun showLoading() {
+        swipeRefreshLayout.isRefreshing = false
         loadingContentErrorView.showLoading()
     }
 
