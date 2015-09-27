@@ -3,7 +3,6 @@ package com.dgsd.android.hackernews.util
 import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.support.annotation.ColorInt
 import android.support.v7.widget.Toolbar
 import android.view.View
@@ -99,6 +98,22 @@ public fun ViewGroup.children(): List<View> {
         retval.add(getChildAt(i))
     }
     return retval
+}
+
+public inline fun <reified T> View.findFirstChild(): T? {
+    if (this is ViewGroup) {
+        val list = LinkedList(children())
+        while (list.isNotEmpty()) {
+            val view = list.pop()
+            if (view is T) {
+                return view as T
+            } else if (view is ViewGroup) {
+                list += view.children()
+            }
+        }
+    }
+
+    return null
 }
 
 public fun View.startActivity(intent: Intent) {

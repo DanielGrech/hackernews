@@ -39,7 +39,7 @@ public class LceViewGroup(context: Context, attrs: AttributeSet?, defStyle: Int)
             removeView(it)
         }
 
-        LayoutInflater.from(getContext()).inflate(R.layout.view_lce, this, true)
+        LayoutInflater.from(context).inflate(R.layout.view_lce, this, true)
 
         content = find(R.id.content)
         progressBar = find(R.id.progressBar)
