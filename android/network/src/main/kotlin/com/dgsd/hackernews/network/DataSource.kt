@@ -1,5 +1,6 @@
 package com.dgsd.hackernews.network
 
+import com.dgsd.hackernews.model.Comment
 import com.dgsd.hackernews.model.Story
 import rx.Observable
 
@@ -16,4 +17,6 @@ public interface DataSource {
     public fun getJobStories(): Observable<List<Story>>
 
     public fun getStory(storyId: Long): Observable<Story>
+
+    public fun getComments(storyId: Long, commentIds: LongArray): Observable<List<Comment>>
 }

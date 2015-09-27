@@ -4,6 +4,7 @@ import android.support.v4.util.LongSparseArray
 import android.util.SparseLongArray
 import com.dgsd.android.hackernews.BuildConfig
 import com.dgsd.android.hackernews.model.PageType
+import com.dgsd.hackernews.model.Comment
 import com.dgsd.hackernews.model.Story
 import com.dgsd.hackernews.network.DataSource
 import com.dgsd.hackernews.network.DbDataSource
@@ -13,13 +14,14 @@ import rx.lang.kotlin.firstOrNull
 import rx.lang.kotlin.toSingletonObservable
 import timber.log.Timber
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 public class HNDataSource(private val apiDataSource: DataSource, private val dbDataSource: DbDataSource) : DataSource {
 
     private val storyListCache = HashMap<PageType, List<Story>>().withDefault({ emptyList() })
 
-    private var storyCache: LongSparseArray<Story> = LongSparseArray()
+    private val storyCache: LongSparseArray<Story> = LongSparseArray()
+
+    private val networkCallTimeArray = SparseLongArray()
 
     public fun clearMemoryCache() {
         storyListCache.clear()
@@ -61,8 +63,12 @@ public class HNDataSource(private val apiDataSource: DataSource, private val dbD
                 { stories -> dbDataSource.saveJobStories(stories) })
     }
 
-    public fun getComments(storyId: Long, commentIds: LongArray): Observable<Story> {
-        return getStory(storyId).delay(2, TimeUnit.SECONDS)
+    override fun getComments(storyId: Long, commentIds: LongArray): Observable<List<Comment>> {
+        return apiDataSource.getComments(storyId, commentIds)
+                .doOnNext {
+                    dbDataSource.saveComments(it)
+                    storyCache.remove(storyId)
+                }
     }
 
     override fun getTopStories(): Observable<List<Story>> {
@@ -141,8 +147,6 @@ public class HNDataSource(private val apiDataSource: DataSource, private val dbD
             return Observable.mergeDelayError(memoryCacheObservable, dbObservable, apiObservable)
         }
     }
-
-    private val networkCallTimeArray = SparseLongArray()
 
     private fun shouldMakeNetworkCall(pageType: PageType): Boolean {
         val lastCallTime = networkCallTimeArray.get(pageType.ordinal(), -1)

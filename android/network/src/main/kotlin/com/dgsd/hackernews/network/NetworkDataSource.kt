@@ -1,11 +1,13 @@
 package com.dgsd.hackernews.network
 
+import com.dgsd.hackernews.model.Comment
 import com.dgsd.hackernews.model.Story
 import com.dgsd.hackernews.network.utils.convert
 import com.dgsd.hackernews.network.utils.flatMapList
 import com.squareup.okhttp.Interceptor
 import com.squareup.okhttp.OkHttpClient
 import com.squareup.wire.Wire
+import hackernews.PbCommentList
 import hackernews.PbStoryList
 import retrofit.Retrofit
 import retrofit.RxJavaCallAdapterFactory
@@ -65,6 +67,14 @@ public class NetworkDataSource : DataSource {
 
     override fun getStory(storyId: Long): Observable<Story> {
         return apiService.getStory(storyId).map { it.convert() }
+    }
+
+    override fun getComments(storyId: Long, commentIds: LongArray): Observable<List<Comment>> {
+        return apiService.getComments(storyId, commentIds)
+                .map { Wire.get(it.comments, PbCommentList.DEFAULT_COMMENTS) }
+                .flatMapList()
+                .map { it.convert() }
+                .toList()
     }
 
     private fun Observable<PbStoryList>.process(): Observable<List<Story>> {

@@ -1,5 +1,6 @@
 package com.dgsd.hackernews.network
 
+import hackernews.PbCommentList
 import hackernews.PbStory
 import hackernews.PbStoryList
 import retrofit.http.GET
@@ -26,8 +27,8 @@ internal interface ApiService {
     @GET("job?format=$FORMAT")
     fun getJobStories(): Observable<PbStoryList>
 
-//    @GET("comments?format=$FORMAT")
-//    fun getComments(@Query("id") vararg ids: Int)
+    @GET("comments?format=$FORMAT")
+    fun getComments(@Query("story") storyId: Long, @Query("id") ids: LongArray): Observable<PbCommentList>
 
     @GET("story/{story_id}?format=$FORMAT")
     fun getStory(@Path("story_id") storyId: Long): Observable<PbStory>

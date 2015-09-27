@@ -47,12 +47,12 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
     fun onCommentPlaceholderClicked(commentIds: List<Long>) {
         getView().showPlaceholderAsLoading(commentIds, true)
         dataSource.getComments(storyId, commentIds.toLongArray())
+                .flatMap { dataSource.getStory(storyId) }
                 .bind(getView())
                 .onIoThread()
                 .subscribe({
                     story = it
                     getView().showStory(it)
-
                     getView().showPlaceholderAsLoading(commentIds, false)
                 }, {
                     // TODO: Proper error messages..
