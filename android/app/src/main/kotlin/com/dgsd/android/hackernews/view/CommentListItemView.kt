@@ -51,4 +51,8 @@ public class CommentListItemView(context: Context, attrs: AttributeSet?, defStyl
             commentText.text = context.getString(R.string.comment_list_item_removed_message)
         }
     }
+
+    fun getHeaderIndicatorY(): Float {
+        return headerText.y + (headerText.height / 2)
+    }
 }

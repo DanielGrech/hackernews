@@ -78,18 +78,19 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
             parent.children().forEach {
                 val vh = parent.getChildViewHolder(it) as CommentListAdapter.CommentViewHolder
                 val deepestIndentation = vh.getIndentationLevel()
+                val isComment = vh.itemViewType == CommentListAdapter.VIEW_TYPE_COMMENT
+                val isCommentPlaceholder = vh.itemViewType == CommentListAdapter.VIEW_TYPE_COMMENT_PLACEHOLDER
 
                 for (indentation in deepestIndentation downTo 1) {
                     val drawAsDotted = indentation != deepestIndentation
-                    val isCommentPlaceholder = vh.itemViewType == CommentListAdapter.VIEW_TYPE_COMMENT_PLACEHOLDER
 
                     val lineStartX = (indentation * indentSize).toFloat()
                     val lineEndX = (indentation * indentSize).toFloat()
                     var lineStartY = parent.layoutManager.getDecoratedTop(it).toFloat()
                     var lineEndY = parent.layoutManager.getDecoratedBottom(it).toFloat()
 
-                    if (!drawAsDotted) {
-                        lineStartY += verticalPadding
+                    if (isComment && !drawAsDotted) {
+                        lineStartY += (vh.itemView as CommentListItemView).getHeaderIndicatorY()
                     }
 
                     if (!drawAsDotted && isCommentPlaceholder) {
@@ -106,7 +107,7 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
 
                     canvas.drawPath(path, linePaint)
 
-                    if (!drawAsDotted) {
+                    if (isComment && !drawAsDotted) {
                         canvas.drawCircle(lineStartX, lineStartY, 12f, circlePaint)
                     }
                 }
