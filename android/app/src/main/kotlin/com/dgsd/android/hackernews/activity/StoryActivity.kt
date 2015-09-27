@@ -110,6 +110,7 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
     }
 
     override fun showStory(story: Story) {
+        this.title = story.title
         toolbar.title = story.title
         toolbar.subtitle = story.getSummaryString(this)
 
