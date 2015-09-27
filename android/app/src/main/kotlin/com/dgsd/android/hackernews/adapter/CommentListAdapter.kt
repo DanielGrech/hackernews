@@ -86,7 +86,7 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
 
         items.clear()
 
-        if (!story.text.isNullOrEmpty()) {
+        if (!story.text.isNullOrBlank()) {
             items.add(ListItem(storyText = story.getHtmlContent()))
         }
 

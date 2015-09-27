@@ -13,8 +13,11 @@ import com.dgsd.android.hackernews.mvp.presenter.StoryPresenter
 import com.dgsd.android.hackernews.mvp.view.StoryMvpView
 import com.dgsd.android.hackernews.util.*
 import com.dgsd.android.hackernews.view.CommentRecyclerView
+import com.dgsd.android.hackernews.view.LceViewGroup
 import com.dgsd.hackernews.model.Story
-import kotlinx.android.synthetic.act_story.*
+import kotlinx.android.synthetic.act_story.swipeRefreshLayout
+import kotlinx.android.synthetic.act_story.toolbar
+import kotlinx.android.synthetic.act_story.viewStoryButton
 import org.jetbrains.anko.*
 
 public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>(), StoryMvpView, CustomTabActivityHelper.ConnectionCallback {
@@ -22,6 +25,8 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
     private lateinit var customTabActivityHelper: CustomTabActivityHelper
 
     private lateinit var recyclerView: CommentRecyclerView
+
+    private lateinit var loadingContentErrorView: LceViewGroup
 
     companion object {
 
@@ -50,18 +55,24 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
             presenter.onViewStoryButtonClicked()
         }
 
+        loadingContentErrorView = find(R.id.loadingContentErrorView)
         recyclerView = find(R.id.recyclerView)
 
         recyclerView.setOnCommentClickListener { comment, view ->
 
         }
 
-        recyclerView.setOnCommentPlaceholderClickListener{ ids, view ->
+        recyclerView.setOnCommentPlaceholderClickListener { ids, view ->
             presenter.onCommentPlaceholderClicked(ids)
         }
 
         swipeRefreshLayout.setColorSchemeResources(R.color.accent)
         swipeRefreshLayout.setOnRefreshListener {
+            presenter.onRefreshRequested()
+        }
+
+        loadingContentErrorView.errorMessage.onClick {
+            showLoading()
             presenter.onRefreshRequested()
         }
     }
@@ -108,14 +119,22 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
         recyclerView.setCommentPlaceholderLoading(commentIds, showLoading)
     }
 
+    override fun showLoading() {
+        loadingContentErrorView.showLoading()
+    }
+
     override fun showError(message: String) {
         swipeRefreshLayout.isRefreshing = false
 
-        // TODO: Show proper error!
-        toast(message)
+        if (recyclerView.adapter.itemCount == 0) {
+            loadingContentErrorView.showError(message)
+        } else {
+            toast(message)
+        }
     }
 
     override fun showStory(story: Story) {
+        loadingContentErrorView.showContent()
         swipeRefreshLayout.isRefreshing = false
 
         this.title = story.title
@@ -148,9 +167,7 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
 
     override fun showNoCommentsMessage(message: String) {
         if (recyclerView.adapter.itemCount == 0) {
-            swipeRefreshLayout.hide()
-            errorMessage.show()
-            errorMessage.text = message
+            loadingContentErrorView.showError(message)
         } else {
             recyclerView.showNoCommentsMessage(message)
         }

@@ -17,4 +17,6 @@ public interface StoryMvpView : MvpView {
 
     fun showNoCommentsMessage(message: String)
 
+    fun showLoading()
+
 }

@@ -11,6 +11,7 @@ import android.widget.TextView
 import com.dgsd.android.hackernews.R
 import com.dgsd.android.hackernews.util.children
 import com.dgsd.android.hackernews.util.hide
+import com.dgsd.android.hackernews.util.hideInvisible
 import com.dgsd.android.hackernews.util.show
 import org.jetbrains.anko.find
 import java.util.*
@@ -52,20 +53,20 @@ public class LceViewGroup(context: Context, attrs: AttributeSet?, defStyle: Int)
 
     public fun showContent() {
         content.show()
-        progressBar.hide()
-        errorMessage.hide()
+        progressBar.hideInvisible()
+        errorMessage.hideInvisible()
     }
 
     public fun showLoading() {
         progressBar.show()
-        errorMessage.hide()
-        content.hide()
+        errorMessage.hideInvisible()
+        content.hideInvisible()
     }
 
     public fun showError(message: CharSequence) {
         errorMessage.text = message
         errorMessage.show()
-        content.hide()
-        progressBar.hide()
+        content.hideInvisible()
+        progressBar.hideInvisible()
     }
 }

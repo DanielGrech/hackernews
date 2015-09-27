@@ -28,6 +28,7 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
 
     override fun onStart() {
         super.onStart()
+        getView().showLoading()
         loadStory(false)
     }
 
@@ -77,7 +78,8 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
                 onCommentPlaceholderClicked(story.commentIds)
             }
         } else {
-            getView().showNoCommentsMessage(getContext().getString(R.string.comment_list_no_comments))
+            val msgRes = if (story.text.isNullOrBlank()) R.string.comment_list_no_comments_with_retry else R.string.comment_list_no_comments
+            getView().showNoCommentsMessage(getContext().getString(msgRes))
         }
 
     }
