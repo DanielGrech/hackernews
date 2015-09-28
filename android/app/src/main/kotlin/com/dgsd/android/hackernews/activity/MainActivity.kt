@@ -1,6 +1,5 @@
 package com.dgsd.android.hackernews.activity
 
-import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
@@ -12,27 +11,16 @@ import android.view.ViewGroup
 import com.dgsd.android.hackernews.R
 import com.dgsd.android.hackernews.fragment.StoryListFragment
 import com.dgsd.android.hackernews.model.PageType
-import com.dgsd.android.hackernews.module.AppServicesComponent
-import com.dgsd.android.hackernews.mvp.presenter.MainPresenter
-import com.dgsd.android.hackernews.mvp.view.MainMvpView
 import com.dgsd.android.hackernews.util.findFirstChild
 import com.dgsd.android.hackernews.util.getTitleRes
 import kotlinx.android.synthetic.act_main.tabLayout
 import kotlinx.android.synthetic.act_main.toolbar
 import kotlinx.android.synthetic.act_main.viewPager
 
-public class MainActivity : PresentableActivity<MainMvpView, MainPresenter>(), MainMvpView {
+public class MainActivity : BaseActivity() {
 
     override fun getLayoutResource(): Int {
         return R.layout.act_main
-    }
-
-    override fun createPresenter(component: AppServicesComponent): MainPresenter {
-        return MainPresenter(this, component)
-    }
-
-    override fun getContext(): Context {
-        return this
     }
 
     override protected fun onCreate(savedInstanceState: Bundle?) {

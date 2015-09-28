@@ -1,7 +1,6 @@
 package com.dgsd.android.hackernews.module
 
 import com.dgsd.android.hackernews.data.HNDataSource
-import com.dgsd.android.hackernews.mvp.presenter.MainPresenter
 import com.dgsd.android.hackernews.mvp.presenter.StoryListPresenter
 import com.dgsd.android.hackernews.mvp.presenter.StoryPresenter
 import com.dgsd.android.hackernews.mvp.presenter.UrlInterceptPresenter
@@ -14,8 +13,6 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = arrayOf(HNModule::class))
 public interface AppServicesComponent {
-
-    fun inject(presenter: MainPresenter)
 
     fun inject(presenter: StoryListPresenter)
 
