@@ -18,7 +18,7 @@ import org.jetbrains.anko.find
 import org.jetbrains.anko.onClick
 import org.jetbrains.anko.share
 
-public class StoryListFragment: PresentableFragment<StoryListMvpView, StoryListPresenter>(), StoryListMvpView {
+public class StoryListFragment : PresentableFragment<StoryListMvpView, StoryListPresenter>(), StoryListMvpView {
 
     private lateinit var loadingContentErrorView: LceViewGroup
 
@@ -101,7 +101,8 @@ public class StoryListFragment: PresentableFragment<StoryListMvpView, StoryListP
                 showLoading()
                 presenter.onRefreshRequested()
             }
-        } else {
+        } else if (userVisibleHint) {
+            // Only show snackbar if the fragment is actually visible
             Snackbar.make(loadingContentErrorView, message, Snackbar.LENGTH_SHORT)
                     .setAction(R.string.retry) {
                         swipeRefreshLayout.isRefreshing = true
