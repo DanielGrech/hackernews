@@ -18,6 +18,7 @@
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="sensorPortrait"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,6 +29,31 @@
         <activity
             android:name=".activity.StoryActivity"
             android:screenOrientation="sensorPortrait" />
+
+        <activity
+            android:name=".activity.UrlInterceptActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:screenOrientation="sensorPortrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.UrlIntercept">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="news.ycombinator.com"
+                    android:pathPattern="/item"
+                    android:scheme="http" />
+                <data
+                    android:host="news.ycombinator.com"
+                    android:pathPattern="/item"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
 
     </application>
 

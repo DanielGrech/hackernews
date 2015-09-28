@@ -77,6 +77,10 @@ public class NetworkDataSource : DataSource {
                 .toList()
     }
 
+    override fun getStoryByCommentId(commentId: Long): Observable<Story> {
+        return apiService.getStoryByCommentId(commentId).map { it.convert() }
+    }
+
     private fun Observable<PbStoryList>.process(): Observable<List<Story>> {
         return this.map { Wire.get(it.stories, PbStoryList.DEFAULT_STORIES) }
                 .flatMapList()

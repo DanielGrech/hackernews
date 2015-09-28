@@ -27,11 +27,17 @@ func NewErrorWithMessage(err error, message string) *ApiError {
 }
 
 func NewError(err error) *ApiError {
-	return NewErrorWithMessage(err, "")
+	return NewErrorWithMessage(err, err.Error())
 }
 
 func (ae *ApiError) Error() string {
-	return ae.Err.Error()
+	if ae.Message != "" {
+		return ae.Message
+	} else if ae.Err != nil {
+		return ae.Err.Error()
+	} else {
+		return "Unknown error"
+	}
 }
 
 func (fn ApiHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {

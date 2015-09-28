@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.customtabs.CustomTabsIntent
+import android.support.design.widget.Snackbar
 import android.view.Menu
 import android.view.MenuItem
 import com.dgsd.android.hackernews.R
@@ -28,14 +29,18 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
 
     private lateinit var loadingContentErrorView: LceViewGroup
 
+    private var commentIdToScrollTo: Long? = null
+
     companion object {
 
         private val EXTRA_STORY_ID = "_story_id"
+        private val EXTRA_SCROLL_TO_COMMENT = "_scroll_to_comment"
         private val EXTRA_HINT_URL = "_hint_url"
 
-        public fun getStartIntent(context: Context, story: Story): Intent {
+        public fun getStartIntent(context: Context, story: Story, commentToShow: Long = -1): Intent {
             return Intent(context, StoryActivity::class.java)
                     .putExtra(EXTRA_STORY_ID, story.id)
+                    .putExtra(EXTRA_SCROLL_TO_COMMENT, commentToShow)
                     .putExtra(EXTRA_HINT_URL, story.url)
         }
     }
@@ -43,6 +48,11 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(toolbar)
+
+        commentIdToScrollTo = intent.getLongExtra(EXTRA_SCROLL_TO_COMMENT, -1)
+        if (commentIdToScrollTo!! < 0) {
+            commentIdToScrollTo = null
+        }
 
         with (supportActionBar) {
             setDisplayHomeAsUpEnabled(true)
@@ -86,7 +96,13 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
         return when (item.itemId) {
             R.id.share -> {
 
-                return true
+                true
+            }
+
+            android.R.id.home -> {
+                startActivity<MainActivity>()
+                finish()
+                true
             }
             else -> super.onOptionsItemSelected(item)
         }
@@ -130,7 +146,7 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
 
     override fun showEphemeralError(message: String) {
         swipeRefreshLayout.isRefreshing = false
-        toast(message)
+        Snackbar.make(swipeRefreshLayout, message, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun showStory(story: Story) {
@@ -150,6 +166,11 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
         val subtitleView = toolbar.getSubtitleView()
         subtitleView?.singleLine = false
         subtitleView?.bottomPadding = dimen(R.dimen.padding_small)
+
+        if (commentIdToScrollTo != null) {
+            recyclerView.scrollToComment(commentIdToScrollTo!!)
+            commentIdToScrollTo = null
+        }
     }
 
     override fun showUri(uri: Uri) {

@@ -19,4 +19,6 @@ public interface DataSource {
     public fun getStory(storyId: Long): Observable<Story>
 
     public fun getComments(storyId: Long, commentIds: LongArray): Observable<List<Comment>>
+
+    public fun getStoryByCommentId(commentId: Long): Observable<Story>
 }

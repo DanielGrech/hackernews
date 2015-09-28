@@ -33,6 +33,8 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
 
     private val items = arrayListOf<ListItem>()
 
+    private var commentIdToHightlight: Long? = null
+
     val commentPlaceholderLoadingSet = HashSet<List<Long>>()
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
@@ -74,6 +76,16 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
 
     override fun getItemCount(): Int {
         return items.size()
+    }
+
+    override fun getItemId(position: Int): Long {
+        return when (getItemViewType(position)) {
+            CommentListAdapter.VIEW_TYPE_COMMENT -> items[position].comment!!.id
+            CommentListAdapter.VIEW_TYPE_COMMENT_PLACEHOLDER -> Long.MAX_VALUE
+            CommentListAdapter.VIEW_TYPE_NO_COMMENTS -> Long.MAX_VALUE - 1
+            CommentListAdapter.VIEW_TYPE_STORY_TEXT -> Long.MAX_VALUE - 2
+            else -> Long.MAX_VALUE - 3
+        }
     }
 
     fun showNoCommentsMessage(message: String) {
@@ -174,7 +186,10 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
                     (itemView as TextView).text = item.noCommentMessage
                 }
                 CommentListAdapter.VIEW_TYPE_COMMENT -> {
-                    (itemView as CommentListItemView).populate(item.comment!!, item.indentationLevel)
+                    with (itemView as CommentListItemView) {
+                        populate(item.comment!!, item.indentationLevel)
+                        showHighlighted(commentIdToHightlight != null && item.comment!!.id == commentIdToHightlight)
+                    }
                 }
                 CommentListAdapter.VIEW_TYPE_COMMENT_PLACEHOLDER -> {
                     val commentIds = item.commentIds!!
@@ -208,5 +223,9 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
             }
         }
 
+    }
+
+    fun highlightComment(commentId: Long) {
+        commentIdToHightlight = commentId
     }
 }

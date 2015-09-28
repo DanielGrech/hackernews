@@ -56,16 +56,16 @@ public class HNModule(private val application: HNApp) {
         return DbOpenHelper(context.applicationContext)
     }
 
-    Provides
-    Singleton
+    @Provides
+    @Singleton
     fun providesSqlBrite(): SqlBrite {
         return SqlBrite.create {
             Timber.tag("Database").v(it)
         }
     }
 
-    Provides
-    Singleton
+    @Provides
+    @Singleton
     fun providesDatabase(sqlBrite: SqlBrite, dbOpenHelper: DbOpenHelper): BriteDatabase {
         return sqlBrite.wrapDatabaseHelper(dbOpenHelper)
     }

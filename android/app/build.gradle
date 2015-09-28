@@ -75,7 +75,7 @@ android {
 
     productFlavors {
         dev {
-            buildConfigField "String", "API_SERVER", "\"http://192.168.0.10:8080/\""
+            buildConfigField "String", "API_SERVER", "\"http://10.80.4.19:8080/\""
 
             resValue "string", "app_name", "${config.appName} dev"
         }

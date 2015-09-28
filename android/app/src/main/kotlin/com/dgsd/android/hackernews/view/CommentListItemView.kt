@@ -1,6 +1,7 @@
 package com.dgsd.android.hackernews.view
 
 import android.content.Context
+import android.graphics.Typeface
 import android.support.v7.widget.CardView
 import android.text.format.DateUtils
 import android.text.method.LinkMovementMethod
@@ -49,6 +50,14 @@ public class CommentListItemView(context: Context, attrs: AttributeSet?, defStyl
 
         if (comment.deadOrDeleted()) {
             commentText.text = context.getString(R.string.comment_list_item_removed_message)
+        }
+    }
+
+    fun showHighlighted(highlighted: Boolean) {
+        if (highlighted) {
+            arrayOf(headerText, commentText).forEach { it.typeface = Typeface.DEFAULT_BOLD }
+        } else {
+            arrayOf(headerText, commentText).forEach { it.typeface = Typeface.DEFAULT }
         }
     }
 

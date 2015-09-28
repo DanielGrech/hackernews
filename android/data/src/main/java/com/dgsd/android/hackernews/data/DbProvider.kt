@@ -95,12 +95,12 @@ public class DbProvider(private val db: BriteDatabase) : DbDataSource {
         val commentObservable = getComments(storyId).defaultIfEmpty(emptyList())
         val commentIdObservable = getCommentIds(storyId).defaultIfEmpty(emptyList())
         val storyObservable = db.createQuery(Tables.Comments.name(), Tables.Stories.SELECT_BY_ID, storyId.toString())
-                .mapToOne {
+                .mapToOneOrNull {
                     Tables.Stories.fromCursor(it)
                 }
 
         return Observable.zip(storyObservable, commentObservable, commentIdObservable) { story, comments, commentIds ->
-            story.copy(comments = comments, commentIds = commentIds)
+            story?.copy(comments = comments, commentIds = commentIds) ?: null
         }
     }
 

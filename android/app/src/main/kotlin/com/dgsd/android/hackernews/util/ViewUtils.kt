@@ -106,7 +106,7 @@ public inline fun <reified T> View.findFirstChild(): T? {
         while (list.isNotEmpty()) {
             val view = list.pop()
             if (view is T) {
-                return view as T
+                return view
             } else if (view is ViewGroup) {
                 list += view.children()
             }
@@ -144,7 +144,6 @@ public fun getCommentColorForIndentation(context: Context, indentation: Int): In
         indentationColors = context.resources.getIntArray(R.array.comment_indentation_colors)
     }
 
-    val level = if (indentation == 0) 0 else (indentation - 1)
     val size = indentationColors!!.size()
     return indentationColors!![indentation % size]
 }

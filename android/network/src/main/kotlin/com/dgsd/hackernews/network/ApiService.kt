@@ -32,4 +32,7 @@ internal interface ApiService {
 
     @GET("story/{story_id}?format=$FORMAT")
     fun getStory(@Path("story_id") storyId: Long): Observable<PbStory>
+
+    @GET("storybycomment/{comment_id}?format=$FORMAT")
+    fun getStoryByCommentId(@Path("comment_id")commentId: Long): Observable<PbStory>
 }

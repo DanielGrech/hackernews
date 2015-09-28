@@ -32,6 +32,14 @@ public class HNDataSource(private val apiDataSource: DataSource, private val dbD
         return dbDataSource.clearOldData()
     }
 
+    override fun getStoryByCommentId(commentId: Long): Observable<Story> {
+        return apiDataSource.getStoryByCommentId(commentId)
+                .doOnNext {
+                    dbDataSource.saveStory(it)
+                    storyCache.put(it.id, it)
+                }
+    }
+
     public fun getTopStories(skipCache: Boolean): Observable<List<Story>> {
         return getStories(PageType.TOP, skipCache,
                 { apiDataSource.getTopStories() },
@@ -100,18 +108,14 @@ public class HNDataSource(private val apiDataSource: DataSource, private val dbD
     }
 
     fun getStory(storyId: Long, skipCache: Boolean): Observable<Story> {
-        val apiObservable: Observable<Story>
+        val apiObservable = apiDataSource.getStory(storyId)
+                .doOnNext {
+                    dbDataSource.saveStory(it)
+                    storyCache.put(it.id, it)
+                }
 
         if (skipCache) {
-            apiObservable = apiDataSource.getStory(storyId)
-                    .doOnNext {
-                        dbDataSource.saveStory(it)
-                        storyCache.put(it.id, it)
-                    }
-
             return apiObservable
-        } else {
-            apiObservable = Observable.empty()
         }
 
         val dbObservable = dbDataSource.getStory(storyId).firstOrNull().filterNulls()

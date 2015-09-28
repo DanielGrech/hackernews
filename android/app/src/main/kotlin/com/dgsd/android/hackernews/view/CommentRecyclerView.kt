@@ -10,6 +10,7 @@ import com.dgsd.android.hackernews.R
 import com.dgsd.android.hackernews.adapter.CommentListAdapter
 import com.dgsd.android.hackernews.util.children
 import com.dgsd.android.hackernews.util.getCommentColorForIndentation
+import com.dgsd.android.hackernews.util.onPreDraw
 import com.dgsd.hackernews.model.Comment
 import com.dgsd.hackernews.model.Story
 import org.jetbrains.anko.dimen
@@ -141,5 +142,20 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
 
     fun setCommentPlaceholderLoading(commentIds: List<Long>, showLoading: Boolean) {
         (adapter as CommentListAdapter).setCommentPlaceholderLoading(commentIds, showLoading)
+    }
+
+    fun scrollToComment(commentId: Long) {
+        for (pos in 0 rangeTo adapter.itemCount - 1) {
+            if (adapter.getItemId(pos) == commentId) {
+                (adapter as CommentListAdapter).highlightComment(commentId)
+                adapter.notifyItemChanged(pos)
+
+                onPreDraw {
+                    smoothScrollToPosition(pos)
+                }
+
+                break
+            }
+        }
     }
 }

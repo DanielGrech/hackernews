@@ -19,6 +19,7 @@ func init() {
 	router.Handle("/job", ApiHandler(getJobStories))
 	router.Handle("/story/{story:[0-9]+}", ApiHandler(getStory))
 	router.Handle("/story/{story:[0-9]+}/comments", ApiHandler(getCommentIdsForStory))
+	router.Handle("/storybycomment/{comment:[0-9]+}", ApiHandler(getStoryByComment))
 	router.Handle("/comment/{comment:[0-9]+}", ApiHandler(getComment))
 	router.Handle("/comment/{comment:[0-9]+}/comments", ApiHandler(getCommentIdsForComment))
 	router.Handle("/comments", ApiHandler(getComments))
@@ -42,6 +43,32 @@ func getStory(handler *Handler) ([]byte, *ApiError) {
 	}
 
 	return handler.EncodeStory(story)
+}
+
+func getStoryByComment(handler *Handler) ([]byte, *ApiError) {
+	commentId, _ := strconv.Atoi(handler.vars["comment"])
+
+	comment, err := handler.GetComment(commentId)
+	if err != nil {
+		return nil, NewError(err)
+	}
+
+	var story *Story
+	for comment != nil && comment.Parent > 0 {
+		story, err = handler.GetStory(comment.Parent, false, true)
+		if err == nil {
+			break
+		} else {
+			comment, _ = handler.GetComment(comment.Parent)
+		}
+	}
+
+	if story == nil {
+		return nil, NewErrorWithMessage(nil, "No story found for comment")
+	} else {
+		return handler.EncodeStory(story)
+	}
+
 }
 
 func getComments(handler *Handler) ([]byte, *ApiError) {
