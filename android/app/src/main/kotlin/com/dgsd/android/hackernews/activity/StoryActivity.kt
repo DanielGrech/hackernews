@@ -128,6 +128,7 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
     }
 
     override fun onStop() {
+        customTabActivityHelper.setConnectionCallback(null)
         customTabActivityHelper.unbindCustomTabsService(this)
         super.onStop()
     }
