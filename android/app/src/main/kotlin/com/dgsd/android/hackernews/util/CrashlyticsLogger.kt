@@ -12,7 +12,7 @@ public class CrashlyticsLogger : Timber.Tree() {
         Crashlytics.setString("BUILD_TIME", BuildConfig.BUILD_TIME)
     }
 
-    override fun log(priority: Int, tag: String, message: String, t: Throwable?) {
+    override fun log(priority: Int, tag: String?, message: String?, t: Throwable?) {
         if (t != null) {
             Crashlytics.logException(t)
         } else {

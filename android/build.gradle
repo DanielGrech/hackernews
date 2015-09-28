@@ -7,7 +7,6 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:1.3.0'
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:0.13.1514'
-        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.16.0'
         classpath 'com.stanfy.spoon:spoon-gradle-plugin:1.0.3'
         classpath 'pl.itako:icon-version:1.1.2'
     }
@@ -21,7 +20,7 @@ task wrapper(type: Wrapper) {
 allprojects {
     repositories {
         jcenter()
-        maven { url 'http://download.crashlytics.com/maven' }
+        maven { url 'https://maven.fabric.io/public' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
 
@@ -78,7 +77,7 @@ subprojects {
                 rxKotlin : "0.22.13",
                 timber : "3.1.0",
                 jsr250 : "1.0",
-                crashlyticsClient : "1.1.13",
+                fabricClient : "2.5.2@aar",
                 yearClass : "1.0.1",
                 stetho : "1.2.0",
                 dagger : "2.0.1",

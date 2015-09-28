@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.ComponentCallbacks2
 import android.os.StrictMode
 import com.crashlytics.android.Crashlytics
+import com.crashlytics.android.answers.Answers
 import com.dgsd.android.hackernews.module.AppServicesComponent
 import com.dgsd.android.hackernews.module.HNModule
 import com.dgsd.android.hackernews.util.Api
@@ -14,6 +15,7 @@ import com.facebook.stetho.Stetho
 import com.facebook.stetho.timber.StethoTree
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
+import io.fabric.sdk.android.Fabric
 import rx.Observable
 import rx.lang.kotlin.deferredObservable
 import rx.schedulers.Schedulers
@@ -72,8 +74,8 @@ abstract class HNApp : Application() {
      * This allows overriding in tests/other modules
      */
     protected open fun enableAppOnlyFunctionality() {
-        if (BuildConfig.CRASHLYTICS_ENABLED) {
-            Crashlytics.start(this)
+        if (true || BuildConfig.CRASHLYTICS_ENABLED) {
+            Fabric.with(this, Crashlytics(), Answers());
             Timber.plant(CrashlyticsLogger())
         }
         registerActivityLifecycleCallbacks(LoggingLifecycleCallbacks())

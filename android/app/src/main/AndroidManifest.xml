@@ -12,9 +12,9 @@
         android:largeHeap="${useLargeHeap}"
         android:theme="@style/AppTheme">
 
-        <!--<meta-data-->
-        <!--android:name="com.crashlytics.ApiKey"-->
-        <!--android:value="KEY_GOES_HERE" />-->
+        <meta-data
+        android:name="com.crashlytics.ApiKey"
+        android:value="3673ac847cb74e5dd32f851f506aae9e67807837" />
 
         <activity
             android:name=".activity.MainActivity"
