@@ -75,6 +75,7 @@ subprojects {
                 okHttp : "2.5.0",
                 rxJava : "1.0.14",
                 rxKotlin : "0.22.13",
+                customActivityOnCrash: "1.4.0",
                 timber : "3.1.0",
                 jsr250 : "1.0",
                 fabricClient : "2.5.2@aar",

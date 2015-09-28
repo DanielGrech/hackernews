@@ -10,4 +10,10 @@
     <style name="AppTheme.Main" parent="AppTheme">
         <item name="android:navigationBarColor">@color/accent</item>
     </style>
+
+    <style name="CustomActivityOnCrashTheme" parent="AppTheme">
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:colorAccent">@color/accent</item>
+    </style>
 </resources>

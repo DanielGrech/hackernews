@@ -3,6 +3,7 @@ package com.dgsd.android.hackernews
 import android.app.Application
 import android.content.ComponentCallbacks2
 import android.os.StrictMode
+import cat.ereza.customactivityoncrash.CustomActivityOnCrash
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.answers.Answers
 import com.dgsd.android.hackernews.module.AppServicesComponent
@@ -74,6 +75,9 @@ abstract class HNApp : Application() {
      * This allows overriding in tests/other modules
      */
     protected open fun enableAppOnlyFunctionality() {
+        CustomActivityOnCrash.setShowErrorDetails(false)
+        CustomActivityOnCrash.install(this);
+
         if (!BuildConfig.DEBUG) {
             Fabric.with(this, Crashlytics(), Answers());
             Timber.plant(CrashlyticsLogger())
