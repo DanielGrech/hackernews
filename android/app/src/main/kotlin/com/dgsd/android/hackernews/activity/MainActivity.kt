@@ -8,7 +8,9 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.widget.RecyclerView
 import android.util.SparseArray
 import android.view.ViewGroup
+import com.dgsd.android.hackernews.HNApp
 import com.dgsd.android.hackernews.R
+import com.dgsd.android.hackernews.analytics.Tracker
 import com.dgsd.android.hackernews.fragment.StoryListFragment
 import com.dgsd.android.hackernews.model.PageType
 import com.dgsd.android.hackernews.util.findFirstChild
@@ -19,6 +21,8 @@ import kotlinx.android.synthetic.act_main.viewPager
 
 public class MainActivity : BaseActivity() {
 
+    private var analytics: Tracker? = null
+
     override fun getLayoutResource(): Int {
         return R.layout.act_main
     }
@@ -27,11 +31,20 @@ public class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setSupportActionBar(toolbar)
 
+        analytics = (application as HNApp).getAppServicesComponent().analytics()
+
         viewPager.adapter = SectionAdapter(supportFragmentManager)
 
         tabLayout.setupWithViewPager(viewPager)
         tabLayout.setOnTabSelectedListener(object: TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                super.onTabSelected(tab)
+                analytics?.trackClick("tab_${tab?.text?.toString()?.toLowerCase() ?: "unknown"}")
+            }
+
             override fun onTabReselected(tab: TabLayout.Tab) {
+                analytics?.trackClick("selected_tab")
+
                 val fragment = (viewPager.adapter as SectionAdapter).fragArray.get(tab.position)
                 // TODO: Baaaddd .. shouldnt rely on traversing view hierarchy for this
                 fragment.view?.findFirstChild<RecyclerView>()?.smoothScrollToPosition(0)

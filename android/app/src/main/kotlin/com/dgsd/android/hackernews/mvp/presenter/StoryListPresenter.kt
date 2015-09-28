@@ -24,13 +24,22 @@ public class StoryListPresenter(view : StoryListMvpView, component : AppServices
         component.inject(this)
     }
 
+    override fun getScreenName(): String {
+        return "story_list_${pageType.name().toLowerCase()}"
+    }
+
     override public fun onResume() {
         super.onResume()
         getView().showLoading()
         getStories(false)
     }
 
+    fun onStoryClicked(story: Story) {
+        analytics.trackClick("story")
+    }
+
     fun onRefreshRequested() {
+        analytics.trackScreenView("${pageType.name().toLowerCase()}_story_list")
         getStories(true)
     }
 
@@ -66,5 +75,4 @@ public class StoryListPresenter(view : StoryListMvpView, component : AppServices
             PageType.JOBS -> dataSource.getJobStories(skipCache)
         }
     }
-
 }

@@ -7,7 +7,6 @@ import com.dgsd.android.hackernews.module.AppServicesComponent
 import com.dgsd.android.hackernews.mvp.view.UrlInterceptMvpView
 import com.dgsd.android.hackernews.util.bind
 import com.dgsd.android.hackernews.util.onIoThread
-import rx.lang.kotlin.firstOrNull
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -18,6 +17,10 @@ public class UrlInterceptPresenter(view: UrlInterceptMvpView, component: AppServ
 
     init {
         component.inject(this)
+    }
+
+    override fun getScreenName(): String {
+        return "url_intercept"
     }
 
     fun onLinkRequested(requestedUri: Uri?) {

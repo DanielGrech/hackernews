@@ -105,7 +105,7 @@ public class HNModule(private val application: HNApp) {
     @Singleton
     fun providesAnalyticsTrackerAgents(): Array<Agent> {
         if (!BuildConfig.DEBUG) {
-            return arrayOf(FabricAgent())
+            return arrayOf(FabricAgent(), DebugAgent())
         } else {
             return arrayOf(DebugAgent())
         }

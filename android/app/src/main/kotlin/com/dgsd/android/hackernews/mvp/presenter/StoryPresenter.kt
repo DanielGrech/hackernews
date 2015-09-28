@@ -23,7 +23,12 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
         component.inject(this)
     }
 
+    override fun getScreenName(): String {
+        return "story"
+    }
+
     fun onRefreshRequested() {
+        analytics.trackSwipeRefresh("comment_list")
         loadStory(true)
     }
 
@@ -34,6 +39,8 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
     }
 
     fun onViewStoryButtonClicked() {
+        analytics.trackClick("view_story")
+
         if (!story?.url.isNullOrBlank()) {
             getView().showUri(Uri.parse(story!!.url))
         }
@@ -89,5 +96,9 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
 
     fun getNfcShareLink(): String? {
         return story?.getShareLink()
+    }
+
+    fun onShareClicked() {
+        analytics.trackClick("share")
     }
 }

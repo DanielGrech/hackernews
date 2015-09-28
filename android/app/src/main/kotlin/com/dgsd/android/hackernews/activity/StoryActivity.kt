@@ -108,7 +108,7 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.share -> {
-
+                presenter.onShareClicked()
                 true
             }
 
