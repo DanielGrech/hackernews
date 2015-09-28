@@ -152,6 +152,8 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
 
                 onPreDraw {
                     smoothScrollToPosition(pos)
+
+                    true
                 }
 
                 break

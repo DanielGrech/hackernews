@@ -41,16 +41,14 @@ public class StoryListItemView(context: Context, attrs: AttributeSet?, defStyle:
         storyDate = find(R.id.storyDate)
         storyAuthor = find(R.id.storyAuthor)
 
-        // Show dummy text so our views are sized appropriately
-        storyDate.text = " "
-        storyAuthor.text = " "
-
         onPreDraw {
             val lps = storyTitle.layoutParams as ViewGroup.MarginLayoutParams
             lps.topMargin += storyDate.height
             lps.bottomMargin += storyDate.height + ((storyCommentCount.height - storyDate.height) / 2)
 
             storyTitle.layoutParams = lps
+
+            false
         }
     }
 

@@ -17,18 +17,13 @@ var indentationColors: IntArray? = null
 /**
  * Runs the given action in an {@link OnPreDrawListener}
  *
- * @param view   The view from which to extract the [ViewTreeObserver.OnPreDrawListener]
  * @param action The action to perform
  */
-public fun View.onPreDraw(action: () -> Unit) {
+public fun View.onPreDraw(action: () -> Boolean) {
     viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
         override fun onPreDraw(): Boolean {
             viewTreeObserver.removeOnPreDrawListener(this)
-            if (isAttachedToWindow) {
-                action()
-            }
-
-            return true
+            return if (isAttachedToWindow) action() else true
         }
     })
 }
