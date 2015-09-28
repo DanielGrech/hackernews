@@ -91,9 +91,18 @@ private fun getHtmlTextFromCache(key: Long, text: String?, cache: LruCache<Long,
 
     var htmlContent = cache.get(key)
     if (htmlContent == null) {
-        htmlContent = Html.fromHtml(text)
+        htmlContent = Html.fromHtml(text).removeWhitespace()
         cache.put(key, htmlContent)
     }
 
     return htmlContent
+}
+
+private fun CharSequence.removeWhitespace(): CharSequence {
+    var i = this.length()
+    while (--i > 0 && Character.isWhitespace(this[i])) {
+        // Decrement i..
+    }
+
+    return this.subSequence(0, i)
 }

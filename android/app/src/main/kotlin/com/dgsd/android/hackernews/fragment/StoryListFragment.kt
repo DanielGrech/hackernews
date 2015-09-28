@@ -16,6 +16,7 @@ import com.dgsd.android.hackernews.view.StoryRecyclerView
 import com.dgsd.hackernews.model.Story
 import org.jetbrains.anko.find
 import org.jetbrains.anko.onClick
+import org.jetbrains.anko.share
 
 public class StoryListFragment: PresentableFragment<StoryListMvpView, StoryListPresenter>(), StoryListMvpView {
 
@@ -60,6 +61,14 @@ public class StoryListFragment: PresentableFragment<StoryListMvpView, StoryListP
             view.startActivity(StoryActivity.getStartIntent(activity, story))
         }
 
+        recyclerView.setOnShareStoryLinkListener {
+            presenter.onShareStoryLink(it)
+        }
+
+        recyclerView.setOnShareStoryCommentLinkListener {
+            presenter.onShareStoryCommentLink(it)
+        }
+
         swipeRefreshLayout.setColorSchemeResources(R.color.accent)
         swipeRefreshLayout.setOnRefreshListener {
             presenter.onRefreshRequested()
@@ -100,5 +109,9 @@ public class StoryListFragment: PresentableFragment<StoryListMvpView, StoryListP
                     }
                     .show()
         }
+    }
+
+    override fun shareUrl(url: String) {
+        context.share(url)
     }
 }

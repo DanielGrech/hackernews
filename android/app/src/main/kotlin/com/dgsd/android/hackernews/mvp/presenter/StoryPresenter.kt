@@ -110,7 +110,7 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
     }
 
     fun onShareCommentsClicked() {
-        analytics.trackClick("share_link")
+        analytics.trackClick("share_comments")
 
         val url = story?.getShareLink()
         if (url.isNullOrBlank()) {

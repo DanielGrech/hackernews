@@ -6,6 +6,7 @@ import com.dgsd.android.hackernews.model.PageType
 import com.dgsd.android.hackernews.module.AppServicesComponent
 import com.dgsd.android.hackernews.mvp.view.StoryListMvpView
 import com.dgsd.android.hackernews.util.bind
+import com.dgsd.android.hackernews.util.getShareLink
 import com.dgsd.android.hackernews.util.onIoThread
 import com.dgsd.hackernews.model.Story
 import rx.Observable
@@ -73,6 +74,24 @@ public class StoryListPresenter(view : StoryListMvpView, component : AppServices
             PageType.ASK_HN -> dataSource.getAskStories(skipCache)
             PageType.SHOW_HN -> dataSource.getShowStories(skipCache)
             PageType.JOBS -> dataSource.getJobStories(skipCache)
+        }
+    }
+
+    fun onShareStoryLink(story: Story) {
+        analytics.trackClick("share_link")
+
+        val url = story.url
+        if (!url.isNullOrBlank()) {
+            getView().shareUrl(url!!)
+        }
+    }
+
+    fun onShareStoryCommentLink(story: Story) {
+        analytics.trackClick("share_comments")
+
+        val url = story.getShareLink()
+        if (!url.isNullOrBlank()) {
+            getView().shareUrl(url!!)
         }
     }
 }

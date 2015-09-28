@@ -91,12 +91,11 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
 
                     val lineStartX = (indentation * indentSize).toFloat()
                     val lineEndX = (indentation * indentSize).toFloat()
-                    val lineStartY = parent.layoutManager.getDecoratedTop(it).toFloat()
+                    var lineStartY = parent.layoutManager.getDecoratedTop(it).toFloat()
                     var lineEndY = parent.layoutManager.getDecoratedBottom(it).toFloat()
 
-                    var circleY = lineStartY
                     if (isComment && !drawAsDotted) {
-                        circleY += (vh.itemView as CommentListItemView).getHeaderIndicatorY()
+                        lineStartY += (vh.itemView as CommentListItemView).getHeaderIndicatorY()
                     }
 
                     if (!drawAsDotted && isCommentPlaceholder) {
@@ -114,7 +113,7 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
                     canvas.drawPath(path, linePaint)
 
                     if (isComment && !drawAsDotted) {
-                        canvas.drawCircle(lineStartX, circleY, 12f, circlePaint)
+                        canvas.drawCircle(lineStartX, lineStartY, 12f, circlePaint)
                     }
                 }
             }
@@ -122,7 +121,8 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
 
         override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
             val vh = parent.getChildViewHolder(view) as CommentListAdapter.CommentViewHolder
-            outRect.left = indentSize * vh.getIndentationLevel()
+            val indentLevel = vh.getIndentationLevel()
+            outRect.left = indentSize * indentLevel
 
             val isLastItem = vh.position == parent.adapter.itemCount - 1
             val isCommentPlaceholder = vh.itemViewType == CommentListAdapter.VIEW_TYPE_COMMENT_PLACEHOLDER
@@ -130,7 +130,7 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
             if (isLastItem) {
                 outRect.bottom = verticalPadding
 
-                if (isCommentPlaceholder) {
+                if (indentLevel == 0 && isCommentPlaceholder) {
                     outRect.top = verticalPadding
                 }
             }

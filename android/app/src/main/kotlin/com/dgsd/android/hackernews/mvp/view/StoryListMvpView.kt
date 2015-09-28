@@ -11,4 +11,6 @@ public interface StoryListMvpView : MvpView {
     fun showError(message: String)
 
     fun showLoading()
+
+    fun shareUrl(url: String)
 }

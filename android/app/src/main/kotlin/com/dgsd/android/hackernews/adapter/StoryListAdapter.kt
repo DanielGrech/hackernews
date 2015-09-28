@@ -12,6 +12,8 @@ public class StoryListAdapter : RecyclerView.Adapter<StoryListAdapter.StoryViewH
 
     private var onClickListener:  (Story, View) -> Unit = {s, v -> }
 
+    private var onLongClickListener: (Story, View) -> Boolean = {s, v -> true}
+
     override fun getItemCount(): Int {
         return stories.size()
     }
@@ -34,14 +36,23 @@ public class StoryListAdapter : RecyclerView.Adapter<StoryListAdapter.StoryViewH
         onClickListener = listener
     }
 
-    inner class StoryViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    public fun setOnStoryLongClickListener(listener: (Story, View) -> Boolean) {
+        onLongClickListener = listener
+    }
+
+    inner class StoryViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener, View.OnLongClickListener {
 
         init {
             view.setOnClickListener(this)
+            view.setOnLongClickListener(this)
         }
 
         override fun onClick(v: View) {
             onClickListener(stories[position], v)
+        }
+
+        override fun onLongClick(v: View): Boolean {
+            return onLongClickListener(stories[position], v)
         }
 
         public fun populate(story: Story) {

@@ -166,10 +166,11 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
         onCommentPlaceholderClickListener = listener
     }
 
-    inner class CommentViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    inner class CommentViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener, View.OnLongClickListener {
 
         init {
             view.setOnClickListener(this)
+            view.setOnLongClickListener(this)
         }
 
         override fun onClick(v: View) {
@@ -178,6 +179,10 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
                 CommentListAdapter.VIEW_TYPE_COMMENT -> onCommentClickListener(item.comment!!, v)
                 CommentListAdapter.VIEW_TYPE_COMMENT_PLACEHOLDER -> onCommentPlaceholderClickListener(item.commentIds!!, v)
             }
+        }
+
+        override fun onLongClick(v: View?): Boolean {
+            return true
         }
 
         public fun populate(item: ListItem) {
