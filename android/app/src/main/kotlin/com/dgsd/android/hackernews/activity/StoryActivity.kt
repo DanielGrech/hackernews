@@ -74,8 +74,8 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
         loadingContentErrorView = find(R.id.loadingContentErrorView)
         recyclerView = find(R.id.recyclerView)
 
-        recyclerView.setOnCommentClickListener { comment, view ->
-
+        recyclerView.setOnShareCommentLinkListener { comment ->
+            presenter.onShareCommentClicked(comment)
         }
 
         recyclerView.setOnCommentPlaceholderClickListener { ids, view ->
@@ -114,7 +114,7 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
             shareLinkItem.setVisible(this)
         }
 
-        with (presenter.canShareCommens()) {
+        with (presenter.canShareComments()) {
             shareCommentsItem.setEnabled(this)
             shareCommentsItem.setVisible(this)
         }

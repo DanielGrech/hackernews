@@ -3,6 +3,7 @@ package com.dgsd.android.hackernews.view
 import android.content.Context
 import android.graphics.*
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.View
@@ -20,6 +21,8 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
 
     private var onClickListener: (Comment, View) -> Unit = { s, v -> }
 
+    private var onShareCommentLinkListener: (Comment) -> Unit = { c -> }
+
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -33,13 +36,37 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
                 context.dimen(R.dimen.padding_default),
                 context.dip(1)))
 
-        (adapter as CommentListAdapter).setOnCommentClickListener { Comment, view ->
-            onClickListener(Comment, view)
+        with (adapter as CommentListAdapter) {
+            setOnCommentClickListener { Comment, view ->
+                onClickListener(Comment, view)
+            }
+
+            setOnCommentLongClickListener { comment, view ->
+                with (PopupMenu(context, view)) {
+                    inflate(R.menu.cm_share_comment)
+
+                    setOnMenuItemClickListener {
+                        when (it.itemId) {
+                            R.id.share_link -> {
+                                onShareCommentLinkListener(comment)
+                            }
+                        }
+
+                        true
+                    }
+
+                    show()
+                }
+            }
         }
     }
 
     public fun setStory(story: Story) {
         (adapter as CommentListAdapter).setStory(story)
+    }
+
+    public fun setOnShareCommentLinkListener(listener: (Comment) -> Unit) {
+        onShareCommentLinkListener = listener
     }
 
     fun showNoCommentsMessage(message: String) {

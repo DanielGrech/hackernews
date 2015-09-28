@@ -31,6 +31,8 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
 
     private var onCommentClickListener: (Comment, View) -> Unit = { c, v -> }
 
+    private var onCommentLongClickListener: (Comment, View) -> Unit = {c , v -> }
+
     private val items = arrayListOf<ListItem>()
 
     private var commentIdToHightlight: Long? = null
@@ -158,6 +160,10 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
         }
     }
 
+    public fun setOnCommentLongClickListener(listener: (Comment, View) -> Unit) {
+        onCommentLongClickListener = listener
+    }
+
     public fun setOnCommentClickListener(listener: (Comment, View) -> Unit) {
         onCommentClickListener = listener
     }
@@ -181,7 +187,11 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
             }
         }
 
-        override fun onLongClick(v: View?): Boolean {
+        override fun onLongClick(v: View): Boolean {
+            val item = items[position]
+            when (item.getType()) {
+                CommentListAdapter.VIEW_TYPE_COMMENT -> onCommentLongClickListener(item.comment!!, v)
+            }
             return true
         }
 

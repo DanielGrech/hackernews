@@ -8,6 +8,7 @@ import com.dgsd.android.hackernews.mvp.view.StoryMvpView
 import com.dgsd.android.hackernews.util.bind
 import com.dgsd.android.hackernews.util.getShareLink
 import com.dgsd.android.hackernews.util.onIoThread
+import com.dgsd.hackernews.model.Comment
 import com.dgsd.hackernews.model.Story
 import timber.log.Timber
 import javax.inject.Inject
@@ -124,7 +125,16 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
         return !story?.url.isNullOrBlank()
     }
 
-    fun canShareCommens(): Boolean {
+    fun canShareComments(): Boolean {
         return !story?.getShareLink().isNullOrBlank()
+    }
+
+    fun onShareCommentClicked(comment: Comment) {
+        analytics.trackClick("share_comment")
+
+        var url = comment.getShareLink()
+        if (!url.isNullOrBlank()) {
+            getView().shareUrl(url!!)
+        }
     }
 }

@@ -44,7 +44,6 @@ public class CommentListItemView(context: Context, attrs: AttributeSet?, defStyl
     fun populate(comment: Comment, indentation: Int) {
         headerText.text = comment.getSummaryString(context)
         commentText.text = comment.getHtmlContent()
-        commentText.movementMethod = LinkMovementMethod.getInstance()
 
         headerText.textColor = getCommentColorForIndentation(context, indentation)
 
