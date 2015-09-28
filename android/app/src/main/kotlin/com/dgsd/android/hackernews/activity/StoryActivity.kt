@@ -191,7 +191,7 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
 
         val customTabIntent = CustomTabsIntent.Builder()
                 .setShowTitle(true)
-                .setToolbarColor(getColor(R.color.primary))
+                .setToolbarColor(resources.getColor(R.color.primary))
                 .build()
 
         CustomTabActivityHelper.openCustomTab(this, customTabIntent, uri) { activity, uri ->
