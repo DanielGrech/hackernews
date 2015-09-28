@@ -188,7 +188,7 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
                 CommentListAdapter.VIEW_TYPE_COMMENT -> {
                     with (itemView as CommentListItemView) {
                         populate(item.comment!!, item.indentationLevel)
-                        showHighlighted(commentIdToHightlight != null && item.comment!!.id == commentIdToHightlight)
+                        showHighlighted(commentIdToHightlight != null && item.comment.id == commentIdToHightlight)
                     }
                 }
                 CommentListAdapter.VIEW_TYPE_COMMENT_PLACEHOLDER -> {

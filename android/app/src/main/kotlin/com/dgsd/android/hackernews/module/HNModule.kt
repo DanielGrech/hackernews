@@ -5,6 +5,10 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.dgsd.android.hackernews.BuildConfig
 import com.dgsd.android.hackernews.HNApp
+import com.dgsd.android.hackernews.analytics.Agent
+import com.dgsd.android.hackernews.analytics.DebugAgent
+import com.dgsd.android.hackernews.analytics.FabricAgent
+import com.dgsd.android.hackernews.analytics.Tracker
 import com.dgsd.android.hackernews.data.AppSettings
 import com.dgsd.android.hackernews.data.DbOpenHelper
 import com.dgsd.android.hackernews.data.DbProvider
@@ -91,4 +95,19 @@ public class HNModule(private val application: HNApp) {
         return HNDataSource(networkDataSource, db)
     }
 
+    @Provides
+    @Singleton
+    fun providesAnalyticsTracker(agents: Array<Agent>): Tracker {
+        return Tracker(*agents)
+    }
+
+    @Provides
+    @Singleton
+    fun providesAnalyticsTrackerAgents(): Array<Agent> {
+        if (!BuildConfig.DEBUG) {
+            return arrayOf(FabricAgent())
+        } else {
+            return arrayOf(DebugAgent())
+        }
+    }
 }

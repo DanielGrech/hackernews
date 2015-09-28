@@ -74,7 +74,7 @@ abstract class HNApp : Application() {
      * This allows overriding in tests/other modules
      */
     protected open fun enableAppOnlyFunctionality() {
-        if (true || BuildConfig.CRASHLYTICS_ENABLED) {
+        if (!BuildConfig.DEBUG) {
             Fabric.with(this, Crashlytics(), Answers());
             Timber.plant(CrashlyticsLogger())
         }
