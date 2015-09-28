@@ -21,4 +21,6 @@ public interface StoryMvpView : MvpView {
 
     fun showLoading()
 
+    fun shareUrl(url: String)
+
 }

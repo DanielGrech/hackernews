@@ -105,10 +105,32 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
         return super.onCreateOptionsMenu(menu)
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        val shareLinkItem = menu.findItem(R.id.share_link)
+        val shareCommentsItem = menu.findItem(R.id.share_comments)
+
+        with (presenter.canShareLink()) {
+            shareLinkItem.setEnabled(this)
+            shareLinkItem.setVisible(this)
+        }
+
+        with (presenter.canShareCommens()) {
+            shareCommentsItem.setEnabled(this)
+            shareCommentsItem.setVisible(this)
+        }
+
+        return super.onPrepareOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.share -> {
-                presenter.onShareClicked()
+            R.id.share_link -> {
+                presenter.onShareLinkClicked()
+                true
+            }
+
+            R.id.share_comments -> {
+                presenter.onShareCommentsClicked()
                 true
             }
 
@@ -185,6 +207,8 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
             recyclerView.scrollToComment(commentIdToScrollTo!!)
             commentIdToScrollTo = null
         }
+
+        supportInvalidateOptionsMenu()
     }
 
     override fun showUri(uri: Uri) {
@@ -230,5 +254,9 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
         } else {
             return NdefMessage(arrayOf(NdefRecord.createUri(shareLink)))
         }
+    }
+
+    override fun shareUrl(url: String) {
+        share(url)
     }
 }

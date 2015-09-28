@@ -91,11 +91,12 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
 
                     val lineStartX = (indentation * indentSize).toFloat()
                     val lineEndX = (indentation * indentSize).toFloat()
-                    var lineStartY = parent.layoutManager.getDecoratedTop(it).toFloat()
+                    val lineStartY = parent.layoutManager.getDecoratedTop(it).toFloat()
                     var lineEndY = parent.layoutManager.getDecoratedBottom(it).toFloat()
 
+                    var circleY = lineStartY
                     if (isComment && !drawAsDotted) {
-                        lineStartY += (vh.itemView as CommentListItemView).getHeaderIndicatorY()
+                        circleY += (vh.itemView as CommentListItemView).getHeaderIndicatorY()
                     }
 
                     if (!drawAsDotted && isCommentPlaceholder) {
@@ -113,7 +114,7 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
                     canvas.drawPath(path, linePaint)
 
                     if (isComment && !drawAsDotted) {
-                        canvas.drawCircle(lineStartX, lineStartY, 12f, circlePaint)
+                        canvas.drawCircle(lineStartX, circleY, 12f, circlePaint)
                     }
                 }
             }

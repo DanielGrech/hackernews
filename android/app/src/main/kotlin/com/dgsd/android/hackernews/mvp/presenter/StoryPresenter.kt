@@ -98,7 +98,33 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
         return story?.getShareLink()
     }
 
-    fun onShareClicked() {
-        analytics.trackClick("share")
+    fun onShareLinkClicked() {
+        analytics.trackClick("share_link")
+
+        val url = story?.url
+        if (url.isNullOrBlank()) {
+            getView().showEphemeralError(getContext().getString(R.string.error_sharing_link))
+        } else {
+            getView().shareUrl(url!!)
+        }
+    }
+
+    fun onShareCommentsClicked() {
+        analytics.trackClick("share_link")
+
+        val url = story?.getShareLink()
+        if (url.isNullOrBlank()) {
+            getView().showEphemeralError(getContext().getString(R.string.error_sharing_comments))
+        } else {
+            getView().shareUrl(url!!)
+        }
+    }
+
+    fun canShareLink(): Boolean {
+        return !story?.url.isNullOrBlank()
+    }
+
+    fun canShareCommens(): Boolean {
+        return !story?.getShareLink().isNullOrBlank()
     }
 }
