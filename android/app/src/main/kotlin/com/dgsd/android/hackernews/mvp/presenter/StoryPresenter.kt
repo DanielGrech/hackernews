@@ -6,6 +6,7 @@ import com.dgsd.android.hackernews.data.HNDataSource
 import com.dgsd.android.hackernews.module.AppServicesComponent
 import com.dgsd.android.hackernews.mvp.view.StoryMvpView
 import com.dgsd.android.hackernews.util.bind
+import com.dgsd.android.hackernews.util.getShareLink
 import com.dgsd.android.hackernews.util.onIoThread
 import com.dgsd.hackernews.model.Story
 import timber.log.Timber
@@ -84,5 +85,9 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
             getView().showNoCommentsMessage(getContext().getString(msgRes))
         }
 
+    }
+
+    fun getNfcShareLink(): String? {
+        return story?.getShareLink()
     }
 }

@@ -2,6 +2,7 @@
     package="com.dgsd.android.hackernews">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.NFC" />
 
     <application
         android:name=".HNAppImpl"
@@ -43,6 +44,20 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="news.ycombinator.com"
+                    android:pathPattern="/item"
+                    android:scheme="http" />
+                <data
+                    android:host="news.ycombinator.com"
+                    android:pathPattern="/item"
+                    android:scheme="https" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
 
                 <data
                     android:host="news.ycombinator.com"

@@ -11,6 +11,8 @@ import com.dgsd.hackernews.model.Comment
 import com.dgsd.hackernews.model.Story
 import java.util.concurrent.TimeUnit
 
+private val ITEM_SHARE_LINK_PREFIX = "https://news.ycombinator.com/item?id="
+
 private val storyHtmlContentCache = LruCache<Long, CharSequence>(20)
 private val commentHtmlContentCache = LruCache<Long, CharSequence>(20)
 
@@ -67,6 +69,15 @@ public fun Comment?.getHtmlContent(): CharSequence? {
         return getHtmlTextFromCache(id, text, commentHtmlContentCache)
     }
 }
+
+public fun Comment?.getShareLink(): String? {
+    return if (this == null) null else ITEM_SHARE_LINK_PREFIX + id
+}
+
+public fun Story?.getShareLink(): String? {
+    return if (this == null) null else ITEM_SHARE_LINK_PREFIX + id
+}
+
 private fun getDateTimeString(time: Long): CharSequence {
     val dateFlags = DateUtils.FORMAT_SHOW_TIME.or(DateUtils.FORMAT_SHOW_DATE)
     return DateUtils.getRelativeTimeSpanString(TimeUnit.SECONDS.toMillis(time),

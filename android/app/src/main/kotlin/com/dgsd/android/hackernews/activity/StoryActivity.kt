@@ -2,7 +2,12 @@ package com.dgsd.android.hackernews.activity
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.nfc.NdefMessage
+import android.nfc.NdefRecord
+import android.nfc.NfcAdapter
+import android.nfc.NfcEvent
 import android.os.Bundle
 import android.support.customtabs.CustomTabsIntent
 import android.support.design.widget.Snackbar
@@ -21,7 +26,8 @@ import kotlinx.android.synthetic.act_story.toolbar
 import kotlinx.android.synthetic.act_story.viewStoryButton
 import org.jetbrains.anko.*
 
-public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>(), StoryMvpView, CustomTabActivityHelper.ConnectionCallback {
+public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>(),
+        StoryMvpView, CustomTabActivityHelper.ConnectionCallback, NfcAdapter.CreateNdefMessageCallback {
 
     private lateinit var customTabActivityHelper: CustomTabActivityHelper
 
@@ -84,6 +90,13 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
         loadingContentErrorView.errorMessage.onClick {
             showLoading()
             presenter.onRefreshRequested()
+        }
+
+        if (packageManager.hasSystemFeature(PackageManager.FEATURE_NFC)) {
+            val nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+            if (nfcAdapter != null && nfcAdapter.isEnabled) {
+                nfcAdapter.setNdefPushMessageCallback(this, this);
+            }
         }
     }
 
@@ -206,6 +219,15 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
         val hintUrl = intent.getStringExtra(EXTRA_HINT_URL)
         if (hintUrl != null) {
             customTabActivityHelper.mayLaunchUrl(Uri.parse(hintUrl), null, null)
+        }
+    }
+
+    override fun createNdefMessage(event: NfcEvent?): NdefMessage? {
+        val shareLink = presenter.getNfcShareLink()
+        if (shareLink == null) {
+            return null
+        } else {
+            return NdefMessage(arrayOf(NdefRecord.createUri(shareLink)))
         }
     }
 }
