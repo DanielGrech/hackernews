@@ -2,6 +2,7 @@ package hackernews
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/golang/protobuf/proto"
 	"net/http"
 )
@@ -44,7 +45,7 @@ func (fn ApiHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	handler := NewHandler(r)
 	if json, err := fn(handler); err != nil {
 		handler.Loge("Error executing request: %v", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("{\"error\": \"%s\", \"description\": \"%v\"}", err.Message, err.Error()), http.StatusInternalServerError)
 	} else {
 		w.Write(json)
 	}
