@@ -4,35 +4,30 @@ import android.os.Bundle
 import com.dgsd.android.hackernews.HNTestRunner
 import com.dgsd.android.hackernews.TestUtils
 import com.dgsd.android.hackernews.module.AppServicesComponent
-import com.dgsd.android.hackernews.mvp.presenter.MainPresenter
 import com.dgsd.android.hackernews.mvp.presenter.Presenter
-import com.dgsd.android.hackernews.mvp.view.MainMvpView
 import com.dgsd.android.hackernews.mvp.view.MvpView
-import com.dgsd.hackernews.DataSource
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Matchers.any
-import org.mockito.Mockito.RETURNS_DEEP_STUBS
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.spy
 import org.mockito.Mockito.verify
-import org.robolectric.Robolectric
 import org.robolectric.Robolectric.buildActivity
 
-RunWith(HNTestRunner::class)
+@RunWith(HNTestRunner::class)
 public class PresentableActivityTest {
 
-    Test
+    @Test
     public fun testDelegatesToPresenter() {
-        val controller = buildActivity(javaClass<PresentableActivityWithMockPresenter>())
+        val controller = buildActivity(PresentableActivityWithMockPresenter::class.java)
 
         val presenter = controller.setup().get().presenter
-        controller.saveInstanceState(mock(javaClass<Bundle>())).pause().stop().destroy().get()
+        controller.saveInstanceState(mock(Bundle::class.java)).pause().stop().destroy().get()
 
-        verify(presenter).onCreate(any(javaClass<Bundle>()))
+        verify(presenter).onCreate(any(Bundle::class.java))
         verify(presenter).onStart()
         verify(presenter).onResume()
-        verify(presenter).onSaveInstanceState(any(javaClass<Bundle>()))
+        verify(presenter).onSaveInstanceState(any(Bundle::class.java))
         verify(presenter).onPause()
         verify(presenter).onStop()
         verify(presenter).onDestroy()
@@ -40,7 +35,7 @@ public class PresentableActivityTest {
 
     open class PresentableActivityWithMockPresenter : PresentableActivity<DummyMvpView, DummyPresenter>() {
         protected override fun createPresenter(component: AppServicesComponent): DummyPresenter {
-            return spy(DummyPresenter(TestUtils.createView(javaClass<DummyMvpView>()), component))
+            return spy(DummyPresenter(TestUtils.createView(DummyMvpView::class.java), component))
         }
 
         protected override fun getLayoutResource(): Int {
@@ -53,6 +48,12 @@ public class PresentableActivityTest {
     }
 
     open class DummyPresenter(view: DummyMvpView, component : AppServicesComponent) : Presenter<DummyMvpView>(view, component) {
+        override fun getScreenName(): String {
+            return "Dummy"
+        }
 
+        override fun onResume() {
+
+        }
     }
 }

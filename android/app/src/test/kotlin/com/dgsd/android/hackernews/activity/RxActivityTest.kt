@@ -10,12 +10,12 @@ import org.robolectric.util.ActivityController
 
 import rx.observers.TestSubscriber
 
-RunWith(HNTestRunner::class)
+@RunWith(HNTestRunner::class)
 public class RxActivityTest {
 
-    Test
+    @Test
     public fun testLifecycleObservable() {
-        val controller = Robolectric.buildActivity(javaClass<LameRxActivity>())
+        val controller = Robolectric.buildActivity(LameRxActivity::class.java)
 
         val subscriber = TestSubscriber<ActivityEvent>()
 

@@ -25,18 +25,6 @@ public class ApiTest {
         assertThat(Api.is(Api.LOLLIPOP)).isFalse();
     }
 
-    @Config(sdk = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    @Test
-    public void testIsFunctionalityForJellybeanMr1() {
-        assertThat(Api.is(Api.JELLYBEAN_MR1)).isTrue();
-    }
-
-    @Config(sdk = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    @Test
-    public void testIsFunctionalityForJellybeanMr2() {
-        assertThat(Api.is(Api.JELLYBEAN_MR2)).isTrue();
-    }
-
     @Config(sdk = Build.VERSION_CODES.KITKAT)
     @Test
     public void testIsFunctionalityForKitkat() {
@@ -55,10 +43,10 @@ public class ApiTest {
         assertThat(Api.isMin(Api.LOLLIPOP)).isFalse();
     }
 
-    @Config(sdk = Build.VERSION_CODES.KITKAT)
+    @Config(sdk = Build.VERSION_CODES.LOLLIPOP)
     @Test
     public void testIsMinWhenAboveApi() {
-        assertThat(Api.isMin(Api.JELLYBEAN_MR1)).isTrue();
+        assertThat(Api.isMin(Api.KITKAT)).isTrue();
     }
 
     @Config(sdk = Build.VERSION_CODES.KITKAT)
@@ -80,9 +68,9 @@ public class ApiTest {
         assertThat(Api.isUpTo(Api.KITKAT)).isFalse();
     }
 
-    @Config(sdk = Build.VERSION_CODES.JELLY_BEAN_MR2)
+    @Config(sdk = Build.VERSION_CODES.KITKAT)
     @Test
     public void testIsUpToOnHigherApi() {
-        assertThat(Api.isUpTo(Api.KITKAT)).isTrue();
+        assertThat(Api.isUpTo(Api.LOLLIPOP)).isTrue();
     }
 }

@@ -8,8 +8,6 @@ import android.os.Build;
  */
 public class Api {
     public static final int LEVEL = Build.VERSION.SDK_INT;
-    public static final int JELLYBEAN_MR1 = Build.VERSION_CODES.JELLY_BEAN_MR1;
-    public static final int JELLYBEAN_MR2 = Build.VERSION_CODES.JELLY_BEAN_MR2;
     public static final int KITKAT = Build.VERSION_CODES.KITKAT;
     public static final int LOLLIPOP = Build.VERSION_CODES.LOLLIPOP;
     public static final int LOLLIPOP_MR1 = Build.VERSION_CODES.LOLLIPOP_MR1;

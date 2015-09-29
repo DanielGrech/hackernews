@@ -14,10 +14,10 @@ import org.robolectric.Robolectric
 import org.robolectric.RuntimeEnvironment
 import rx.observers.TestSubscriber
 
-RunWith(HNTestRunner::class)
+@RunWith(HNTestRunner::class)
 public class RxFragmentTest {
 
-    Test
+    @Test
     public fun testLifecycleObservable() {
         val fragment = LameRxFragment()
 
@@ -25,15 +25,15 @@ public class RxFragmentTest {
 
         fragment.lifecycle().subscribe(subscriber)
 
-        val activity = Robolectric.setupActivity(javaClass<AppCompatActivity>())
+        val activity = Robolectric.setupActivity(AppCompatActivity::class.java)
         val contentView = LinearLayout(RuntimeEnvironment.application)
 
-        contentView.setId(android.R.id.content)
+        contentView.id = android.R.id.content
         activity.setContentView(contentView)
 
-        activity.getSupportFragmentManager().beginTransaction().add(android.R.id.content, fragment, null).commit()
+        activity.supportFragmentManager.beginTransaction().add(android.R.id.content, fragment, null).commit()
 
-        activity.getSupportFragmentManager().beginTransaction().remove(fragment).commit()
+        activity.supportFragmentManager.beginTransaction().remove(fragment).commit()
 
         subscriber.assertValues(
                 // Create ...
@@ -57,7 +57,7 @@ public class RxFragmentTest {
     public class LameRxFragment : RxFragment() {
 
         override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-            return View(container?.getContext())
+            return View(container?.context)
         }
     }
 }

@@ -16,23 +16,23 @@ import timber.log.Timber
 
 import org.assertj.core.api.Assertions.assertThat
 
-RunWith(HNTestRunner::class)
+@RunWith(HNTestRunner::class)
 public class LoggingLifecycleCallbacksTest {
 
     var testTree: TestTree = TestTree()
 
-    Before
+    @Before
     public fun setup() {
         testTree = TestTree()
         Timber.plant(testTree)
     }
 
-    After
+    @After
     public fun teardown() {
         Timber.uproot(testTree)
     }
 
-    Test
+    @Test
     public fun testLogsCorrectEntries() {
         val activity = Activity()
 
@@ -55,7 +55,6 @@ public class LoggingLifecycleCallbacksTest {
                 "onDestroy() - Activity"
         )
     }
-
 
     private inner class TestTree : Timber.DebugTree() {
 

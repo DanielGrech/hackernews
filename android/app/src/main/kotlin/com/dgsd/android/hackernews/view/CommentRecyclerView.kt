@@ -123,8 +123,10 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
                     var horizontalLineEndX = lineStartX
 
                     if (isComment && !drawAsDotted) {
-                        horizontalLineEndX += (vh.itemView as CommentListItemView).getHeaderIndicatorX()
-                        lineStartY += (vh.itemView as CommentListItemView).getHeaderIndicatorY()
+                        with (vh.itemView as CommentListItemView) {
+                            horizontalLineEndX += getHeaderIndicatorX()
+                            lineStartY += getHeaderIndicatorY()
+                        }
                     }
 
                     if (!drawAsDotted && isCommentPlaceholder) {

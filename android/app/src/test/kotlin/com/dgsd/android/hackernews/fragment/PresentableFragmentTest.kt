@@ -21,10 +21,10 @@ import org.mockito.Mockito.spy
 import org.mockito.Mockito.verify
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil
 
-RunWith(HNTestRunner::class)
+@RunWith(HNTestRunner::class)
 public class PresentableFragmentTest {
 
-    Test
+    @Test
     public fun testDelegatesToPresenter() {
         val frag = DummyFragment()
 
@@ -32,12 +32,12 @@ public class PresentableFragmentTest {
 
         val presenter = frag.presenter
 
-        verify(presenter).onCreate(any(javaClass<Bundle>()))
+        verify(presenter).onCreate(any(Bundle::class.java))
         verify(presenter).onStart()
         verify(presenter).onResume()
 
-        frag.onSaveInstanceState(mock(javaClass<Bundle>()))
-        verify(presenter).onSaveInstanceState(any(javaClass<Bundle>()))
+        frag.onSaveInstanceState(mock(Bundle::class.java))
+        verify(presenter).onSaveInstanceState(any(Bundle::class.java))
 
         frag.onPause()
         verify(presenter).onPause()
@@ -54,13 +54,19 @@ public class PresentableFragmentTest {
     }
 
     open class DummyPresenter(view: DummyMvpView, component : AppServicesComponent) : Presenter<DummyMvpView>(view, component) {
+        override fun getScreenName(): String {
+            return "Dummy"
+        }
 
+        override fun onResume() {
+
+        }
     }
 
     public class DummyFragment : PresentableFragment<DummyMvpView, DummyPresenter>() {
 
         override protected fun createPresenter(servicesComponent: AppServicesComponent, savedInstanceState: Bundle?): DummyPresenter {
-            return spy(DummyPresenter(TestUtils.createView(javaClass<PresentableFragmentTest.DummyMvpView>()), servicesComponent))
+            return spy(DummyPresenter(TestUtils.createView(PresentableFragmentTest.DummyMvpView::class.java), servicesComponent))
         }
 
         override protected fun getLayoutId(): Int {

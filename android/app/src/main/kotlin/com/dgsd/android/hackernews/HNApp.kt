@@ -41,8 +41,6 @@ abstract class HNApp : Application() {
         enableAppOnlyFunctionality()
 
         appServicesComponent = createAppServicesComponent()
-
-        clearOldAppData()
     }
 
     override fun onTrimMemory(level: Int) {
@@ -83,6 +81,8 @@ abstract class HNApp : Application() {
             Timber.plant(CrashlyticsLogger())
         }
         registerActivityLifecycleCallbacks(LoggingLifecycleCallbacks())
+
+        clearOldAppData()
     }
 
     protected open fun enableDebugTools() {

@@ -12,7 +12,7 @@ import com.dgsd.android.hackernews.mvp.view.MvpView
  */
 public abstract class PresentableFragment<V : MvpView, T : Presenter<V>> : BaseFragment() {
 
-    protected lateinit var presenter : T
+    lateinit var presenter : T
 
     protected abstract fun createPresenter(servicesComponent: AppServicesComponent, savedInstanceState: Bundle?): T
 

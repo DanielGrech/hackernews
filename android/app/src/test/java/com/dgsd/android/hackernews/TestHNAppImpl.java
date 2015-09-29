@@ -15,4 +15,6 @@ public class TestHNAppImpl extends HNAppImpl {
     protected void enableAppOnlyFunctionality() {
         // Not whilst running tests
     }
+
+
 }
