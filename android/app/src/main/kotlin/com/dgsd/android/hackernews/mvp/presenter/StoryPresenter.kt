@@ -69,7 +69,9 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
     private fun loadStory(skipCache: Boolean) {
         dataSource.getStory(storyId, skipCache)
                 .bind(getView())
+                .materialize()
                 .onIoThread()
+                .dematerialize<Story>()
                 .subscribe({
                     onStoryLoaded(it)
                 }, {
