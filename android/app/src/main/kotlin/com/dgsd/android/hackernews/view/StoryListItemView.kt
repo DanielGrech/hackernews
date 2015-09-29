@@ -43,5 +43,7 @@ public class StoryListItemView(context: Context, attrs: AttributeSet?, defStyle:
                 story.author,
                 story.getDateTimeString()
         )
+
+        contentDescription = "${storyTitle.text}. ${storySubtitle.text}"
     }
 }

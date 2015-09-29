@@ -50,6 +50,8 @@ public class CommentListItemView(context: Context, attrs: AttributeSet?, defStyl
         if (comment.deadOrDeleted()) {
             commentText.text = context.getString(R.string.comment_list_item_removed_message)
         }
+
+        contentDescription = "${headerText.text}. ${commentText.text}"
     }
 
     fun showHighlighted(highlighted: Boolean) {
