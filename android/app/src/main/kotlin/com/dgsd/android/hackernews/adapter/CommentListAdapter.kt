@@ -184,7 +184,13 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
             val item = items[position]
             when (item.getType()) {
                 CommentListAdapter.VIEW_TYPE_COMMENT -> onCommentClickListener(item.comment!!, v)
-                CommentListAdapter.VIEW_TYPE_COMMENT_PLACEHOLDER -> onCommentPlaceholderClickListener(item.commentIds!!, v)
+                CommentListAdapter.VIEW_TYPE_COMMENT_PLACEHOLDER -> {
+                    with (v as CommentPlaceholderListItemView) {
+                        if (!isLoading()) {
+                            onCommentPlaceholderClickListener(item.commentIds!!, v)
+                        }
+                    }
+                }
             }
         }
 

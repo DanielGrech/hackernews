@@ -101,14 +101,18 @@ public class StoryListFragment : PresentableFragment<StoryListMvpView, StoryList
                 showLoading()
                 presenter.onRefreshRequested()
             }
-        } else if (userVisibleHint) {
-            // Only show snackbar if the fragment is actually visible
-            Snackbar.make(loadingContentErrorView, message, Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.retry) {
-                        swipeRefreshLayout.isRefreshing = true
-                        presenter.onRefreshRequested()
-                    }
-                    .show()
+        } else {
+            loadingContentErrorView.showContent()
+
+            if (userVisibleHint) {
+                // Only show snackbar if the fragment is actually visible
+                Snackbar.make(loadingContentErrorView, message, Snackbar.LENGTH_SHORT)
+                        .setAction(R.string.retry) {
+                            swipeRefreshLayout.isRefreshing = true
+                            presenter.onRefreshRequested()
+                        }
+                        .show()
+            }
         }
     }
 

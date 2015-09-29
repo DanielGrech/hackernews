@@ -41,29 +41,23 @@ public fun View.onLayout(action: () -> Unit) {
 
 /**
  * Set the visibility of all the given views to [View.GONE]
- *
- * @param views The views to hide
  */
 public fun View.hide() {
-    setVisibility(View.GONE)
+    visibility = View.GONE
 }
 
 /**
  * Set the visibility of all the given views to [View.INVISIBLE]
- *
- * @param views The views to
  */
 public fun View.hideInvisible() {
-    setVisibility(View.INVISIBLE)
+    visibility = View.INVISIBLE
 }
 
 /**
  * Set the visibility of all the given views to [View.VISIBLE]
- *
- * @param views The views to show
  */
 public fun View.show() {
-    setVisibility(View.VISIBLE)
+    visibility = View.VISIBLE
 }
 
 public fun View.showWhen(condition : Boolean) {
@@ -80,11 +74,11 @@ public fun View.hideWhen(condition : Boolean) {
 }
 
 public fun View.isGone(): Boolean {
-    return this.getVisibility() == View.GONE
+    return this.visibility == View.GONE
 }
 
 public fun View.isVisible(): Boolean {
-    return this.getVisibility() == View.VISIBLE
+    return this.visibility == View.VISIBLE
 }
 
 public fun ViewGroup.children(): List<View> {

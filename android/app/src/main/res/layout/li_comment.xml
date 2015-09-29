@@ -25,6 +25,7 @@
         android:autoLink="all"
         android:linksClickable="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColorLink="@color/accent"
         tools:text="Comment text goes here!" />
 
 

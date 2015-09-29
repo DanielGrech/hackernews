@@ -50,9 +50,12 @@ public class StoryListPresenter(view : StoryListMvpView, component : AppServices
     }
 
     private fun getStories(skipCache: Boolean) {
+        // For materialize/dematerialize nonsense, see https://github.com/ReactiveX/RxJava/issues/2887
         getStoryObservable(skipCache)
                 .bind(getView())
+                .materialize()
                 .onIoThread()
+                .dematerialize<List<Story>>()
                 .subscribe({
                     if (it.isEmpty()) {
                         hasLoadedStories = false
@@ -62,8 +65,6 @@ public class StoryListPresenter(view : StoryListMvpView, component : AppServices
                         getView().showStories(it)
                     }
                 }, {
-                    Timber.e(it, "Error showing stories")
-
                     if (hasLoadedStories) {
                         getView().showError(getContext().getString(R.string.error_retrieving_stories_ephemeral))
                     } else {
