@@ -2,5 +2,4 @@
 <resources>
     <dimen name="padding_default">15dp</dimen>
     <dimen name="padding_small">8dp</dimen>
-    <dimen name="comment_list_item_circle_indicator_radius">4dp</dimen>
 </resources>

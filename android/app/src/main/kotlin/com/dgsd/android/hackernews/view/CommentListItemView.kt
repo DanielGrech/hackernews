@@ -61,6 +61,10 @@ public class CommentListItemView(context: Context, attrs: AttributeSet?, defStyl
     }
 
     fun getHeaderIndicatorY(): Float {
-        return headerText.y + (headerText.height / 2)
+        return headerText.y + headerText.height
+    }
+
+    fun getHeaderIndicatorX(): Float {
+        return headerText.x + headerText.width
     }
 }
