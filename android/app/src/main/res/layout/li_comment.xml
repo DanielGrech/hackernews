@@ -13,7 +13,6 @@
         android:paddingEnd="@dimen/padding_small"
         android:paddingStart="@dimen/padding_small"
         android:paddingTop="@dimen/padding_small"
-        android:textAllCaps="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         android:textColor="@color/accent"
         tools:text="dgrech · 6 hours ago" />

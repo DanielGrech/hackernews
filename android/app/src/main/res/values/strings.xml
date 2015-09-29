@@ -6,11 +6,9 @@
     <string name="tab_title_jobs">Jobs</string>
 
     <string name="empty_stories">No stories found</string>
-    <string name="story_list_item_time_template">Posted %1$s</string>
-    <string name="story_list_item_author_template">Posted by %1$s</string>
-    <string name="story_list_item_comments_template">{1} votes · {0,choice,0#No comments|1#1 comment|1&lt;{0} comments}</string>
+    <string name="story_list_item_comments_template">{1} votes · {0,choice,0#No comments|1#1 comment|1&lt;{0} comments} · {2} · Posted {3}</string>
     <string name="story_summary_string_template">%1$s · %2$s votes</string>
-    <string name="comment_list_item_header_template">%1$s · %2$s</string>
+    <string name="comment_list_item_header_template">%1$s · Posted %2$s</string>
     <string name="comment_list_item_header_template_removed">Unknown</string>
     <string name="comment_list_item_removed_message">This comment has been removed</string>
     <string name="comment_list_no_comments">No comments</string>

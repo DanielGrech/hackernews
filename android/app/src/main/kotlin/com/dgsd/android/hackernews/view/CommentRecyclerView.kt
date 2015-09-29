@@ -34,7 +34,8 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
         addItemDecoration(IndentItemDecoration(context,
                 context.dimen(R.dimen.padding_default),
                 context.dimen(R.dimen.padding_default),
-                context.dip(1)))
+                context.dip(1),
+                context.dimen(R.dimen.comment_list_item_circle_indicator_radius)))
 
         with (adapter as CommentListAdapter) {
             setOnCommentClickListener { Comment, view ->
@@ -81,7 +82,7 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
         (adapter as CommentListAdapter).setOnCommentPlaceholderClickListener(listener)
     }
 
-    public class IndentItemDecoration(val context: Context, val indentSize: Int, val verticalPadding: Int, val lineWidth: Int) : RecyclerView.ItemDecoration() {
+    public class IndentItemDecoration(val context: Context, val indentSize: Int, val verticalPadding: Int, val lineWidth: Int, val circleRadius: Int) : RecyclerView.ItemDecoration() {
 
         private val linePaint: Paint
 
@@ -140,7 +141,7 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
                     canvas.drawPath(path, linePaint)
 
                     if (isComment && !drawAsDotted) {
-                        canvas.drawCircle(lineStartX, lineStartY, 12f, circlePaint)
+                        canvas.drawCircle(lineStartX, lineStartY, circleRadius.toFloat(), circlePaint)
                     }
                 }
             }

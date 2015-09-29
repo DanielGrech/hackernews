@@ -81,7 +81,7 @@ public fun Story?.getShareLink(): String? {
 private fun getDateTimeString(time: Long): CharSequence {
     val dateFlags = DateUtils.FORMAT_SHOW_TIME.or(DateUtils.FORMAT_SHOW_DATE)
     return DateUtils.getRelativeTimeSpanString(TimeUnit.SECONDS.toMillis(time),
-            System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS, dateFlags)
+            System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS, dateFlags).toString().toLowerCase()
 }
 
 private fun getHtmlTextFromCache(key: Long, text: String?, cache: LruCache<Long, CharSequence>): CharSequence?{

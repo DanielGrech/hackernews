@@ -61,7 +61,7 @@ public abstract class BaseActivity : RxActivity() {
             setTaskDescription(ActivityManager.TaskDescription(
                     title?.toString(),
                     BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher),
-                    getColor(R.color.primary))
+                    resources.getColor(R.color.primary))
             )
         }
     }
