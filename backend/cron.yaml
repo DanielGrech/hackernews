@@ -5,19 +5,19 @@ cron:
 
 - description: new stories job
   url: /tasks/new_stories
-  schedule: every 5 minutes
+  schedule: every 3 minutes
 
 - description: ask stories job
   url: /tasks/ask_stories
-  schedule: every 5 minutes
+  schedule: every 6 minutes
 
 - description: show stories job
   url: /tasks/show_stories
-  schedule: every 5 minutes
+  schedule: every 7 minutes
 
 - description: job stories job
   url: /tasks/job_stories
-  schedule: every 5 minutes
+  schedule: every 8 minutes
 
 - description: cleanup old data
   url: /tasks/cleanup
