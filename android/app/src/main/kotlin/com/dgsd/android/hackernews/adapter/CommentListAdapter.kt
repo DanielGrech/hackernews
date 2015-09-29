@@ -60,6 +60,7 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
                         .inflate(R.layout.li_story_text, parent, false) as CardView
                 val storyTextView = storyCardView.find<TextView>(R.id.text)
                 storyTextView.movementMethod = LinkMovementMethod.getInstance()
+                storyTextView.setLineSpacing(0f, 1.2f)
 
                 storyCardView.tag = storyTextView
 
