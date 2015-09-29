@@ -1,6 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
+apply from: '../buildscripts/jacoco.gradle'
+
 android {
     compileSdkVersion config.compileSdkVersion
     buildToolsVersion config.buildToolsVersion
@@ -22,6 +24,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+
+    libraryVariants.matching { it.buildType.name != 'release' }.all { createJacocoTask(it) }
 }
 
 dependencies {
