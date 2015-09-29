@@ -1,6 +1,7 @@
 package com.dgsd.android.hackernews.mvp.presenter
 
 import com.dgsd.android.hackernews.R
+import com.dgsd.android.hackernews.data.AppSettings
 import com.dgsd.android.hackernews.data.HNDataSource
 import com.dgsd.android.hackernews.model.PageType
 import com.dgsd.android.hackernews.module.AppServicesComponent
@@ -19,6 +20,9 @@ public class StoryListPresenter(view : StoryListMvpView, component : AppServices
     @Inject
     lateinit val dataSource: HNDataSource
 
+    @Inject
+    lateinit val appSettings: AppSettings
+
     var hasLoadedStories = false
 
     init {
@@ -35,8 +39,9 @@ public class StoryListPresenter(view : StoryListMvpView, component : AppServices
         getStories(false)
     }
 
-    fun onStoryClicked(story: Story) {
+    fun onStoryClicked(story: Story): Boolean {
         analytics.trackClick("story")
+        return appSettings.showLinksFirst().get(false)
     }
 
     fun onRefreshRequested() {

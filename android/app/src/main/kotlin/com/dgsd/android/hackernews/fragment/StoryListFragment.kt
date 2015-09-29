@@ -57,8 +57,8 @@ public class StoryListFragment : PresentableFragment<StoryListMvpView, StoryList
         swipeRefreshLayout = view.find(R.id.swipeRefreshLayout)
 
         recyclerView.setOnStoryClickListener { story, view ->
-            presenter.onStoryClicked(story)
-            view.startActivity(StoryActivity.getStartIntent(activity, story))
+            val showLinkDirectly = presenter.onStoryClicked(story)
+            view.startActivity(StoryActivity.getStartIntent(activity, story, showStoryImmediately = showLinkDirectly))
         }
 
         recyclerView.setOnShareStoryLinkListener {

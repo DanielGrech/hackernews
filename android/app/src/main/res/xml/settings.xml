@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="@string/settings_cat_key_content"
+        android:title="@string/settings_cat_title_content">
+
+        <CheckBoxPreference
+            android:key="@string/settings_key_show_links_first"
+            android:title="@string/settings_title_show_links_first"
+            android:summary="@string/settings_summary_show_links_first"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="@string/settings_cat_key_about"
+        android:title="@string/settings_cat_title_about">
+
+        <Preference
+            android:key="@string/settings_key_app_version"
+            android:selectable="false"
+            android:title="@string/settings_title_app_version" />
+
+        <Preference
+            android:key="@string/settings_key_build_info"
+            android:selectable="false"
+            android:title="@string/settings_title_build_info" />
+
+        <Preference
+            android:key="@string/settings_key_rate"
+            android:summary="@string/settings_summary_rate"
+            android:title="@string/settings_title_rate" />
+
+        <Preference
+            android:key="@string/settings_key_support"
+            android:summary="@string/settings_summary_support"
+            android:title="@string/settings_title_support" />
+
+        <Preference
+            android:key="@string/settings_key_licenses"
+            android:summary="@string/settings_summary_licenses"
+            android:title="@string/settings_title_licenses" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

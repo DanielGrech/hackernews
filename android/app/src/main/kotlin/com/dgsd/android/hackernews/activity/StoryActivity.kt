@@ -42,12 +42,14 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
         private val EXTRA_STORY_ID = "_story_id"
         private val EXTRA_SCROLL_TO_COMMENT = "_scroll_to_comment"
         private val EXTRA_HINT_URL = "_hint_url"
+        private val EXTRA_SHOW_STORY = "_show_story"
 
-        public fun getStartIntent(context: Context, story: Story, commentToShow: Long = -1): Intent {
+        public fun getStartIntent(context: Context, story: Story, commentToShow: Long = -1, showStoryImmediately: Boolean = false): Intent {
             return Intent(context, StoryActivity::class.java)
                     .putExtra(EXTRA_STORY_ID, story.id)
                     .putExtra(EXTRA_SCROLL_TO_COMMENT, commentToShow)
                     .putExtra(EXTRA_HINT_URL, story.url)
+                    .putExtra(EXTRA_SHOW_STORY, showStoryImmediately)
         }
     }
 
@@ -135,7 +137,7 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
             }
 
             android.R.id.home -> {
-                startActivity<MainActivity>()
+                startActivity(MainActivity.getStartIntent(this))
                 finish()
                 true
             }
@@ -160,7 +162,8 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
     }
 
     override fun createPresenter(component: AppServicesComponent): StoryPresenter {
-        return StoryPresenter(this, component, intent.getLongExtra(EXTRA_STORY_ID, -1L))
+        return StoryPresenter(this, component,
+                intent.getLongExtra(EXTRA_STORY_ID, -1L), intent.getBooleanExtra(EXTRA_SHOW_STORY, false))
     }
 
     override fun getContext(): Context {

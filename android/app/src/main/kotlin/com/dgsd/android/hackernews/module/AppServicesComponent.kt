@@ -1,6 +1,7 @@
 package com.dgsd.android.hackernews.module
 
 import com.dgsd.android.hackernews.analytics.Tracker
+import com.dgsd.android.hackernews.data.AppSettings
 import com.dgsd.android.hackernews.data.HNDataSource
 import com.dgsd.android.hackernews.mvp.presenter.StoryListPresenter
 import com.dgsd.android.hackernews.mvp.presenter.StoryPresenter
@@ -25,4 +26,5 @@ public interface AppServicesComponent {
 
     fun analytics(): Tracker
 
+    fun appSettings(): AppSettings
 }

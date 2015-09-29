@@ -27,9 +27,31 @@
     <string name="share_link">Share Link</string>
     <string name="share_comments">Share Comments</string>
     <string name="retry">Retry</string>
+    <string name="settings">Settings</string>
 
     <plurals name="load_more_comments">
         <item quantity="one">Tap to load %1$s more comment</item>
         <item quantity="other">Tap to load %1$s more comments</item>
     </plurals>
+
+    <string name="settings_cat_title_content">Content</string>
+    <string name="settings_cat_key_content">settings_cat_key_content</string>
+    <string name="settings_cat_title_about">About</string>
+    <string name="settings_cat_key_about">settings_cat_key_about</string>
+    <string name="settings_key_show_links_first">settings_key_show_links_first</string>
+    <string name="settings_key_app_version">settings_key_app_version</string>
+    <string name="settings_key_build_info">settings_key_build_info</string>
+    <string name="settings_key_rate">settings_key_rate</string>
+    <string name="settings_key_support">settings_key_support</string>
+    <string name="settings_key_licenses">settings_key_licenses</string>
+    <string name="settings_title_show_links_first">Show links first</string>
+    <string name="settings_title_app_version">App version</string>
+    <string name="settings_title_build_info">Build info</string>
+    <string name="settings_title_rate">Rate app</string>
+    <string name="settings_title_support">Support</string>
+    <string name="settings_title_licenses">Licenses</string>
+    <string name="settings_summary_show_links_first">Open story links directly from the main list, instead of showing comments</string>
+    <string name="settings_summary_rate">If you like the app, please leave a rating in Google Play</string>
+    <string name="settings_summary_support">Email support with feedback or requests</string>
+    <string name="settings_summary_licenses">Libraries used to create this app</string>
 </resources>

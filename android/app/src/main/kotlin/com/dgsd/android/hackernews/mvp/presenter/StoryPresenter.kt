@@ -13,15 +13,18 @@ import com.dgsd.hackernews.model.Story
 import timber.log.Timber
 import javax.inject.Inject
 
-public class StoryPresenter(view: StoryMvpView, val component: AppServicesComponent, val storyId: Long) : Presenter<StoryMvpView>(view, component) {
+public class StoryPresenter(view: StoryMvpView, val component: AppServicesComponent, val storyId: Long, val showStoryOnFirstLoad: Boolean = false) : Presenter<StoryMvpView>(view, component) {
 
     @Inject
     lateinit val dataSource: HNDataSource
 
     private var story: Story? = null
 
+    private var showStoryUriOnNextLoad = false
+
     init {
         component.inject(this)
+        showStoryUriOnNextLoad = showStoryOnFirstLoad
     }
 
     override fun getScreenName(): String {
@@ -93,6 +96,11 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
             getView().showNoCommentsMessage(getContext().getString(msgRes))
         }
 
+        if (showStoryUriOnNextLoad) {
+            showStoryUriOnNextLoad = false
+
+            onViewStoryButtonClicked()
+        }
     }
 
     fun getNfcShareLink(): String? {

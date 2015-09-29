@@ -47,6 +47,7 @@ android {
         buildConfigField "boolean", "LEAK_CANARY_ENABLED", "${!isCiBuild()}"
         buildConfigField "long", "STORY_LIST_NETWORK_CACHE_TIME", "${1000L * 60L * 60L * 5L}"
         buildConfigField "String", "GA_TRACKING_ID", "\"UA-36903330-5\""
+        buildConfigField "String", "SUPPORT_EMAIL", "\"dgsoftwaredevelopment@gmail.com\""
 
         manifestPlaceholders = [
                 // Want QA's to get a crash free build, but devs on their local machine
@@ -146,6 +147,7 @@ dependencies {
     compile "javax.annotation:jsr250-api:${versions.jsr250}"
     compile "com.facebook.stetho:stetho-timber:${versions.stetho}"
     compile "com.lacronicus:easydatastorelib:${versions.easyDataStore}"
+    compile "de.psdev.licensesdialog:licensesdialog:${versions.licensesDialog}"
     compile("com.crashlytics.sdk.android:crashlytics:${versions.fabricClient}") {
         transitive = true;
     }
