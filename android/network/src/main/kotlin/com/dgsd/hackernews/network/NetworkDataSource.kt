@@ -30,7 +30,7 @@ public class NetworkDataSource : DataSource {
         }
     }
 
-    val apiService: ApiService
+    internal var apiService: ApiService
 
     private constructor(builder: NetworkDataSource.Builder) {
         val client = createDefaultHttpClient()
