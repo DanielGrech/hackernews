@@ -95,8 +95,9 @@ android {
     }
 
     testOptions {
-        unitTests {
-            returnDefaultValues = true
+        unitTests.returnDefaultValues = true
+        unitTests.all {
+            jvmArgs = ['-XX:MaxPermSize=2048m']
         }
     }
 

@@ -2,6 +2,8 @@
 
 #  Android tests
 
+echo "Going to execute Android tests.."
+
 cd android
 
 ./gradlew clean assembleDebug \
@@ -10,6 +12,18 @@ cd android
 	:data:testDebugUnitTest :data:testDebugUnitTestCoverage \
 	:app:testDevDebugUnitTest :app:testDevDebugUnitTestCoverage
 
+androidTestsResult=$?
+
 cd ..
 
+if [ $androidTestsResult -ne 0 ]; then
+    exit $androidTestsResult
+fi
+
 # Backend tests
+
+echo "Going to execute Backend tests.."
+
+cd backend
+
+cd ..

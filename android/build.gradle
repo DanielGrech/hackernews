@@ -68,7 +68,7 @@ subprojects {
                 rxAndroid : "1.0.1",
                 rxBinding : "0.3.0-SNAPSHOT",
                 rxLifecycle : "0.3.0",
-                retrofit : "2.0.0-beta1",
+                retrofit : "2.0.0-beta2",
                 wire : "1.8.0",
                 easyDataStore : "1.0.2",
                 sqlbrite: "0.3.1",
