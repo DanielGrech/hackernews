@@ -10,11 +10,10 @@ public fun PbComment.convert(): Comment {
             id = this.id,
             time = this.time,
             author = this.author,
-            parentId = this.parent_id,
             text = this.text,
-            deleted = this.deleted,
-            dead =  this.dead,
-            commentCount = this.comment_count
+            deleted = this.deleted ?: false,
+            dead =  this.dead ?: false,
+            commentCount = this.comment_count ?: -1
     )
 
     if (this.comment_ids != null) {
@@ -23,6 +22,10 @@ public fun PbComment.convert(): Comment {
 
     if (this.comments != null) {
         item = item.copy(comments = this.comments.map { it.convert() }.sortedByDescending { it -> it.time  }.toList())
+    }
+
+    if (this.parent_id != null && this.parent_id  > 0) {
+        item = item.copy(parentId = this.parent_id)
     }
 
     return item
@@ -36,10 +39,10 @@ public fun PbStory.convert(): Story {
             title = this.title,
             text = this.text,
             url = this.url,
-            score = this.score,
-            deleted = this.deleted,
-            dead =  this.dead,
-            commentCount = this.comment_count
+            score = this.score ?: -1,
+            deleted = this.deleted ?: false,
+            dead =  this.dead ?: false,
+            commentCount = this.comment_count ?: -1
     )
 
     if (this.comment_ids != null) {
@@ -50,7 +53,7 @@ public fun PbStory.convert(): Story {
         item = item.copy(comments = this.comments.map { it.convert() }.sortedByDescending { it -> it.time  }.toList())
     }
 
-    if (this.parent_id > 0) {
+    if (this.parent_id != null && this.parent_id  > 0) {
         item = item.copy(parentId = this.parent_id)
     }
 
