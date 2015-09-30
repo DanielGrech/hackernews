@@ -105,31 +105,35 @@ func (handler *Handler) cleanupOldData() {
 	handler.dataStore.DeleteStoriesNotIn(ids)
 }
 
-func (handler *Handler) GetStory(storyId int, enableApiCommentFetch bool, enableDbCommentFetch bool) (*Story, error) {
-	story, err := handler.cache.GetStory(storyId)
+func (handler *Handler) GetStory(storyId int, useApi bool, enableDbCommentFetch bool) (*Story, error) {
+	if !useApi {
+		if story, err := handler.cache.GetStory(storyId); err == nil {
+			return story, err
+		}
 
-	if err != nil {
-		story, err = handler.dataStore.GetStory(storyId, enableDbCommentFetch)
-		if err != nil {
-			story, err = handler.apiClient.GetStory(storyId)
-			if err != nil {
-				return nil, err
-			} else {
-				handler.Logd("Got story %+v", story.ID, story.Title)
+		if story, err := handler.dataStore.GetStory(storyId, enableDbCommentFetch); err == nil {
+			if enableDbCommentFetch {
+				handler.cache.SetStory(story)
 			}
-
-			if enableApiCommentFetch {
-				handler.fetchTopComments(story)
-			}
-
-			if err = handler.dataStore.SaveStory(story); err != nil {
-				handler.Loge("Error saving story to data store: %v", err)
-			}
-			handler.cache.SetStory(story)
-		} else if enableDbCommentFetch {
-			handler.cache.SetStory(story)
+			return story, err
 		}
 	}
+
+	story, err := handler.apiClient.GetStory(storyId)
+	if err != nil {
+		return nil, err
+	} else {
+		handler.Logd("Got story %+v", story.ID, story.Title)
+	}
+
+	if useApi {
+		handler.fetchTopComments(story)
+	}
+
+	if err = handler.dataStore.SaveStory(story); err != nil {
+		handler.Loge("Error saving story to data store: %v", err)
+	}
+	handler.cache.SetStory(story)
 
 	return story, err
 }
