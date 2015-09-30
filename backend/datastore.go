@@ -1,6 +1,7 @@
 package hackernews
 
 import (
+	"sort"
 	"strconv"
 
 	"appengine"
@@ -157,6 +158,17 @@ func (db *Db) GetStories(ids []int, includeComments bool) ([]*Story, error) {
 			}
 		}
 
+		idToIndexMap := make(map[int]int)
+		for index, value := range ids {
+			idToIndexMap[value] = index
+		}
+
+		fn := func(t1, t2 *Story) bool {
+			return idToIndexMap[t1.ID] < idToIndexMap[t2.ID]
+		}
+
+		SortBy(fn).Sort(stories)
+
 		return stories, nil
 	}
 }
@@ -256,4 +268,31 @@ func (db *Db) keyForStory(id int) *datastore.Key {
 		0,
 		nil,
 	)
+}
+
+type SortBy func(s1, s2 *Story) bool
+
+func (by SortBy) Sort(stories []*Story) {
+	sort.Sort(&storySorter{
+		stories: stories,
+		by:      by,
+	})
+}
+
+type storySorter struct {
+	stories []*Story
+	by      func(p1, p2 *Story) bool // Closure used in the Less method.
+}
+
+// Len is part of sort.Interface.
+func (s *storySorter) Len() int {
+	return len(s.stories)
+}
+
+func (s *storySorter) Swap(i, j int) {
+	s.stories[i], s.stories[j] = s.stories[j], s.stories[i]
+}
+
+func (s *storySorter) Less(i, j int) bool {
+	return s.by(s.stories[i], s.stories[j])
 }
