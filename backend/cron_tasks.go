@@ -50,8 +50,8 @@ func (tasks *Tasks) getStoryIds(handler *Handler, fromApiClientFn func() ([]int,
 	}
 
 	storiesToRetrieve := len(storyIds)
-	if storiesToRetrieve > 200 {
-		storiesToRetrieve = 200
+	if storiesToRetrieve > 120 {
+		storiesToRetrieve = 120
 	}
 
 	storyIds = storyIds[:storiesToRetrieve]
