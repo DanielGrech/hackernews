@@ -70,7 +70,7 @@ func (tasks *Tasks) getStoryIds(handler *Handler, fromApiClientFn func() ([]int,
 }
 
 func getStories(handler *Handler, storyIds []int) error {
-	const workers = 50
+	const workers = 60
 	ch := make(chan int, workers)
 	storyCh := make(chan *FetchStoryResult, len(storyIds))
 
