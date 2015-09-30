@@ -21,6 +21,11 @@ const cacheKeyJobStoriesList = "job_stories_list"
 const cacheKeyStoryPrefix = "story_"
 const cacheKeyCommentPrefix = "comment_"
 
+var storyIdCache = make(map[string][]int)
+var storyListCache = make(map[string][]*Story)
+var storyCache = make(map[int]*Story)
+var commentCache = make(map[int]*Comment)
+
 type Cache struct {
 	context appengine.Context
 }
@@ -32,9 +37,17 @@ func NewCache(c appengine.Context) *Cache {
 }
 
 func (cache *Cache) GetStory(id int) (*Story, error) {
+	memoryCacheEntry := storyCache[id]
+	if memoryCacheEntry != nil {
+		return memoryCacheEntry, nil
+	}
+
 	var cacheEntry Story
 	cacheKey := cacheKeyStoryPrefix + strconv.Itoa(id)
 	_, err := memcache.Gob.Get(cache.context, cacheKey, &cacheEntry)
+
+	storyCache[id] = &cacheEntry
+
 	return &cacheEntry, err
 }
 
@@ -46,13 +59,23 @@ func (cache *Cache) SetStory(story *Story) {
 
 	if err := memcache.Gob.Set(cache.context, item); err != nil {
 		cache.context.Warningf("Error saving story to memcache: %v", err)
+	} else {
+		storyCache[story.ID] = story
 	}
 }
 
 func (cache *Cache) GetComment(id int) (*Comment, error) {
+	memoryCacheEntry := commentCache[id]
+	if memoryCacheEntry != nil {
+		return memoryCacheEntry, nil
+	}
+
 	var cacheEntry Comment
 	cacheKey := cacheKeyCommentPrefix + strconv.Itoa(id)
 	_, err := memcache.Gob.Get(cache.context, cacheKey, &cacheEntry)
+
+	commentCache[id] = &cacheEntry
+
 	return &cacheEntry, err
 }
 
@@ -64,10 +87,17 @@ func (cache *Cache) SetComment(comment *Comment) {
 
 	if err := memcache.Gob.Set(cache.context, item); err != nil {
 		cache.context.Warningf("Error saving comment to memcache: %v", err)
+	} else {
+		commentCache[comment.ID] = comment
 	}
 }
 
 func (cache *Cache) GetStories(typeKey string) []*Story {
+	memoryCacheEntry := storyListCache[typeKey]
+	if len(memoryCacheEntry) > 0 {
+		return memoryCacheEntry
+	}
+
 	var cacheEntry []*Story
 	if _, err := memcache.Gob.Get(cache.context, typeKey, &cacheEntry); err != nil {
 		if err != memcache.ErrCacheMiss {
@@ -75,6 +105,7 @@ func (cache *Cache) GetStories(typeKey string) []*Story {
 		}
 		return nil
 	} else {
+		storyListCache[typeKey] = cacheEntry
 		return cacheEntry
 	}
 }
@@ -87,16 +118,22 @@ func (cache *Cache) SetStories(typeKey string, stories []*Story) {
 
 	if err := memcache.Gob.Set(cache.context, item); err != nil {
 		cache.context.Warningf("Error saving stories to memcache: %v", typeKey, err)
+	} else {
+		storyListCache[typeKey] = stories
 	}
 }
 
 func (cache *Cache) ClearStories(typeKey string) {
+	delete(storyListCache, typeKey)
+
 	if err := memcache.Delete(cache.context, typeKey); err != nil && err != memcache.ErrCacheMiss {
 		cache.context.Warningf("Error clearing stories from memcache: %v", typeKey, err)
 	}
 }
 
 func (cache *Cache) ClearStory(storyId int) {
+	delete(storyCache, storyId)
+
 	key := cacheKeyStoryPrefix + strconv.Itoa(storyId)
 	if err := memcache.Delete(cache.context, key); err != nil && err != memcache.ErrCacheMiss {
 		cache.context.Warningf("Error clearing storiy from memcache: %v", key, err)
@@ -151,10 +188,17 @@ func (cache *Cache) putIdsInCache(ids []int, cacheKey string) {
 
 	if err := memcache.Gob.Set(cache.context, item); err != nil {
 		cache.context.Warningf("Error saving story ids to memcache: %v", err)
+	} else {
+		storyIdCache[cacheKey] = ids
 	}
 }
 
 func (cache *Cache) getIdsFromCache(cacheKey string) []int {
+	ids := storyIdCache[cacheKeyJobStories]
+	if len(ids) > 0 {
+		return ids
+	}
+
 	var cacheEntry []int
 	if _, err := memcache.Gob.Get(cache.context, cacheKey, &cacheEntry); err != nil {
 		if err != memcache.ErrCacheMiss {
@@ -162,6 +206,7 @@ func (cache *Cache) getIdsFromCache(cacheKey string) []int {
 		}
 		return nil
 	} else {
+		storyIdCache[cacheKeyJobStories] = cacheEntry
 		return cacheEntry
 	}
 }
