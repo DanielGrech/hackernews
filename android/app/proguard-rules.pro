@@ -6,9 +6,12 @@
 -dontwarn javax.inject.**
 -dontwarn kotlin.**
 -dontwarn sun.misc.Unsafe
--keepattributes *Annotation*
--keepattributes Signature
+-keepattributes SourceFile,LineNumberTable,*Annotation*,Signature
 -keepclassmembers enum * { *; }
+
+## Fabric ##
+
+-keep class com.crashlytics.android.**
 
 ## Support Lib ##
 
