@@ -61,12 +61,11 @@ public class MainActivity : BaseActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.settings -> {
-                analytics?.trackClick("settings")
-                startActivity(SettingsActivity.getStartIntent(this))
-            }
+        if (item.itemId == R.id.settings) {
+            analytics?.trackClick("settings")
+            startActivity(SettingsActivity.getStartIntent(this))
         }
+
         return super.onOptionsItemSelected(item)
     }
 }

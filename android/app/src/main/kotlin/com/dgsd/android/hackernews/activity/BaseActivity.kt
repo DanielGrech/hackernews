@@ -43,12 +43,11 @@ public abstract class BaseActivity : RxActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                onBackPressed()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item)
         }
     }
 

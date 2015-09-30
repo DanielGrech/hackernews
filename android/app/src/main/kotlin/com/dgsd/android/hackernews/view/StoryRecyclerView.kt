@@ -45,14 +45,10 @@ public class StoryRecyclerView(context: Context, attrs: AttributeSet?, defStyle:
                     }
 
                     setOnMenuItemClickListener {
-                        when (it.itemId) {
-                            R.id.share_comments -> {
-                                onShareStoryCommentLinkListener(story)
-                            }
-
-                            R.id.share_link -> {
-                                onShareStoryLinkListener(story)
-                            }
+                        if (it.itemId == R.id.share_comments) {
+                            onShareStoryCommentLinkListener(story)
+                        } else if (it.itemId == R.id.share_link) {
+                            onShareStoryLinkListener(story)
                         }
                         true
                     }

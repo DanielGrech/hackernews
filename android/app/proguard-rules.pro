@@ -1,17 +1,44 @@
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in /Users/dgrech/dev/android-sdk/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the proguardFiles
-# directive in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+## Common ##
 
-# Add any project specific keep options here:
+-useuniqueclassmembernames
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+-dontwarn javax.annotation.**
+-dontwarn javax.inject.**
+-dontwarn kotlin.**
+-dontwarn sun.misc.Unsafe
+-keepattributes *Annotation*
+-keepattributes Signature
+-keepclassmembers enum * { *; }
+
+## Support Lib ##
+
+-dontwarn android.support.v7.**
+-keep class android.support.v7.** { *; }
+-keep interface android.support.v7.** { *; }
+
+## Stetho ##
+-dontwarn com.facebook.stetho.**
+
+## Test frameworks ##
+
+-dontwarn org.mockito.**
+-dontwarn org.junit.**
+-dontwarn org.robolectric.**
+
+## Retrofit (with OkHttp) ##
+-keep class com.squareup.okhttp.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+-dontwarn com.squareup.okhttp.**
+-dontwarn okio.**
+-dontwarn retrofit.**
+-keep class retrofit.** { *; }
+
+## RxJava ##
+-dontwarn rx.**
+-keep class rx.** { *; }
+
+## Serialization ##
+
+-keep class com.dgsd.hackernews.model.** { *; }
+-keep class com.squareup.wire.** { *; }
+-keep class hackernews.** { *; }

@@ -46,10 +46,8 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
                     inflate(R.menu.cm_share_comment)
 
                     setOnMenuItemClickListener {
-                        when (it.itemId) {
-                            R.id.share_link -> {
-                                onShareCommentLinkListener(comment)
-                            }
+                        if (it.itemId == R.id.share_link) {
+                            onShareCommentLinkListener(comment)
                         }
 
                         true

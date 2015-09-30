@@ -125,23 +125,18 @@ public class StoryActivity : PresentableActivity<StoryMvpView, StoryPresenter>()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.share_link -> {
-                presenter.onShareLinkClicked()
-                true
-            }
-
-            R.id.share_comments -> {
-                presenter.onShareCommentsClicked()
-                true
-            }
-
-            android.R.id.home -> {
-                startActivity(MainActivity.getStartIntent(this))
-                finish()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
+        return if (item.itemId == R.id.share_link) {
+            presenter.onShareLinkClicked()
+            true
+        } else if (item.itemId == R.id.share_comments) {
+            presenter.onShareCommentsClicked()
+            true
+        } else if (item.itemId == android.R.id.home) {
+            startActivity(MainActivity.getStartIntent(this))
+            finish()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
         }
     }
 
