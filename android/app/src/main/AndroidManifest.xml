@@ -19,7 +19,6 @@
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="sensorPortrait"
             android:theme="@style/AppTheme.Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,19 +28,16 @@
 
         <activity
             android:name=".activity.SettingsActivity"
-            android:screenOrientation="sensorPortrait"
             android:label="@string/settings"/>
 
         <activity
-            android:name=".activity.StoryActivity"
-            android:screenOrientation="sensorPortrait" />
+            android:name=".activity.StoryActivity" />
 
         <activity
             android:name=".activity.UrlInterceptActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:noHistory="true"
-            android:screenOrientation="sensorPortrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme.UrlIntercept">
             <intent-filter>
