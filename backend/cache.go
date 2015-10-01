@@ -194,7 +194,7 @@ func (cache *Cache) putIdsInCache(ids []int, cacheKey string) {
 }
 
 func (cache *Cache) getIdsFromCache(cacheKey string) []int {
-	ids := storyIdCache[cacheKeyJobStories]
+	ids := storyIdCache[cacheKey]
 	if len(ids) > 0 {
 		return ids
 	}
@@ -206,7 +206,7 @@ func (cache *Cache) getIdsFromCache(cacheKey string) []int {
 		}
 		return nil
 	} else {
-		storyIdCache[cacheKeyJobStories] = cacheEntry
+		storyIdCache[cacheKey] = cacheEntry
 		return cacheEntry
 	}
 }
