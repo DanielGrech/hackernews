@@ -259,7 +259,7 @@ func (handler *Handler) fetchTopComments(story *Story) {
 		commentIdsToFetch = 3
 	}
 
-	const workers = 5
+	const workers = 3
 	ch := make(chan int, workers)
 	commentCh := make(chan *Comment, commentIdsToFetch)
 
@@ -281,8 +281,12 @@ func (handler *Handler) fetchTopComments(story *Story) {
 		}()
 	}
 
-	for _, id := range commentIds {
-		ch <- id
+	for index, id := range commentIds {
+		if index < commentIdsToFetch {
+			ch <- id
+		} else {
+			break
+		}
 	}
 
 	close(ch)
