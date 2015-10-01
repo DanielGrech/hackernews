@@ -181,13 +181,13 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
         }
 
         override fun onClick(v: View) {
-            val item = items[position]
-            when (item.getType()) {
-                CommentListAdapter.VIEW_TYPE_COMMENT -> onCommentClickListener(item.comment!!, v)
+            val item = items.getOrNull(position)
+            when (item?.getType()) {
+                CommentListAdapter.VIEW_TYPE_COMMENT -> onCommentClickListener(item!!.comment!!, v)
                 CommentListAdapter.VIEW_TYPE_COMMENT_PLACEHOLDER -> {
                     with (v as CommentPlaceholderListItemView) {
                         if (!isLoading()) {
-                            onCommentPlaceholderClickListener(item.commentIds!!, v)
+                            onCommentPlaceholderClickListener(item!!.commentIds!!, v)
                         }
                     }
                 }
@@ -195,9 +195,9 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
         }
 
         override fun onLongClick(v: View): Boolean {
-            val item = items[position]
-            when (item.getType()) {
-                CommentListAdapter.VIEW_TYPE_COMMENT -> onCommentLongClickListener(item.comment!!, v)
+            val item = items.getOrNull(position)
+            when (item?.getType()) {
+                CommentListAdapter.VIEW_TYPE_COMMENT -> onCommentLongClickListener(item!!.comment!!, v)
             }
             return true
         }
@@ -227,7 +227,7 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
         }
 
         public fun getIndentationLevel(): Int {
-            return items[position].indentationLevel
+            return items.getOrNull(position)?.indentationLevel ?: 0
         }
     }
 
