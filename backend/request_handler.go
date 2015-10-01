@@ -255,11 +255,8 @@ func (handler *Handler) fetchTopComments(story *Story) {
 	commentIds := story.Kids
 
 	commentIdsToFetch := len(commentIds)
-	if commentIdsToFetch > 3 {
-		commentIdsToFetch = 3
-	}
 
-	const workers = 3
+	const workers = 10
 	ch := make(chan int, workers)
 	commentCh := make(chan *Comment, commentIdsToFetch)
 
