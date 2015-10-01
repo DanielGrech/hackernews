@@ -11,6 +11,8 @@ import com.dgsd.android.hackernews.util.onIoThread
 import com.dgsd.hackernews.model.Comment
 import com.dgsd.hackernews.model.Story
 import com.dgsd.hackernews.network.utils.filterNulls
+import rx.Observable
+import rx.lang.kotlin.toSingletonObservable
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -58,7 +60,16 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
         if (currentPlaceholderCommentsBeingFetched.add(commentIds)) {
             getView().showPlaceholderAsLoading(commentIds, true)
             dataSource.getComments(storyId, commentIds.toLongArray())
-                    .flatMap { dataSource.getStory(storyId).lastOrDefault(story).filterNulls() }
+                    .flatMap {
+                        if (it.isEmpty()) {
+                            Observable.error(IllegalStateException("No comment ids returned"))
+                        } else {
+                            it.toSingletonObservable()
+                        }
+                    }
+                    .flatMap {
+                        dataSource.getStory(storyId).lastOrDefault(story).filterNulls()
+                    }
                     .bind(getView())
                     .onIoThread()
                     .subscribe({
