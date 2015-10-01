@@ -38,9 +38,9 @@ abstract class HNApp : Application() {
             enableDebugTools()
         }
 
-        enableAppOnlyFunctionality()
-
         appServicesComponent = createAppServicesComponent()
+
+        enableAppOnlyFunctionality()
     }
 
     override fun onTrimMemory(level: Int) {
