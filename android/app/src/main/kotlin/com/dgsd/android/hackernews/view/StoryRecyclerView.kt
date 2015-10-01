@@ -2,7 +2,6 @@ package com.dgsd.android.hackernews.view
 
 import android.content.Context
 import android.graphics.Rect
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.View
@@ -12,9 +11,7 @@ import com.dgsd.android.hackernews.adapter.StoryListAdapter
 import com.dgsd.hackernews.model.Story
 import org.jetbrains.anko.dimen
 
-public class StoryRecyclerView(context: Context, attrs: AttributeSet?, defStyle: Int) : RecyclerView (context, attrs, defStyle) {
-
-    private var onClickListener: (Story, View) -> Unit = { s, v -> }
+public class StoryRecyclerView(context: Context, attrs: AttributeSet?, defStyle: Int) : BaseRecyclerView<Story> (context, attrs, defStyle) {
 
     private var onShareStoryCommentLinkListener: (Story) -> Unit = { s -> }
 
@@ -25,7 +22,6 @@ public class StoryRecyclerView(context: Context, attrs: AttributeSet?, defStyle:
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
     init {
-        layoutManager = LinearLayoutManager(context)
         adapter = StoryListAdapter()
 
         addItemDecoration(VerticalSpaceItemDecoration(context.dimen(R.dimen.padding_small)))
@@ -61,10 +57,6 @@ public class StoryRecyclerView(context: Context, attrs: AttributeSet?, defStyle:
 
     public fun setStories(stories: List<Story>) {
         (adapter as StoryListAdapter).setStories(stories)
-    }
-
-    public fun setOnStoryClickListener(listener: (Story, View) -> Unit) {
-        onClickListener = listener
     }
 
     public fun setOnShareStoryCommentLinkListener(listener: (Story) -> Unit) {

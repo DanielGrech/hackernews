@@ -17,9 +17,7 @@ import com.dgsd.hackernews.model.Story
 import org.jetbrains.anko.dimen
 import org.jetbrains.anko.dip
 
-public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyle: Int) : RecyclerView (context, attrs, defStyle) {
-
-    private var onClickListener: (Comment, View) -> Unit = { s, v -> }
+public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyle: Int) : BaseRecyclerView<Comment> (context, attrs, defStyle) {
 
     private var onShareCommentLinkListener: (Comment) -> Unit = { c -> }
 
@@ -37,8 +35,8 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
                 context.dip(1)))
 
         with (adapter as CommentListAdapter) {
-            setOnCommentClickListener { Comment, view ->
-                onClickListener(Comment, view)
+            setOnCommentClickListener { comment, view ->
+                onClickListener(comment, view)
             }
 
             setOnCommentLongClickListener { comment, view ->
@@ -69,10 +67,6 @@ public class CommentRecyclerView(context: Context, attrs: AttributeSet?, defStyl
 
     fun showNoCommentsMessage(message: String) {
         (adapter as CommentListAdapter).showNoCommentsMessage(message)
-    }
-
-    public fun setOnCommentClickListener(listener: (Comment, View) -> Unit) {
-        (adapter as CommentListAdapter).setOnCommentClickListener(listener)
     }
 
     public fun setOnCommentPlaceholderClickListener(listener: (List<Long>, View) -> Unit) {
