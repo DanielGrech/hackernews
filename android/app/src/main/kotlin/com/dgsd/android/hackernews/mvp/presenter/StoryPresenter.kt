@@ -10,7 +10,9 @@ import com.dgsd.android.hackernews.util.getShareLink
 import com.dgsd.android.hackernews.util.onIoThread
 import com.dgsd.hackernews.model.Comment
 import com.dgsd.hackernews.model.Story
+import com.dgsd.hackernews.network.utils.filterNulls
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 public class StoryPresenter(view: StoryMvpView, val component: AppServicesComponent, val storyId: Long, val showStoryOnFirstLoad: Boolean = false) : Presenter<StoryMvpView>(view, component) {
@@ -21,6 +23,8 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
     private var story: Story? = null
 
     private var showStoryUriOnNextLoad = false
+
+    val currentPlaceholderCommentsBeingFetched = HashSet<List<Long>>()
 
     init {
         component.inject(this)
@@ -51,19 +55,24 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
     }
 
     fun onCommentPlaceholderClicked(commentIds: List<Long>) {
-        getView().showPlaceholderAsLoading(commentIds, true)
-        dataSource.getComments(storyId, commentIds.toLongArray())
-                .flatMap { dataSource.getStory(storyId) }
-                .bind(getView())
-                .onIoThread()
-                .subscribe({
-                    onStoryLoaded(it)
-                    getView().showPlaceholderAsLoading(commentIds, false)
-                }, {
-                    Timber.e(it, "Error getting comments")
-                    getView().showEphemeralError(getContext().getString(R.string.error_retrieving_comments_ephemeral))
-                    getView().showPlaceholderAsLoading(commentIds, false)
-                })
+        if (currentPlaceholderCommentsBeingFetched.add(commentIds)) {
+            getView().showPlaceholderAsLoading(commentIds, true)
+            dataSource.getComments(storyId, commentIds.toLongArray())
+                    .flatMap { dataSource.getStory(storyId).lastOrDefault(story).filterNulls() }
+                    .bind(getView())
+                    .onIoThread()
+                    .subscribe({
+                        currentPlaceholderCommentsBeingFetched.remove(commentIds)
+                        onStoryLoaded(it)
+                        getView().showPlaceholderAsLoading(commentIds, false)
+                    }, {
+                        Timber.e(it, "Error getting comments")
+
+                        currentPlaceholderCommentsBeingFetched.remove(commentIds)
+                        getView().showEphemeralError(getContext().getString(R.string.error_retrieving_comments_ephemeral))
+                        getView().showPlaceholderAsLoading(commentIds, false)
+                    })
+        }
     }
 
     private fun loadStory(skipCache: Boolean) {
@@ -76,7 +85,7 @@ public class StoryPresenter(view: StoryMvpView, val component: AppServicesCompon
                     onStoryLoaded(it)
                 }, {
                     Timber.e(it, "Error getting story")
-                    if (this.story?.hasComments() ?:false) {
+                    if (this.story?.hasComments() ?: false) {
                         getView().showEphemeralError(getContext().getString(R.string.error_retrieving_comments_ephemeral))
                     } else {
                         getView().showError(getContext().getString(R.string.error_retrieving_comments))

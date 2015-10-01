@@ -65,6 +65,7 @@ public class StoryListPresenter(view : StoryListMvpView, component : AppServices
                         getView().showStories(it)
                     }
                 }, {
+                    Timber.e(it, "Error loading stories")
                     if (hasLoadedStories) {
                         getView().showError(getContext().getString(R.string.error_retrieving_stories_ephemeral))
                     } else {
