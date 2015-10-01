@@ -46,7 +46,9 @@ func (cache *Cache) GetStory(id int) (*Story, error) {
 	cacheKey := cacheKeyStoryPrefix + strconv.Itoa(id)
 	_, err := memcache.Gob.Get(cache.context, cacheKey, &cacheEntry)
 
-	storyCache[id] = &cacheEntry
+	if err == nil {
+		storyCache[id] = &cacheEntry
+	}
 
 	return &cacheEntry, err
 }
@@ -74,7 +76,9 @@ func (cache *Cache) GetComment(id int) (*Comment, error) {
 	cacheKey := cacheKeyCommentPrefix + strconv.Itoa(id)
 	_, err := memcache.Gob.Get(cache.context, cacheKey, &cacheEntry)
 
-	commentCache[id] = &cacheEntry
+	if err == nil {
+		commentCache[id] = &cacheEntry
+	}
 
 	return &cacheEntry, err
 }
