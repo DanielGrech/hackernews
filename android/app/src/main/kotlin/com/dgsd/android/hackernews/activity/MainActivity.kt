@@ -65,6 +65,11 @@ public class MainActivity : BaseActivity() {
         setupToolbarCollapse()
     }
 
+    override fun onStart() {
+        super.onStart()
+        appbar.translationY = 0f
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.act_main, menu)
         return super.onCreateOptionsMenu(menu)
