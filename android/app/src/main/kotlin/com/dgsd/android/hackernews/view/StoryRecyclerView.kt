@@ -17,6 +17,8 @@ public class StoryRecyclerView(context: Context, attrs: AttributeSet?, defStyle:
 
     private var onShareStoryLinkListener: (Story) -> Unit = { s -> }
 
+    private var topItemAllowance = 0
+
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -67,13 +69,17 @@ public class StoryRecyclerView(context: Context, attrs: AttributeSet?, defStyle:
         onShareStoryLinkListener = listener
     }
 
-    public class VerticalSpaceItemDecoration(val verticalHeight: Int) : RecyclerView.ItemDecoration() {
+    private inner class VerticalSpaceItemDecoration(val verticalHeight: Int) : RecyclerView.ItemDecoration() {
 
         override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
             outRect.bottom = verticalHeight
             if (parent.getChildAdapterPosition(view) == 0) {
-                outRect.top = verticalHeight
+                outRect.top = verticalHeight + topItemAllowance
             }
         }
+    }
+
+    fun setTopItemAllowance(allowance: Int) {
+        topItemAllowance = allowance
     }
 }

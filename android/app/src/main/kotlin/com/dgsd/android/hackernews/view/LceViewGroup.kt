@@ -10,7 +10,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import com.dgsd.android.hackernews.R
 import com.dgsd.android.hackernews.util.children
-import com.dgsd.android.hackernews.util.hide
 import com.dgsd.android.hackernews.util.hideInvisible
 import com.dgsd.android.hackernews.util.show
 import org.jetbrains.anko.find
@@ -45,6 +44,12 @@ public class LceViewGroup(context: Context, attrs: AttributeSet?, defStyle: Int)
         content = find(R.id.content)
         progressBar = find(R.id.progressBar)
         errorMessage = find(R.id.errorMessage)
+
+        content.clipChildren = false
+        content.clipToPadding = false
+
+        clipChildren = false
+        clipToPadding = false
 
         childrenToAdd.forEach {
             content.addView(it)

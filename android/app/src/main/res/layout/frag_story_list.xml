@@ -2,18 +2,24 @@
 <com.dgsd.android.hackernews.view.LceViewGroup xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/loadingContentErrorView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false">
 
         <com.dgsd.android.hackernews.view.StoryRecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical" />
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:scrollbars="vertical"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </com.dgsd.android.hackernews.view.LceViewGroup>

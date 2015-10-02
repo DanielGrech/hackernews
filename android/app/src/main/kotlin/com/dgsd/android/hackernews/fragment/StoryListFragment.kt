@@ -56,22 +56,26 @@ public class StoryListFragment : PresentableFragment<StoryListMvpView, StoryList
         recyclerView = view.find(R.id.recyclerView)
         swipeRefreshLayout = view.find(R.id.swipeRefreshLayout)
 
-        recyclerView.setOnStoryClickListener { story, view ->
-            val showLinkDirectly = presenter.onStoryClicked(story)
-            view.startActivity(StoryActivity.getStartIntent(activity, story, showStoryImmediately = showLinkDirectly))
+        with (recyclerView) {
+            setOnStoryClickListener { story, view ->
+                val showLinkDirectly = presenter.onStoryClicked(story)
+                view.startActivity(StoryActivity.getStartIntent(activity, story, showStoryImmediately = showLinkDirectly))
+            }
+
+            setOnShareStoryLinkListener {
+                presenter.onShareStoryLink(it)
+            }
+
+            setOnShareStoryCommentLinkListener {
+                presenter.onShareStoryCommentLink(it)
+            }
         }
 
-        recyclerView.setOnShareStoryLinkListener {
-            presenter.onShareStoryLink(it)
-        }
-
-        recyclerView.setOnShareStoryCommentLinkListener {
-            presenter.onShareStoryCommentLink(it)
-        }
-
-        swipeRefreshLayout.setColorSchemeResources(R.color.accent)
-        swipeRefreshLayout.setOnRefreshListener {
-            presenter.onRefreshRequested()
+        with (swipeRefreshLayout) {
+            setColorSchemeResources(R.color.accent)
+            setOnRefreshListener {
+                presenter.onRefreshRequested()
+            }
         }
     }
 
