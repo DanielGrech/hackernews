@@ -13,7 +13,7 @@ import javax.inject.Inject
 public abstract class Presenter<V : MvpView>(private val view: V, private val component: AppServicesComponent) {
 
     @Inject
-    protected lateinit val analytics: Tracker
+    protected lateinit var analytics: Tracker
 
     protected abstract fun getScreenName(): String
 

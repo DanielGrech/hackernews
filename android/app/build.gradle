@@ -4,7 +4,7 @@ buildscript {
         maven { url 'http://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-android-extensions:0.13.1514'
+        classpath 'org.jetbrains.kotlin:kotlin-android-extensions:0.14.449'
         classpath 'io.fabric.tools:gradle:1.19.2'
     }
 }
@@ -61,9 +61,17 @@ android {
         debug {
             applicationIdSuffix ".debug"
             versionNameSuffix "-${getCiBuildNumber()}"
-            testCoverageEnabled true
 
             resValue "string", "app_name", "${config.appName} Debug"
+        }
+
+        jacocoEnabled.initWith(buildTypes.debug)
+        jacocoEnabled {
+            applicationIdSuffix ".debug.jacoco"
+            versionNameSuffix "-jacoco-${getCiBuildNumber()}"
+            testCoverageEnabled true
+
+            resValue "string", "app_name", "${config.appName} Debug (Jacoco)"
         }
 
         release {
@@ -131,7 +139,7 @@ android {
         }
     }
 
-    applicationVariants.matching { it.buildType.name != 'release' }.all { createJacocoTask(it) }
+    applicationVariants.matching { it.buildType.name == 'jacocoEnabled' }.all { createJacocoTask(it) }
 }
 
 dependencies {

@@ -20,7 +20,7 @@ import javax.inject.Inject
 public class StoryPresenter(view: StoryMvpView, val component: AppServicesComponent, val storyId: Long, val showStoryOnFirstLoad: Boolean = false) : Presenter<StoryMvpView>(view, component) {
 
     @Inject
-    lateinit val dataSource: HNDataSource
+    lateinit var dataSource: HNDataSource
 
     private var story: Story? = null
 

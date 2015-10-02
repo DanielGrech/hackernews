@@ -18,10 +18,10 @@ public class StoryListPresenter(view : StoryListMvpView, component : AppServices
                                 val pageType: PageType) : Presenter<StoryListMvpView>(view, component) {
 
     @Inject
-    lateinit val dataSource: HNDataSource
+    lateinit var dataSource: HNDataSource
 
     @Inject
-    lateinit val appSettings: AppSettings
+    lateinit var appSettings: AppSettings
 
     var hasLoadedStories = false
 

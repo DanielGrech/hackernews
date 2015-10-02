@@ -13,7 +13,7 @@ import javax.inject.Inject
 public class UrlInterceptPresenter(view: UrlInterceptMvpView, component: AppServicesComponent) : Presenter<UrlInterceptMvpView>(view, component) {
 
     @Inject
-    lateinit val dataSource: HNDataSource
+    lateinit var dataSource: HNDataSource
 
     init {
         component.inject(this)
