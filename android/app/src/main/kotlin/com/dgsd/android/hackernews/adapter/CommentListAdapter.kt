@@ -119,7 +119,12 @@ public class CommentListAdapter : RecyclerView.Adapter<CommentListAdapter.Commen
 
         if (startRange >= 0) {
             Timber.d("Notifying items changed: $startRange --> $itemCount")
-            notifyItemRangeChanged(startRange, itemCount);
+            try {
+                notifyItemRangeChanged(startRange, itemCount);
+            } catch (ex: Exception) {
+                Timber.e("Error notifying items changed")
+                notifyDataSetChanged()
+            }
         } else {
             Timber.d("No items updated")
         }

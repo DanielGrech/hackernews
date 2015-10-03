@@ -41,8 +41,8 @@ subprojects {
                 minSdkVersion : 19,
                 targetSdkVersion : 23,
 
-                versionCode : 3,
-                versionName : "1.0.2",
+                versionCode : 4,
+                versionName : "1.0.3",
 
                 releaseSigning : [
                         storeFile : System.getenv('DGSD_RELEASE_STORE_FILE'),
