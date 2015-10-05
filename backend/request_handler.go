@@ -136,7 +136,7 @@ func (handler *Handler) GetStory(storyId int, enableDbCommentFetch bool) (*Story
 func (handler *Handler) FetchStory(storyId int) (*Story, error) {
 	cachedStory, err := handler.cache.GetStory(storyId)
 	if err != nil {
-		handler.Loge("Error getting story %v from cache: %v", storyId, err)
+		handler.Logd("Error getting story %v from cache: %v", storyId, err)
 	}
 
 	story, err := handler.apiClient.GetStory(storyId)
