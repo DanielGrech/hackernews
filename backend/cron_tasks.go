@@ -50,8 +50,8 @@ func (tasks *Tasks) getStoryIds(handler *Handler, fromApiClientFn func() ([]int,
 	}
 
 	storiesToRetrieve := len(storyIds)
-	if storiesToRetrieve > 120 {
-		storiesToRetrieve = 120
+	if storiesToRetrieve > 100 {
+		storiesToRetrieve = 100
 	}
 
 	storyIds = storyIds[:storiesToRetrieve]
@@ -81,7 +81,7 @@ func getStories(handler *Handler, storyIds []int) error {
 			defer wg.Done()
 			for storyId := range ch {
 				handler.Logd("Attempting to fetch story %v", storyId)
-				story, err := handler.GetStory(storyId, true, false)
+				story, err := handler.FetchStory(storyId)
 				storyCh <- &FetchStoryResult{story: story, err: err}
 			}
 		}()

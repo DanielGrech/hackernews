@@ -1,19 +1,19 @@
 cron:
 - description: top stories job
   url: /tasks/top_stories
-  schedule: every 12 minutes
+  schedule: every 20 minutes
 
 - description: new stories job
   url: /tasks/new_stories
-  schedule: every 10 minutes
+  schedule: every 15 minutes
 
 - description: ask stories job
   url: /tasks/ask_stories
-  schedule: every 20 minutes
+  schedule: every 30 minutes
 
 - description: show stories job
   url: /tasks/show_stories
-  schedule: every 30 minutes
+  schedule: every 45 minutes
 
 - description: job stories job
   url: /tasks/job_stories

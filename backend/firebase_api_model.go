@@ -168,3 +168,9 @@ func (i item) ToComment() Comment {
 	c.Dead = i.Dead()
 	return c
 }
+
+func (story *Story) PracticallyEquals(other *Story) bool {
+	return story.ID == other.ID && story.By == story.By && other.Title == other.Title &&
+		story.URL == other.URL && story.Dead == other.Dead && story.Deleted == other.Deleted &&
+		story.CommentCount == other.CommentCount && story.Score == other.Score
+}

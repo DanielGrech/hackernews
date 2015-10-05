@@ -36,7 +36,7 @@ func init() {
 func getStory(handler *Handler) ([]byte, *ApiError) {
 	storyId, _ := strconv.Atoi(handler.vars["story"])
 
-	story, err := handler.GetStory(storyId, false, true)
+	story, err := handler.GetStory(storyId, true)
 
 	if err != nil {
 		return nil, NewErrorWithMessageAndCode(err, "No story found", http.StatusNotFound)
@@ -55,7 +55,7 @@ func getStoryByComment(handler *Handler) ([]byte, *ApiError) {
 
 	var story *Story
 	for comment != nil && comment.Parent > 0 {
-		story, err = handler.GetStory(comment.Parent, false, true)
+		story, err = handler.GetStory(comment.Parent, true)
 		if err == nil {
 			break
 		} else {
@@ -138,7 +138,7 @@ func getComment(handler *Handler) ([]byte, *ApiError) {
 func getCommentIdsForStory(handler *Handler) ([]byte, *ApiError) {
 	storyId, _ := strconv.Atoi(handler.vars["story"])
 
-	story, err := handler.GetStory(storyId, false, false)
+	story, err := handler.GetStory(storyId, false)
 
 	if err != nil {
 		return nil, NewError(err)

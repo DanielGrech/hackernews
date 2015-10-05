@@ -36,11 +36,11 @@ func NewHandler(r *http.Request) *Handler {
 }
 
 func (handler *Handler) Logd(format string, args ...interface{}) {
-	handler.context.Debugf(format, args)
+	handler.context.Debugf(format, args...)
 }
 
 func (handler *Handler) Loge(format string, args ...interface{}) {
-	handler.context.Errorf(format, args)
+	handler.context.Errorf(format, args...)
 }
 
 func (handler *Handler) EncodeStories(stories []*Story) ([]byte, *ApiError) {
@@ -105,18 +105,16 @@ func (handler *Handler) cleanupOldData() {
 	handler.dataStore.DeleteStoriesNotIn(ids)
 }
 
-func (handler *Handler) GetStory(storyId int, useApi bool, enableDbCommentFetch bool) (*Story, error) {
-	if !useApi {
-		if story, err := handler.cache.GetStory(storyId); err == nil {
-			return story, err
-		}
+func (handler *Handler) GetStory(storyId int, enableDbCommentFetch bool) (*Story, error) {
+	if story, err := handler.cache.GetStory(storyId); err == nil {
+		return story, err
+	}
 
-		if story, err := handler.dataStore.GetStory(storyId, enableDbCommentFetch); err == nil {
-			if enableDbCommentFetch {
-				handler.cache.SetStory(story)
-			}
-			return story, err
+	if story, err := handler.dataStore.GetStory(storyId, enableDbCommentFetch); err == nil {
+		if enableDbCommentFetch {
+			handler.cache.SetStory(story)
 		}
+		return story, err
 	}
 
 	story, err := handler.apiClient.GetStory(storyId)
@@ -126,13 +124,37 @@ func (handler *Handler) GetStory(storyId int, useApi bool, enableDbCommentFetch 
 		handler.Logd("Got story %+v", story.ID, story.Title)
 	}
 
-	if useApi {
-		handler.fetchTopComments(story)
-	}
-
 	if err = handler.dataStore.SaveStory(story); err != nil {
 		handler.Loge("Error saving story to data store: %v", err)
+	} else {
+		handler.cache.SetStory(story)
 	}
+
+	return story, err
+}
+
+func (handler *Handler) FetchStory(storyId int) (*Story, error) {
+	cachedStory, err := handler.cache.GetStory(storyId)
+	if err != nil {
+		handler.Loge("Error getting story %v from cache: %v", storyId, err)
+	}
+
+	story, err := handler.apiClient.GetStory(storyId)
+	if err != nil {
+		return nil, err
+	} else {
+		handler.Logd("Got story %+v %+v", story.ID, story.Title)
+	}
+
+	if cachedStory != nil && cachedStory.PracticallyEquals(story) {
+		handler.Logd("Story %v hasnt changed. Throwing away result..", storyId)
+	} else {
+		handler.fetchTopComments(story)
+		if err = handler.dataStore.SaveStory(story); err != nil {
+			handler.Loge("Error saving story to data store: %v", err)
+		}
+	}
+
 	handler.cache.SetStory(story)
 
 	return story, err
@@ -268,9 +290,9 @@ func (handler *Handler) fetchTopComments(story *Story) {
 			for commentId := range ch {
 				comment, err := handler.GetComment(commentId)
 				if err != nil {
-					handler.Loge("Error getting comment %v", commentId, err)
+					handler.Loge("Error getting comment %v. Err = %v", commentId, err)
 				} else {
-					handler.Logd("Got comment %v", commentId, comment.Parent)
+					handler.Logd("Got comment %v Parent = %v", commentId, comment.Parent)
 				}
 
 				commentCh <- comment
