@@ -11,7 +11,7 @@ import MMDrawerController
 
 class MainDrawerController: MMDrawerController {
     convenience init() {
-        let navController = UINavigationController(rootViewController: MainViewController())
+        let navController = UINavigationController(rootViewController: StoryListViewController(type: StoryListType.Top))
         self.init(centerViewController: navController, leftDrawerViewController: DrawerViewController())
         
         openDrawerGestureModeMask = MMOpenDrawerGestureMode.PanningCenterView;

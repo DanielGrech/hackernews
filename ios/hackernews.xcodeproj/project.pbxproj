@@ -13,7 +13,7 @@
 		AB6107ED1BBD002100A9ACB1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB6107EB1BBD002100A9ACB1 /* LaunchScreen.storyboard */; };
 		AB6107F81BBD002200A9ACB1 /* hackernewsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6107F71BBD002200A9ACB1 /* hackernewsTests.swift */; };
 		AB6108031BBD002200A9ACB1 /* hackernewsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6108021BBD002200A9ACB1 /* hackernewsUITests.swift */; };
-		AB89C73E1BBD019400AB3CCE /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB89C73D1BBD019400AB3CCE /* MainViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		AB89C73E1BBD019400AB3CCE /* StoryListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB89C73D1BBD019400AB3CCE /* StoryListViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		AB89C7431BBD09D300AB3CCE /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB89C7421BBD09D300AB3CCE /* UIColor+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		AB89C7451BBD0C0600AB3CCE /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB89C7441BBD0C0600AB3CCE /* String+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		AB89C7471BBD0C5E00AB3CCE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = AB89C7461BBD0C5E00AB3CCE /* Localizable.strings */; settings = {ASSET_TAGS = (); }; };
@@ -52,7 +52,7 @@
 		AB6107FE1BBD002200A9ACB1 /* hackernewsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = hackernewsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB6108021BBD002200A9ACB1 /* hackernewsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = hackernewsUITests.swift; sourceTree = "<group>"; };
 		AB6108041BBD002200A9ACB1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		AB89C73D1BBD019400AB3CCE /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		AB89C73D1BBD019400AB3CCE /* StoryListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryListViewController.swift; sourceTree = "<group>"; };
 		AB89C7421BBD09D300AB3CCE /* UIColor+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		AB89C7441BBD0C0600AB3CCE /* String+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		AB89C7461BBD0C5E00AB3CCE /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
@@ -161,7 +161,7 @@
 		AB89C73A1BBD012E00AB3CCE /* viewcontrollers */ = {
 			isa = PBXGroup;
 			children = (
-				AB89C73D1BBD019400AB3CCE /* MainViewController.swift */,
+				AB89C73D1BBD019400AB3CCE /* StoryListViewController.swift */,
 				AB89C7481BBD123800AB3CCE /* MainDrawerController.swift */,
 				ABAFE7E71BCB24EE0025E0DC /* DrawerViewController.swift */,
 			);
@@ -363,7 +363,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AB89C7451BBD0C0600AB3CCE /* String+Extensions.swift in Sources */,
-				AB89C73E1BBD019400AB3CCE /* MainViewController.swift in Sources */,
+				AB89C73E1BBD019400AB3CCE /* StoryListViewController.swift in Sources */,
 				AB89C7491BBD123800AB3CCE /* MainDrawerController.swift in Sources */,
 				AB89C7431BBD09D300AB3CCE /* UIColor+Extensions.swift in Sources */,
 				AB6107E31BBD002100A9ACB1 /* AppDelegate.swift in Sources */,

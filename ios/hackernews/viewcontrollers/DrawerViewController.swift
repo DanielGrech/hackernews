@@ -13,7 +13,6 @@ class DrawerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.accent
-        self.view.frame = CGRectMake(0, 0, 500, 500)
     }
     
     override func didReceiveMemoryWarning() {

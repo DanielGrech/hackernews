@@ -6,9 +6,9 @@
   Copyright © 2015 DGSD. All rights reserved.
 */
 
-"page_title_main" = "Hacker News";
-"tab_title_top" = "Top";
-"tab_title_new" = "New";
-"tab_title_ask" = "Ask HN";
-"tab_title_show" = "Show HN";
-"tab_title_jobs" = "Jobs";
+"page_title_app_name" = "Hacker News";
+"page_title_top" = "Top";
+"page_title_new" = "New";
+"page_title_ask" = "Ask HN";
+"page_title_show" = "Show HN";
+"page_title_jobs" = "Jobs";
