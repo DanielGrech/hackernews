@@ -1,0 +1,14 @@
+/* 
+  strings.strings
+  hackernews
+
+  Created by Daniel Grech on 1/10/2015.
+  Copyright © 2015 DGSD. All rights reserved.
+*/
+
+"page_title_main" = "Hacker News";
+"tab_title_top" = "Top";
+"tab_title_new" = "New";
+"tab_title_ask" = "Ask HN";
+"tab_title_show" = "Show HN";
+"tab_title_jobs" = "Jobs";

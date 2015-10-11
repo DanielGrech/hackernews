@@ -1,0 +1,15 @@
+platform :ios, '8.0'
+use_frameworks!
+
+target 'hackernews' do
+	pod 'MMDrawerController', '~> 0.6.0'
+end
+
+target 'hackernewsTests' do
+
+end
+
+target 'hackernewsUITests' do
+
+end
+
