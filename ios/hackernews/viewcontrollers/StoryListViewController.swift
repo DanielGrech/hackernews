@@ -41,6 +41,11 @@ class StoryListViewController: UIViewController {
             case StoryListType.ShowHn: return "page_title_show".localized
             case StoryListType.Jobs: return "page_title_jobs".localized
             }}()
+        
+        UIApplication.appDelegate.dataSource.getTopStories { (stories, error) in
+            print("Got stories: %v", stories)
+            print("Got errors: %v", error)
+        }
     }
     
     override func didReceiveMemoryWarning() {

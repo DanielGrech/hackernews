@@ -9,8 +9,7 @@
 import Foundation
 
 struct Comment {
-    
-    let id: Int64 = -1
+    var id: Int64 = -1
     var time: Int64 = -1
     var author: String? = nil
     var text: String? = nil

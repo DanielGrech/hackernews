@@ -13,6 +13,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     
+    private(set) lazy var dataSource : DataSource = {
+        return DataSource(networkDataSource: NetworkDataSource())
+    }()
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         if let window = window {
