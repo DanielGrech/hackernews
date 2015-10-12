@@ -24,9 +24,14 @@
 		ABAFE7EF1BCB342E0025E0DC /* NSDate+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABAFE7EE1BCB342E0025E0DC /* NSDate+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		ABB9D67E1BCB3A9A00330AEC /* NetworkDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB9D67D1BCB3A9A00330AEC /* NetworkDataSource.swift */; settings = {ASSET_TAGS = (); }; };
 		ABB9D6801BCB3AA700330AEC /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB9D67F1BCB3AA700330AEC /* DataSource.swift */; settings = {ASSET_TAGS = (); }; };
-		ABB9D6821BCB411E00330AEC /* UIApplication+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB9D6811BCB411E00330AEC /* UIApplication+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
+		ABB9D6821BCB411E00330AEC /* AppDelegate+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB9D6811BCB411E00330AEC /* AppDelegate+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		ABB9D6841BCB62CB00330AEC /* JSON+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB9D6831BCB62CB00330AEC /* JSON+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		ABB9D6861BCB6FC300330AEC /* Alamofire+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB9D6851BCB6FC300330AEC /* Alamofire+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
+		ABB9D6881BCB77AF00330AEC /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB9D6871BCB77AF00330AEC /* UIViewController+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
+		ABB9D68B1BCB77DE00330AEC /* PresentableUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB9D68A1BCB77DE00330AEC /* PresentableUIViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		ABB9D68D1BCB787B00330AEC /* Presenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB9D68C1BCB787B00330AEC /* Presenter.swift */; settings = {ASSET_TAGS = (); }; };
+		ABB9D68F1BCB790200330AEC /* StoryListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB9D68E1BCB790200330AEC /* StoryListPresenter.swift */; settings = {ASSET_TAGS = (); }; };
+		ABB9D6911BCB7A1B00330AEC /* StoryListType.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB9D6901BCB7A1B00330AEC /* StoryListType.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,9 +76,14 @@
 		ABAFE7EE1BCB342E0025E0DC /* NSDate+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+Extensions.swift"; sourceTree = "<group>"; };
 		ABB9D67D1BCB3A9A00330AEC /* NetworkDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkDataSource.swift; sourceTree = "<group>"; };
 		ABB9D67F1BCB3AA700330AEC /* DataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
-		ABB9D6811BCB411E00330AEC /* UIApplication+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIApplication+Extensions.swift"; sourceTree = "<group>"; };
+		ABB9D6811BCB411E00330AEC /* AppDelegate+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AppDelegate+Extensions.swift"; sourceTree = "<group>"; };
 		ABB9D6831BCB62CB00330AEC /* JSON+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "JSON+Extensions.swift"; sourceTree = "<group>"; };
 		ABB9D6851BCB6FC300330AEC /* Alamofire+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Alamofire+Extensions.swift"; sourceTree = "<group>"; };
+		ABB9D6871BCB77AF00330AEC /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
+		ABB9D68A1BCB77DE00330AEC /* PresentableUIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentableUIViewController.swift; sourceTree = "<group>"; };
+		ABB9D68C1BCB787B00330AEC /* Presenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Presenter.swift; sourceTree = "<group>"; };
+		ABB9D68E1BCB790200330AEC /* StoryListPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryListPresenter.swift; sourceTree = "<group>"; };
+		ABB9D6901BCB7A1B00330AEC /* StoryListType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryListType.swift; sourceTree = "<group>"; };
 		C3A9CEB11F8790BB0862A407 /* Pods-hackernews.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hackernews.release.xcconfig"; path = "Pods/Target Support Files/Pods-hackernews/Pods-hackernews.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -145,6 +155,7 @@
 		AB6107E11BBD002100A9ACB1 /* hackernews */ = {
 			isa = PBXGroup;
 			children = (
+				ABB9D6891BCB77B900330AEC /* presenters */,
 				ABB9D67C1BCB378200330AEC /* managers */,
 				ABAFE7E91BCB30380025E0DC /* models */,
 				AB89C7411BBD089E00AB3CCE /* utils */,
@@ -182,6 +193,7 @@
 				AB89C73D1BBD019400AB3CCE /* StoryListViewController.swift */,
 				AB89C7481BBD123800AB3CCE /* MainDrawerController.swift */,
 				ABAFE7E71BCB24EE0025E0DC /* DrawerViewController.swift */,
+				ABB9D68A1BCB77DE00330AEC /* PresentableUIViewController.swift */,
 			);
 			path = viewcontrollers;
 			sourceTree = "<group>";
@@ -192,9 +204,10 @@
 				AB89C7421BBD09D300AB3CCE /* UIColor+Extensions.swift */,
 				AB89C7441BBD0C0600AB3CCE /* String+Extensions.swift */,
 				ABAFE7EE1BCB342E0025E0DC /* NSDate+Extensions.swift */,
-				ABB9D6811BCB411E00330AEC /* UIApplication+Extensions.swift */,
+				ABB9D6811BCB411E00330AEC /* AppDelegate+Extensions.swift */,
 				ABB9D6831BCB62CB00330AEC /* JSON+Extensions.swift */,
 				ABB9D6851BCB6FC300330AEC /* Alamofire+Extensions.swift */,
+				ABB9D6871BCB77AF00330AEC /* UIViewController+Extensions.swift */,
 			);
 			name = utils;
 			path = hackernews/utils;
@@ -205,6 +218,7 @@
 			children = (
 				ABAFE7EA1BCB31910025E0DC /* Comment.swift */,
 				ABAFE7EC1BCB33150025E0DC /* Story.swift */,
+				ABB9D6901BCB7A1B00330AEC /* StoryListType.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -216,6 +230,15 @@
 				ABB9D67F1BCB3AA700330AEC /* DataSource.swift */,
 			);
 			path = managers;
+			sourceTree = "<group>";
+		};
+		ABB9D6891BCB77B900330AEC /* presenters */ = {
+			isa = PBXGroup;
+			children = (
+				ABB9D68C1BCB787B00330AEC /* Presenter.swift */,
+				ABB9D68E1BCB790200330AEC /* StoryListPresenter.swift */,
+			);
+			name = presenters;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -404,13 +427,18 @@
 			files = (
 				AB89C7451BBD0C0600AB3CCE /* String+Extensions.swift in Sources */,
 				AB89C73E1BBD019400AB3CCE /* StoryListViewController.swift in Sources */,
-				ABB9D6821BCB411E00330AEC /* UIApplication+Extensions.swift in Sources */,
+				ABB9D6821BCB411E00330AEC /* AppDelegate+Extensions.swift in Sources */,
+				ABB9D68D1BCB787B00330AEC /* Presenter.swift in Sources */,
 				AB89C7491BBD123800AB3CCE /* MainDrawerController.swift in Sources */,
 				ABAFE7EF1BCB342E0025E0DC /* NSDate+Extensions.swift in Sources */,
+				ABB9D6911BCB7A1B00330AEC /* StoryListType.swift in Sources */,
 				ABAFE7EB1BCB31910025E0DC /* Comment.swift in Sources */,
 				AB89C7431BBD09D300AB3CCE /* UIColor+Extensions.swift in Sources */,
+				ABB9D6881BCB77AF00330AEC /* UIViewController+Extensions.swift in Sources */,
 				ABB9D6841BCB62CB00330AEC /* JSON+Extensions.swift in Sources */,
 				ABB9D6861BCB6FC300330AEC /* Alamofire+Extensions.swift in Sources */,
+				ABB9D68B1BCB77DE00330AEC /* PresentableUIViewController.swift in Sources */,
+				ABB9D68F1BCB790200330AEC /* StoryListPresenter.swift in Sources */,
 				AB6107E31BBD002100A9ACB1 /* AppDelegate.swift in Sources */,
 				ABB9D67E1BCB3A9A00330AEC /* NetworkDataSource.swift in Sources */,
 				ABAFE7E81BCB24EE0025E0DC /* DrawerViewController.swift in Sources */,

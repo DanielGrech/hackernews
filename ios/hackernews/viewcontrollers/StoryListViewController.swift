@@ -8,51 +8,33 @@
 
 import UIKit
 
-enum StoryListType {
-    case Top
-    case New
-    case AskHn
-    case ShowHn
-    case Jobs
-}
 
-class StoryListViewController: UIViewController {
+
+class StoryListViewController: PresentableViewController<StoryListPresenter>, StoryListMvpView {
     
-    var listType: StoryListType
-    
-    init(type: StoryListType) {
-        listType = type
-        super.init(nibName: nil, bundle: nil)
+    init(pageType: PageType) {
+        super.init(presenter: StoryListPresenter(pageType: pageType) )
+        presenter.view = self
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("Use from storyboard not supported")
-        
-    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.whiteColor()
-        self.title = {
-            switch (listType) {
-            case StoryListType.Top: return "page_title_top".localized
-            case StoryListType.New: return "page_title_new".localized
-            case StoryListType.AskHn: return "page_title_ask".localized
-            case StoryListType.ShowHn: return "page_title_show".localized
-            case StoryListType.Jobs: return "page_title_jobs".localized
-            }}()
+    }
+    
+    
+    func showError(err: NSError) {
         
-        UIApplication.appDelegate.dataSource.getTopStories { (stories, error) in
-            print("Got stories: %v", stories)
-            print("Got errors: %v", error)
-        }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func showStories(stories: [Story]) {
+        
     }
     
-    
+    func showPageTitle(title: String) {
+        self.title = title
+    }
 }
 

@@ -8,7 +8,8 @@
 
 import UIKit
 
-extension UIApplication {
+extension AppDelegate {
     
-    @nonobjc static let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    @nonobjc static let instance = UIApplication.sharedApplication().delegate as! AppDelegate
+
 }
