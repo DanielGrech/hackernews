@@ -3,6 +3,7 @@ use_frameworks!
 
 target 'hackernews' do
 	pod 'MMDrawerController', '~> 0.6.0'
+	pod 'Alamofire', '~> 3.0'
 end
 
 target 'hackernewsTests' do
