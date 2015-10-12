@@ -19,6 +19,9 @@
 		AB89C7471BBD0C5E00AB3CCE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = AB89C7461BBD0C5E00AB3CCE /* Localizable.strings */; settings = {ASSET_TAGS = (); }; };
 		AB89C7491BBD123800AB3CCE /* MainDrawerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB89C7481BBD123800AB3CCE /* MainDrawerController.swift */; settings = {ASSET_TAGS = (); }; };
 		ABAFE7E81BCB24EE0025E0DC /* DrawerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABAFE7E71BCB24EE0025E0DC /* DrawerViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		ABAFE7EB1BCB31910025E0DC /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABAFE7EA1BCB31910025E0DC /* Comment.swift */; settings = {ASSET_TAGS = (); }; };
+		ABAFE7ED1BCB33150025E0DC /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABAFE7EC1BCB33150025E0DC /* Story.swift */; settings = {ASSET_TAGS = (); }; };
+		ABAFE7EF1BCB342E0025E0DC /* NSDate+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABAFE7EE1BCB342E0025E0DC /* NSDate+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +61,9 @@
 		AB89C7461BBD0C5E00AB3CCE /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		AB89C7481BBD123800AB3CCE /* MainDrawerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainDrawerController.swift; sourceTree = "<group>"; };
 		ABAFE7E71BCB24EE0025E0DC /* DrawerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawerViewController.swift; sourceTree = "<group>"; };
+		ABAFE7EA1BCB31910025E0DC /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		ABAFE7EC1BCB33150025E0DC /* Story.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Story.swift; sourceTree = "<group>"; };
+		ABAFE7EE1BCB342E0025E0DC /* NSDate+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+Extensions.swift"; sourceTree = "<group>"; };
 		C3A9CEB11F8790BB0862A407 /* Pods-hackernews.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hackernews.release.xcconfig"; path = "Pods/Target Support Files/Pods-hackernews/Pods-hackernews.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -129,6 +135,7 @@
 		AB6107E11BBD002100A9ACB1 /* hackernews */ = {
 			isa = PBXGroup;
 			children = (
+				ABAFE7E91BCB30380025E0DC /* models */,
 				AB89C7411BBD089E00AB3CCE /* utils */,
 				AB89C73A1BBD012E00AB3CCE /* viewcontrollers */,
 				AB6107E21BBD002100A9ACB1 /* AppDelegate.swift */,
@@ -173,10 +180,20 @@
 			children = (
 				AB89C7421BBD09D300AB3CCE /* UIColor+Extensions.swift */,
 				AB89C7441BBD0C0600AB3CCE /* String+Extensions.swift */,
+				ABAFE7EE1BCB342E0025E0DC /* NSDate+Extensions.swift */,
 			);
 			name = utils;
 			path = hackernews/utils;
 			sourceTree = SOURCE_ROOT;
+		};
+		ABAFE7E91BCB30380025E0DC /* models */ = {
+			isa = PBXGroup;
+			children = (
+				ABAFE7EA1BCB31910025E0DC /* Comment.swift */,
+				ABAFE7EC1BCB33150025E0DC /* Story.swift */,
+			);
+			path = models;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
@@ -365,9 +382,12 @@
 				AB89C7451BBD0C0600AB3CCE /* String+Extensions.swift in Sources */,
 				AB89C73E1BBD019400AB3CCE /* StoryListViewController.swift in Sources */,
 				AB89C7491BBD123800AB3CCE /* MainDrawerController.swift in Sources */,
+				ABAFE7EF1BCB342E0025E0DC /* NSDate+Extensions.swift in Sources */,
+				ABAFE7EB1BCB31910025E0DC /* Comment.swift in Sources */,
 				AB89C7431BBD09D300AB3CCE /* UIColor+Extensions.swift in Sources */,
 				AB6107E31BBD002100A9ACB1 /* AppDelegate.swift in Sources */,
 				ABAFE7E81BCB24EE0025E0DC /* DrawerViewController.swift in Sources */,
+				ABAFE7ED1BCB33150025E0DC /* Story.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
