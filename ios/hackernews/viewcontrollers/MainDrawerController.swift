@@ -14,8 +14,7 @@ class MainDrawerController: MMDrawerController {
         let navController = UINavigationController(rootViewController: StoryListViewController(pageType: PageType.Top))
         self.init(centerViewController: navController, leftDrawerViewController: DrawerViewController())
         
-        openDrawerGestureModeMask = MMOpenDrawerGestureMode.PanningCenterView;
-        closeDrawerGestureModeMask = MMCloseDrawerGestureMode.PanningCenterView;
+        openDrawerGestureModeMask = MMOpenDrawerGestureMode.All;
+        closeDrawerGestureModeMask = MMCloseDrawerGestureMode.All;
     }
-    
 }

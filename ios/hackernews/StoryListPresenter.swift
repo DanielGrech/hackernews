@@ -25,8 +25,10 @@ class StoryListPresenter : Presenter {
         dataSource.getTopStories { stories, error in
             if (error != nil) {
                 print("Got error: ", error)
+                self.view.showError(error!)
             } else {
                 print("Got stories: ", stories)
+                self.view.showStories(stories!)
             }
         }
     }

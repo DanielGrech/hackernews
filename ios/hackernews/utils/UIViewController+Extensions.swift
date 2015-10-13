@@ -6,5 +6,15 @@
 //  Copyright © 2015 DGSD. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+extension UIViewController {
+    
+    func useableScreenHeight() -> CGFloat {
+        let statusBarHeight = UIApplication.sharedApplication().statusBarFrame.size.height
+        let navBarHeight = self.navigationController?.navigationBar.frame.size.height ?? 0
+        
+        return UIScreen.height() - navBarHeight - statusBarHeight
+    }
+}
 

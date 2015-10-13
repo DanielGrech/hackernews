@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		4001F885FDCC166941376773 /* Pods_hackernews.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E815614159463B00D84CFDA /* Pods_hackernews.framework */; };
+		AB3BD0541BCC61D0002DC299 /* UIScreen+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3BD0531BCC61D0002DC299 /* UIScreen+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
+		AB3BD0571BCC638D002DC299 /* StoryListViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3BD0561BCC638D002DC299 /* StoryListViewDataSource.swift */; settings = {ASSET_TAGS = (); }; };
+		AB3BD05A1BCC85D0002DC299 /* StoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3BD0591BCC85D0002DC299 /* StoryTableViewCell.swift */; settings = {ASSET_TAGS = (); }; };
 		AB6107E31BBD002100A9ACB1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6107E21BBD002100A9ACB1 /* AppDelegate.swift */; };
 		AB6107EA1BBD002100A9ACB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB6107E91BBD002100A9ACB1 /* Assets.xcassets */; };
 		AB6107ED1BBD002100A9ACB1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB6107EB1BBD002100A9ACB1 /* LaunchScreen.storyboard */; };
@@ -54,6 +57,9 @@
 /* Begin PBXFileReference section */
 		122389A173E455BC3D4AF0D8 /* Pods-hackernews.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hackernews.debug.xcconfig"; path = "Pods/Target Support Files/Pods-hackernews/Pods-hackernews.debug.xcconfig"; sourceTree = "<group>"; };
 		6E815614159463B00D84CFDA /* Pods_hackernews.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_hackernews.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB3BD0531BCC61D0002DC299 /* UIScreen+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScreen+Extensions.swift"; sourceTree = "<group>"; };
+		AB3BD0561BCC638D002DC299 /* StoryListViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryListViewDataSource.swift; sourceTree = "<group>"; };
+		AB3BD0591BCC85D0002DC299 /* StoryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryTableViewCell.swift; sourceTree = "<group>"; };
 		AB6107DF1BBD002100A9ACB1 /* hackernews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hackernews.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB6107E21BBD002100A9ACB1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AB6107E91BBD002100A9ACB1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -130,6 +136,22 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		AB3BD0551BCC6359002DC299 /* data_sources */ = {
+			isa = PBXGroup;
+			children = (
+				AB3BD0561BCC638D002DC299 /* StoryListViewDataSource.swift */,
+			);
+			path = data_sources;
+			sourceTree = "<group>";
+		};
+		AB3BD0581BCC85B7002DC299 /* views */ = {
+			isa = PBXGroup;
+			children = (
+				AB3BD0591BCC85D0002DC299 /* StoryTableViewCell.swift */,
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
 		AB6107D61BBD002100A9ACB1 = {
 			isa = PBXGroup;
 			children = (
@@ -155,6 +177,8 @@
 		AB6107E11BBD002100A9ACB1 /* hackernews */ = {
 			isa = PBXGroup;
 			children = (
+				AB3BD0581BCC85B7002DC299 /* views */,
+				AB3BD0551BCC6359002DC299 /* data_sources */,
 				ABB9D6891BCB77B900330AEC /* presenters */,
 				ABB9D67C1BCB378200330AEC /* managers */,
 				ABAFE7E91BCB30380025E0DC /* models */,
@@ -208,6 +232,7 @@
 				ABB9D6831BCB62CB00330AEC /* JSON+Extensions.swift */,
 				ABB9D6851BCB6FC300330AEC /* Alamofire+Extensions.swift */,
 				ABB9D6871BCB77AF00330AEC /* UIViewController+Extensions.swift */,
+				AB3BD0531BCC61D0002DC299 /* UIScreen+Extensions.swift */,
 			);
 			name = utils;
 			path = hackernews/utils;
@@ -428,7 +453,9 @@
 				AB89C7451BBD0C0600AB3CCE /* String+Extensions.swift in Sources */,
 				AB89C73E1BBD019400AB3CCE /* StoryListViewController.swift in Sources */,
 				ABB9D6821BCB411E00330AEC /* AppDelegate+Extensions.swift in Sources */,
+				AB3BD05A1BCC85D0002DC299 /* StoryTableViewCell.swift in Sources */,
 				ABB9D68D1BCB787B00330AEC /* Presenter.swift in Sources */,
+				AB3BD0571BCC638D002DC299 /* StoryListViewDataSource.swift in Sources */,
 				AB89C7491BBD123800AB3CCE /* MainDrawerController.swift in Sources */,
 				ABAFE7EF1BCB342E0025E0DC /* NSDate+Extensions.swift in Sources */,
 				ABB9D6911BCB7A1B00330AEC /* StoryListType.swift in Sources */,
@@ -442,6 +469,7 @@
 				AB6107E31BBD002100A9ACB1 /* AppDelegate.swift in Sources */,
 				ABB9D67E1BCB3A9A00330AEC /* NetworkDataSource.swift in Sources */,
 				ABAFE7E81BCB24EE0025E0DC /* DrawerViewController.swift in Sources */,
+				AB3BD0541BCC61D0002DC299 /* UIScreen+Extensions.swift in Sources */,
 				ABB9D6801BCB3AA700330AEC /* DataSource.swift in Sources */,
 				ABAFE7ED1BCB33150025E0DC /* Story.swift in Sources */,
 			);
