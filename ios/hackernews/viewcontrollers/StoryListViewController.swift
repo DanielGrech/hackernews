@@ -36,7 +36,6 @@ class StoryListViewController: PresentableViewController<StoryListPresenter>, St
         self.view.addSubview(tableView)
     }
     
-    
     func showError(err: NSError) {
         
     }

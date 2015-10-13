@@ -17,8 +17,20 @@ class Presenter {
     func viewDidLoad() {
         
     }
-}
-
-protocol MvpView {
-    // Marker interface
+    
+    func viewWillAppear() {
+        
+    }
+    
+    func viewWillDisappear() {
+        
+    }
+    
+    func viewDidAppear() {
+        
+    }
+    
+    func viewDidDisappear() {
+        
+    }
 }

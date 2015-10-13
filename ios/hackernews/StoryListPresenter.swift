@@ -23,6 +23,7 @@ class StoryListPresenter : Presenter {
     override func viewDidLoad() {
         view.showPageTitle(getPageTitle())
         dataSource.getTopStories { stories, error in
+            
             if (error != nil) {
                 print("Got error: ", error)
                 self.view.showError(error!)
@@ -32,6 +33,8 @@ class StoryListPresenter : Presenter {
             }
         }
     }
+    
+    
     
     private func getPageTitle() -> String! {
         return {
@@ -45,7 +48,7 @@ class StoryListPresenter : Presenter {
     }
 }
 
-protocol StoryListMvpView: MvpView {
+protocol StoryListMvpView {
     
     func showPageTitle(title: String)
     
