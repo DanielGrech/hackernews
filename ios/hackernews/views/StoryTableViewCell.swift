@@ -10,16 +10,27 @@ import UIKit
 
 class StoryTableViewCell: UITableViewCell {
     
+    let storyTitle: UILabel
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: UITableViewCellStyle.Subtitle, reuseIdentifier: reuseIdentifier)
+        storyTitle = UILabel()
+        storyTitle.textColor = UIColor.primaryText
+        storyTitle.translatesAutoresizingMaskIntoConstraints = false
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        self.contentView.addSubview(storyTitle)
+        
+        self.contentView.alignLeading(self.storyTitle)
+        self.contentView.alignTop(self.storyTitle)
+        self.contentView.alignTrailing(self.storyTitle)
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder: NSCoder) {
         fatalError("Use with Nib not supported")
     }
     
     func setStory(story: Story) {
-        self.textLabel?.text = story.title
+        self.storyTitle.text = story.title
         self.detailTextLabel?.text = story.author
     }
     

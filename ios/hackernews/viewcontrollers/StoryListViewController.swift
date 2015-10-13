@@ -19,6 +19,8 @@ class StoryListViewController: PresentableViewController<StoryListPresenter>, St
         refreshControl = UIRefreshControl()
         tableDataSource = StoryListViewDataSource()
         
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        
         super.init(presenter: StoryListPresenter(pageType: pageType) )
         presenter.view = self
         
@@ -33,10 +35,10 @@ class StoryListViewController: PresentableViewController<StoryListPresenter>, St
         refreshControl.tintColor = UIColor.accent
         refreshControl.addTarget(self.presenter, action: Selector("onRefreshRequested"), forControlEvents: .ValueChanged)
         
-        tableView.frame = CGRectMake(0, 0, UIScreen.width(), UIScreen.height())
-        tableView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight, .FlexibleTopMargin, .FlexibleBottomMargin]
         tableView.addSubview(refreshControl)
         self.view.addSubview(tableView)
+        
+        self.tableView.matchToSize(self.view)
     }
     
     func showError(err: NSError) {
