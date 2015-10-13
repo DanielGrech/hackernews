@@ -22,8 +22,15 @@ class StoryListPresenter : Presenter {
     
     override func viewDidLoad() {
         view.showPageTitle(getPageTitle())
+        refreshData(false)
+    }
+    
+    func onRefreshRequested() {
+        refreshData(true)
+    }
+    
+    private func refreshData(skipCache: Bool) {
         dataSource.getTopStories { stories, error in
-            
             if (error != nil) {
                 print("Got error: ", error)
                 self.view.showError(error!)
@@ -33,8 +40,6 @@ class StoryListPresenter : Presenter {
             }
         }
     }
-    
-    
     
     private func getPageTitle() -> String! {
         return {

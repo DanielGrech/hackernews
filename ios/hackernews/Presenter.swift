@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Presenter {
+class Presenter: NSObject {
    
     lazy var dataSource: DataSource = {
         return AppDelegate.instance.dataSource

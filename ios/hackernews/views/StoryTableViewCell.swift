@@ -17,7 +17,6 @@ class StoryTableViewCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("Use with Nib not supported")
     }
-
     
     func setStory(story: Story) {
         self.textLabel?.text = story.title

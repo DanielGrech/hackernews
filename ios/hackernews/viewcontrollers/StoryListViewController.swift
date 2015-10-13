@@ -30,17 +30,22 @@ class StoryListViewController: PresentableViewController<StoryListPresenter>, St
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.whiteColor()
         
+        refreshControl.tintColor = UIColor.accent
+        refreshControl.addTarget(self.presenter, action: Selector("onRefreshRequested"), forControlEvents: .ValueChanged)
+        
         tableView.frame = CGRectMake(0, 0, UIScreen.width(), UIScreen.height())
-        tableView.autoresizingMask = [UIViewAutoresizing.FlexibleWidth, UIViewAutoresizing.FlexibleHeight, UIViewAutoresizing.FlexibleTopMargin, UIViewAutoresizing.FlexibleBottomMargin]
+        tableView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight, .FlexibleTopMargin, .FlexibleBottomMargin]
         tableView.addSubview(refreshControl)
         self.view.addSubview(tableView)
     }
     
     func showError(err: NSError) {
-        
+        refreshControl.endRefreshing()
     }
     
     func showStories(stories: [Story]) {
+        refreshControl.endRefreshing()
+        
         tableDataSource.stories.removeAll()
         tableDataSource.stories += stories
         tableView.reloadData()
