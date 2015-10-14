@@ -11,7 +11,8 @@
 		AB3BD0541BCC61D0002DC299 /* UIScreen+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3BD0531BCC61D0002DC299 /* UIScreen+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		AB3BD0571BCC638D002DC299 /* StoryListViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3BD0561BCC638D002DC299 /* StoryListViewDataSource.swift */; settings = {ASSET_TAGS = (); }; };
 		AB3BD05A1BCC85D0002DC299 /* StoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3BD0591BCC85D0002DC299 /* StoryTableViewCell.swift */; settings = {ASSET_TAGS = (); }; };
-		AB3BD05C1BCCB99B002DC299 /* UIView+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3BD05B1BCCB99B002DC299 /* UIView+extensions.swift */; settings = {ASSET_TAGS = (); }; };
+		AB3BD05C1BCCB99B002DC299 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3BD05B1BCCB99B002DC299 /* UIView+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
+		AB4C0C8C1BCDDB4B0028011E /* UIFont+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4C0C8B1BCDDB4B0028011E /* UIFont+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		AB6107E31BBD002100A9ACB1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6107E21BBD002100A9ACB1 /* AppDelegate.swift */; };
 		AB6107EA1BBD002100A9ACB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB6107E91BBD002100A9ACB1 /* Assets.xcassets */; };
 		AB6107ED1BBD002100A9ACB1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB6107EB1BBD002100A9ACB1 /* LaunchScreen.storyboard */; };
@@ -61,7 +62,8 @@
 		AB3BD0531BCC61D0002DC299 /* UIScreen+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScreen+Extensions.swift"; sourceTree = "<group>"; };
 		AB3BD0561BCC638D002DC299 /* StoryListViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryListViewDataSource.swift; sourceTree = "<group>"; };
 		AB3BD0591BCC85D0002DC299 /* StoryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryTableViewCell.swift; sourceTree = "<group>"; };
-		AB3BD05B1BCCB99B002DC299 /* UIView+extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+extensions.swift"; sourceTree = "<group>"; };
+		AB3BD05B1BCCB99B002DC299 /* UIView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
+		AB4C0C8B1BCDDB4B0028011E /* UIFont+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+Extensions.swift"; sourceTree = "<group>"; };
 		AB6107DF1BBD002100A9ACB1 /* hackernews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hackernews.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB6107E21BBD002100A9ACB1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AB6107E91BBD002100A9ACB1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -235,7 +237,8 @@
 				ABB9D6851BCB6FC300330AEC /* Alamofire+Extensions.swift */,
 				ABB9D6871BCB77AF00330AEC /* UIViewController+Extensions.swift */,
 				AB3BD0531BCC61D0002DC299 /* UIScreen+Extensions.swift */,
-				AB3BD05B1BCCB99B002DC299 /* UIView+extensions.swift */,
+				AB3BD05B1BCCB99B002DC299 /* UIView+Extensions.swift */,
+				AB4C0C8B1BCDDB4B0028011E /* UIFont+Extensions.swift */,
 			);
 			name = utils;
 			path = hackernews/utils;
@@ -463,6 +466,7 @@
 				ABAFE7EF1BCB342E0025E0DC /* NSDate+Extensions.swift in Sources */,
 				ABB9D6911BCB7A1B00330AEC /* StoryListType.swift in Sources */,
 				ABAFE7EB1BCB31910025E0DC /* Comment.swift in Sources */,
+				AB4C0C8C1BCDDB4B0028011E /* UIFont+Extensions.swift in Sources */,
 				AB89C7431BBD09D300AB3CCE /* UIColor+Extensions.swift in Sources */,
 				ABB9D6881BCB77AF00330AEC /* UIViewController+Extensions.swift in Sources */,
 				ABB9D6841BCB62CB00330AEC /* JSON+Extensions.swift in Sources */,
@@ -474,7 +478,7 @@
 				ABAFE7E81BCB24EE0025E0DC /* DrawerViewController.swift in Sources */,
 				AB3BD0541BCC61D0002DC299 /* UIScreen+Extensions.swift in Sources */,
 				ABB9D6801BCB3AA700330AEC /* DataSource.swift in Sources */,
-				AB3BD05C1BCCB99B002DC299 /* UIView+extensions.swift in Sources */,
+				AB3BD05C1BCCB99B002DC299 /* UIView+Extensions.swift in Sources */,
 				ABAFE7ED1BCB33150025E0DC /* Story.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

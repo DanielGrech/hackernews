@@ -15,6 +15,7 @@ extension UIColor {
     @nonobjc public static let accent = UIColor(rgb: 0xFF8937)
     @nonobjc public static let primaryText = UIColor(rgb: 0xDD000000)
     @nonobjc public static let secondaryText = UIColor(rgb: 0x727272)
+    @nonobjc public static let borderColor = UIColor(rgb: 0x33D6D6D6)
     
     convenience init(rgb: UInt, alphaVal:CGFloat = 1) {
         self.init(

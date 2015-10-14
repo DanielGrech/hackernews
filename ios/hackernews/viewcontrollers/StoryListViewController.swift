@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class StoryListViewController: PresentableViewController<StoryListPresenter>, StoryListMvpView, UITableViewDelegate {
     
@@ -30,15 +31,23 @@ class StoryListViewController: PresentableViewController<StoryListPresenter>, St
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.whiteColor()
         
         refreshControl.tintColor = UIColor.accent
         refreshControl.addTarget(self.presenter, action: Selector("onRefreshRequested"), forControlEvents: .ValueChanged)
         
         tableView.addSubview(refreshControl)
-        self.view.addSubview(tableView)
+        view.addSubview(tableView)
         
-        self.tableView.matchToSize(self.view)
+        tableView.snp_makeConstraints { make in
+            make.edges.equalTo(self.view)
+        }
+        
+        tableView.estimatedRowHeight = 80
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
+        tableView.separatorColor = UIColor.borderColor
+        tableView.separatorInset = UIEdgeInsetsMake(0, UIView.DEFAULT_PADDING_SMALL, 0, UIView.DEFAULT_PADDING_SMALL)
     }
     
     func showError(err: NSError) {
@@ -55,6 +64,6 @@ class StoryListViewController: PresentableViewController<StoryListPresenter>, St
     
     func showPageTitle(title: String) {
         self.title = title
-    }    
+    }
 }
 

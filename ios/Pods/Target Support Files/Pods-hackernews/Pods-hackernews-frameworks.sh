@@ -86,10 +86,12 @@ strip_invalid_archs() {
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-hackernews/Alamofire.framework"
   install_framework "Pods-hackernews/MMDrawerController.framework"
+  install_framework "Pods-hackernews/SnapKit.framework"
   install_framework "Pods-hackernews/SwiftyJSON.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-hackernews/Alamofire.framework"
   install_framework "Pods-hackernews/MMDrawerController.framework"
+  install_framework "Pods-hackernews/SnapKit.framework"
   install_framework "Pods-hackernews/SwiftyJSON.framework"
 fi
