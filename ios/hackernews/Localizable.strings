@@ -12,3 +12,5 @@
 "page_title_ask" = "Ask HN";
 "page_title_show" = "Show HN";
 "page_title_jobs" = "Jobs";
+
+"story_list_item_details_template" = "%@ · %@ · %@ · %@";

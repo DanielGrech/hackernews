@@ -62,6 +62,6 @@ class StoryTableViewCell: UITableViewCell {
     
     func setStory(story: Story) {
         self.storyTitle.text = story.title
-        self.storyInfo.text = story.author
+        self.storyInfo.text = story.getStoryListDetailText()
     }
 }
